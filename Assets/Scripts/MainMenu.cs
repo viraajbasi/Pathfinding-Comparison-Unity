@@ -12,7 +12,7 @@ public class MainMenu : MonoBehaviour
 
     public void QuitGame()
     {
-        Debug.Log("Quit"); // Won't quit when in Unity Editor
+        Debug.Log("The program will now quit"); // Won't quit when in Unity Editor
         Application.Quit();
     }
 }
