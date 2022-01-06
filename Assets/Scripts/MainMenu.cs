@@ -1,18 +1,38 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public void PlayGame()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-    }
+	public string firstLevel;
+	public GameObject optionsScreen;
+	public void StartGame()
+	{
+		SceneManager.LoadScene(firstLevel);
+	}
 
-    public void QuitGame()
-    {
-        Debug.Log("The program will now quit"); // Won't quit when in Unity Editor
-        Application.Quit();
-    }
+	public void OpenOptions()
+	{
+		optionsScreen.SetActive(true);
+	}
+
+	public void CloseOptions()
+	{
+		optionsScreen.SetActive(false);
+	}
+
+	public void OpenAbout()
+	{
+
+	}
+
+	public void CloseAbout()
+	{
+
+	}
+
+	public void QuitGame()
+	{
+		Application.Quit();
+		Debug.Log("Quitting...");
+	}
 }

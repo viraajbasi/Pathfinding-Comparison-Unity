@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System;
 
 [Flags]
@@ -41,7 +39,7 @@ public static class MazeGenerator
 
 	private static WallState[,] RecursiveBacktracker(WallState[,] maze, int width, int height)
 	{
-		var rng = new System.Random();
+		var rng = new Random();
 		var posStack = new Stack<Position>();
 		var pos = new Position { X = rng.Next(0, width), Y = rng.Next(0, height) };
 		
