@@ -1,15 +1,21 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-	public string firstLevel;
 	public GameObject optionsScreen;
-	public void StartGame()
+	public GameObject aboutScreen;
+	public GameObject startScreen;
+
+	public void OpenStart()
 	{
-		SceneManager.LoadScene(firstLevel);
+		startScreen.SetActive(true);
 	}
 
+	public void CloseStart()
+	{
+		startScreen.SetActive(false);
+	}
+	
 	public void OpenOptions()
 	{
 		optionsScreen.SetActive(true);
@@ -22,12 +28,12 @@ public class MainMenu : MonoBehaviour
 
 	public void OpenAbout()
 	{
-
+		aboutScreen.SetActive(true);
 	}
 
 	public void CloseAbout()
 	{
-
+		aboutScreen.SetActive(false);
 	}
 
 	public void QuitGame()
