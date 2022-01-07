@@ -30,7 +30,7 @@ public class StartScreen : MonoBehaviour
         UserSolvesMaze = userSolvesToggle.isOn;
         RecursiveBackrackerChosen = recursiveBacktrackerToggle.isOn;
 
-        if (DijkstraChosen | AStarChosen  | BellmanFordChosen | UserSolvesMaze)
+        if (DijkstraChosen | AStarChosen  | BellmanFordChosen | UserSolvesMaze && recursiveBacktrackerToggle.isOn | kruskalToggle.isOn)
         {
             SceneManager.LoadScene(mainProgram);
         }
