@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class StartScreen : MonoBehaviour
 {
@@ -12,13 +13,15 @@ public class StartScreen : MonoBehaviour
     public Toggle kruskalToggle;
     public Toggle userSolvesToggle;
     public GameObject helpScreen;
+    public GameObject errorScreen;
+    public TMP_Text errorBody;
 
     public static bool DijkstraChosen;
     public static bool AStarChosen;
     public static bool BellmanFordChosen;
     public static bool UserSolvesMaze;
     public static bool RecursiveBackrackerChosen;
-    
+
     public void BeginProgram()
     {
         DijkstraChosen = dijkstraToggle.isOn;
@@ -33,8 +36,21 @@ public class StartScreen : MonoBehaviour
         }
         else
         {
-            // Add code to display error
+            if (recursiveBacktrackerToggle.isOn == false && kruskalToggle.isOn == false)
+            {
+                DisplayError("Ensure a maze generation algorithm is chosen.");
+            }
+            else
+            {
+                DisplayError("Ensure a pathfinding algorithm is chosen.");
+            }
         }
+    }
+
+    public void DisplayError(string message)
+    {
+        errorBody.text = message;
+        errorScreen.SetActive(true);
     }
 
     public void OpenHelp()

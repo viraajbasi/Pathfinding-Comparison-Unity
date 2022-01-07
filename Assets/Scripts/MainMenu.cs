@@ -5,6 +5,7 @@ public class MainMenu : MonoBehaviour
 	public GameObject optionsScreen;
 	public GameObject aboutScreen;
 	public GameObject startScreen;
+	public GameObject errorScreen;
 
 	public void OpenStart()
 	{
@@ -34,6 +35,11 @@ public class MainMenu : MonoBehaviour
 	public void CloseAbout()
 	{
 		aboutScreen.SetActive(false);
+	}
+
+	public void CloseError()
+	{
+		errorScreen.SetActive(false);
 	}
 
 	public void QuitGame()
