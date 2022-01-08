@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -8,8 +7,6 @@ public class OptionsScreen : MonoBehaviour
 {
     public Toggle fullscreenTog;
 	public Toggle vsyncTog;
-	private Resolution[] _resolutions;
-	private int _selectedResolution;
 	public TMP_Text resolutionLabel;
 	public AudioMixer theMixer;
 	public TMP_Text masterLabel;
@@ -18,6 +15,9 @@ public class OptionsScreen : MonoBehaviour
 	public Slider masterSlider;
 	public Slider musicSlider;
 	public Slider sfxSlider;
+	
+	private Resolution[] _resolutions;
+	private int _selectedResolution;
 
 	// Start is called before the first frame update
     void Start()

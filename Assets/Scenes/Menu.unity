@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657815, g: 0.49641192, b: 0.57481617, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -298,6 +298,7 @@ GameObject:
   - component: {fileID: 314379053}
   - component: {fileID: 314379052}
   - component: {fileID: 314379057}
+  - component: {fileID: 314379058}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -408,7 +409,20 @@ MonoBehaviour:
   optionsScreen: {fileID: 1624423366}
   aboutScreen: {fileID: 0}
   startScreen: {fileID: 1473822643}
+--- !u!114 &314379058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 314379051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f758732226c2461d9b2177082846a0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   errorScreen: {fileID: 6194943621482479330}
+  errorMessage: {fileID: 6194943621482479329}
 --- !u!1 &368484534
 GameObject:
   m_ObjectHideFlags: 0
@@ -2975,8 +2989,7 @@ MonoBehaviour:
   kruskalToggle: {fileID: 415155722}
   userSolvesToggle: {fileID: 784763885}
   helpScreen: {fileID: 0}
-  errorScreen: {fileID: 6194943621482479330}
-  errorBody: {fileID: 6194943621482479329}
+  errorScript: {fileID: 314379058}
 --- !u!114 &1473822646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4558,14 +4571,14 @@ PrefabInstance:
     - target: {fileID: 3990334578318009095, guid: 62ae4974d7dbb4d45abb126873866a5a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 314379057}
+      objectReference: {fileID: 314379058}
     - target: {fileID: 3990334578318009095, guid: 62ae4974d7dbb4d45abb126873866a5a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: CloseError
+      value: CloseErrorScreen
       objectReference: {fileID: 0}
     - target: {fileID: 3990334578318009095, guid: 62ae4974d7dbb4d45abb126873866a5a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: MainMenu, Assembly-CSharp
+      value: ErrorScreen, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 4768160130689263296, guid: 62ae4974d7dbb4d45abb126873866a5a, type: 3}
       propertyPath: m_AnchoredPosition.x
