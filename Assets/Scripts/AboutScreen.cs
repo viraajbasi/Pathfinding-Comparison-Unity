@@ -6,6 +6,11 @@ public class AboutScreen : MonoBehaviour
 {
     public TMP_Text algorithmInformation;
 
+    public void Start()
+    {
+        algorithmInformation.text = "Choose an algorithm.";
+    }
+    
     public void DijkstraInfo()
     {
         ReadInfoAndShow("Dijkstra");
