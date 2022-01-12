@@ -23,17 +23,9 @@ public class OptionsScreen : MonoBehaviour
     void Start()
     {
        fullscreenTog.isOn = Screen.fullScreen;
-
-	   if (QualitySettings.vSyncCount == 0)
-	   {
-		   vsyncTog.isOn = false;
-	   }
-	   else
-	   {
-		   vsyncTog.isOn = true;
-	   }
-
-	   _resolutions = Screen.resolutions;
+       vsyncTog.isOn = QualitySettings.vSyncCount != 0;
+       _resolutions = Screen.resolutions;
+       
 	   for (int i = 0; i < _resolutions.Length; i++)
 	   {
 		   if (Screen.width == _resolutions[i].width && Screen.height == _resolutions[i].height)
@@ -56,18 +48,11 @@ public class OptionsScreen : MonoBehaviour
     }
 
     public void ApplyGraphics()
-	{
-		if (vsyncTog.isOn)
-		{
-			QualitySettings.vSyncCount = 1;
-		}
-		else
-		{
-			QualitySettings.vSyncCount = 0;
-		}
+    {
+	    QualitySettings.vSyncCount = vsyncTog.isOn ? 1 : 0;
 
-		Screen.SetResolution(_resolutions[_selectedResolution].width, _resolutions[_selectedResolution].height, fullscreenTog.isOn);
-	}
+	    Screen.SetResolution(_resolutions[_selectedResolution].width, _resolutions[_selectedResolution].height, fullscreenTog.isOn);
+    }
 
 	public void ResLeft()
 	{
