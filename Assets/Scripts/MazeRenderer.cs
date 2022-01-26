@@ -2,22 +2,13 @@ using UnityEngine;
 
 public class MazeRenderer : MonoBehaviour
 {
-	[SerializeField]
 	[Range(1, 50)]
-	private int width = 10;
-
-	[SerializeField]
+	public int width = 10;
 	[Range(1, 50)]
-	private int height = 10;
-
-	[SerializeField]
-	private float size = 1f;
-	
-	[SerializeField]
-	private Transform wallPrefab = null;
-	
-	[SerializeField]
-	private Transform floorPrefab = null;
+	public int height = 10;
+	public float size = 1f;
+	public Transform wallPrefab = null;
+	public Transform floorPrefab = null;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +17,7 @@ public class MazeRenderer : MonoBehaviour
 		Draw(maze);
     }
     
-    private void Draw(WallState[,] maze)
+    private void Draw(WallStateBool[,] maze)
 	{
 		var floor = Instantiate(floorPrefab, transform);
 		floor.localScale = new Vector3(width, 1, height);
@@ -38,14 +29,14 @@ public class MazeRenderer : MonoBehaviour
 				var cell = maze[i,j];
 				var pos = new Vector3(-width / 2 + i, 0, -height / 2 + j);
 
-				if (cell.HasFlag(WallState.UP))
+				if (/*cell.HasFlag(WallState.UP)*/ cell.Top)
 				{
 					var topWall = Instantiate(wallPrefab, transform) as Transform;
 					topWall.position = pos + new Vector3(0, 0, size / 2);
 					topWall.localScale = new Vector3(size, topWall.localScale.y, topWall.localScale.z);
 				}
 
-				if (cell.HasFlag(WallState.LEFT))
+				if (/*cell.HasFlag(WallState.LEFT)*/ cell.Left)
 				{
 					var leftWall = Instantiate(wallPrefab, transform) as Transform;
 					leftWall.position = pos + new Vector3(-size / 2, 0, 0);
@@ -55,7 +46,7 @@ public class MazeRenderer : MonoBehaviour
 
 				if (i == width - 1)
 				{
-					if (cell.HasFlag(WallState.RIGHT))
+					if (/*cell.HasFlag(WallState.RIGHT)*/ cell.Right)
 					{
 						var rightWall = Instantiate(wallPrefab, transform) as Transform;
 						rightWall.position = pos + new Vector3(+size / 2, 0, 0);
@@ -66,7 +57,7 @@ public class MazeRenderer : MonoBehaviour
 
 				if (j == 0)
 				{
-					if (cell.HasFlag(WallState.DOWN))
+					if (/*cell.HasFlag(WallState.DOWN)*/ cell.Bottom)
 					{
 						var bottomWall = Instantiate(wallPrefab, transform) as Transform;
 						bottomWall.position = pos + new Vector3(0, 0, -size / 2);
