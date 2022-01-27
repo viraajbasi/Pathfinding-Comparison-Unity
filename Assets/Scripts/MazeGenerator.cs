@@ -1,15 +1,6 @@
 using System.Collections.Generic;
-using System;
-
-/*[Flags]
-public enum WallState
-{
-	LEFT = 1, // 0001
-	RIGHT = 2, // 0010
-	UP = 4, // 0100
-	DOWN = 8, // 1000
-	VISITED = 128, // 1000 0000
-}*/
+using UnityEngine;
+using Random = System.Random;
 
 public class Position
 {
@@ -21,8 +12,6 @@ public struct Neighbour
 {
 	public Position Position;
 	public SharedWall Wall;
-	//public WallState SharedWall;
-	//public SharedWallState SharedWall;
 }
 
 public enum SharedWall
@@ -33,47 +22,30 @@ public enum SharedWall
 	Right
 }
 
-/*public class SharedWallState
+public class WallStateBool
 {
-	public bool TopShared;
-	public bool BottomShared;
-	public bool LeftShared;
-	public bool RightShared;
-}*/
-
-public struct WallStateBool
-{
-	public bool Top;
-	public bool Bottom;
-	public bool Left;
-	public bool Right;
-	public bool Visited;
-	//public SharedWall wall;
+	public bool Top { get; set; }
+	public bool Bottom { get; set; }
+	public bool Left { get; set; }
+	public bool Right { get; set; }
+	public bool Visited { get; set; }
+	public int X { get; set; }
+	public int Y { get; set; }
 }
 
 public static class MazeGenerator
 {
-	//public WallState SharedWall;
-	/*private static WallState GetOppositeWall(WallStateBool wall)
-	{
-		switch (wall)
-		{
-			case WallState.RIGHT: return WallState.LEFT;
-			case WallState.LEFT: return WallState.RIGHT;
-			case WallState.UP: return WallState.DOWN;
-			case WallState.DOWN: return WallState.UP;
-			default: return WallState.LEFT;
-		}
-	}*/
-
-	private static WallStateBool[,] RecursiveBacktracker(WallStateBool[,] maze, int width, int height)
+	private static List<WallStateBool> RecursiveBacktracker(List<WallStateBool> maze, int width, int height)
 	{
 		var rng = new Random();
 		var posStack = new Stack<Position>();
-		var pos = new Position { X = rng.Next(0, width), Y = rng.Next(0, height) };
+		var pos = new Position
+		{
+			X = rng.Next(0, width),
+			Y = rng.Next(0, height)
+		};
 		
-		//maze[pos.X, pos.Y] |= WallState.VISITED; // 1000 1111
-		maze[pos.X, pos.Y].Visited = true;
+		maze[maze.FindIndex(a => a.X == pos.X && a.Y == pos.Y)].Visited = true;
 		posStack.Push(pos);
 
 		while (posStack.Count > 0)
@@ -89,24 +61,20 @@ public static class MazeGenerator
 				var rndNeigbour = neighbours[rndIndex];
 				var nPos = rndNeigbour.Position;
 
-				/*maze[current.X, current.Y] &= ~rndNeigbour.SharedWall;
-				maze[nPos.X, nPos.Y] &= ~GetOppositeWall(rndNeigbour.SharedWall);
-				maze[nPos.X, nPos.Y] |= WallState.VISITED;*/
-
 				switch (rndNeigbour.Wall)
 				{
 					// Determine the shared wall from current cell and remove it.
 					case SharedWall.Top:
-						maze[current.X, current.Y].Top = false;
+						maze[maze.FindIndex(a => a.X == current.X && a.Y == current.Y)].Top = false;
 						break;
 					case SharedWall.Bottom:
-						maze[current.X, current.Y].Bottom = false;
+						maze[maze.FindIndex(a => a.X == current.X && a.Y == current.Y)].Bottom = false;
 						break;
 					case SharedWall.Left:
-						maze[current.X, current.Y].Left = false;
+						maze[maze.FindIndex(a => a.X == current.X && a.Y == current.Y)].Left = false;
 						break;
 					case SharedWall.Right:
-						maze[current.X, current.Y].Right = false;
+						maze[maze.FindIndex(a => a.X == current.X && a.Y == current.Y)].Right = false;
 						break;
 				}
 				
@@ -114,38 +82,34 @@ public static class MazeGenerator
 				{
 					// Determine the shared wall from neighbouring cell and remove it .
 					case SharedWall.Top:
-						maze[nPos.X, nPos.Y].Bottom = false;
+						maze[maze.FindIndex(a => a.X == nPos.X && a.Y == nPos.Y)].Bottom = false;
 						break;
 					case SharedWall.Bottom:
-						maze[nPos.X, nPos.Y].Top = false;
+						maze[maze.FindIndex(a => a.X == nPos.X && a.Y == nPos.Y)].Top = false;
 						break;
 					case SharedWall.Left:
-						maze[nPos.X, nPos.Y].Right = false;
+						maze[maze.FindIndex(a => a.X == nPos.X && a.Y == nPos.Y)].Right = false;
 						break;
 					case SharedWall.Right:
-						maze[nPos.X, nPos.Y].Left = false;
+						maze[maze.FindIndex(a => a.X == nPos.X && a.Y == nPos.Y)].Left = false;
 						break;
 				}
 
 				posStack.Push(nPos);
 			}
 		}
-
+		
+		Debug.Log("Reached end.");
 		return maze;
 	}
 
-	private static WallStateBool[,] Kruskal(WallStateBool[,] maze, int width, int height)
-	{
-		return maze;
-	}
-
-	private static List<Neighbour> GetUnvisitedNeighbours(Position p, WallStateBool[,] maze, int width, int height)
+	private static List<Neighbour> GetUnvisitedNeighbours(Position p, List<WallStateBool> maze, int width, int height)
 	{
 		var list = new List<Neighbour>();
 
 		if (p.X > 0) // Left Wall
 		{
-			if (/*!maze[p.X - 1, p.Y].HasFlag(WallState.VISITED)*/ !maze[p.X - 1, p.Y].Visited)
+			if (!maze[maze.FindIndex(a => a.X == p.X - 1 && a.Y == p.Y)].Visited)
 			{
 				list.Add(new Neighbour
 						{
@@ -154,7 +118,6 @@ public static class MazeGenerator
 								X = p.X - 1,
 								Y = p.Y,
 							},
-							//SharedWall = WallState.LEFT
 							Wall = SharedWall.Left
 						});
 			}
@@ -162,7 +125,7 @@ public static class MazeGenerator
 
 		if (p.Y > 0) // Bottom Wall
 		{
-			if (/*!maze[p.X, p.Y - 1].HasFlag(WallState.VISITED)*/ !maze[p.X, p.Y - 1].Visited)
+			if (!maze[maze.FindIndex(a => a.X == p.X && a.Y == p.Y - 1)].Visited)
 			{
 				list.Add(new Neighbour
 						{
@@ -171,7 +134,6 @@ public static class MazeGenerator
 								X = p.X,
 								Y = p.Y - 1
 							},
-							//SharedWall = WallState.DOWN
 							Wall = SharedWall.Bottom
 						});
 			}
@@ -179,7 +141,7 @@ public static class MazeGenerator
 
 		if (p.Y < height - 1) // Top Wall
 		{
-			if (/*!maze[p.X, p.Y + 1].HasFlag(WallState.VISITED)*/ !maze[p.X, p.Y + 1].Visited)
+			if (!maze[maze.FindIndex(a => a.X == p.X && a.Y == p.Y + 1)].Visited)
 			{
 				list.Add(new Neighbour
 						{
@@ -188,7 +150,6 @@ public static class MazeGenerator
 								X = p.X,
 								Y = p.Y + 1
 							},
-							//SharedWall = WallState.UP
 							Wall = SharedWall.Top
 						});
 			}
@@ -196,7 +157,7 @@ public static class MazeGenerator
 
 		if (p.X < width - 1) // Right Wall
 		{
-			if (/*!maze[p.X + 1, p.Y].HasFlag(WallState.VISITED)*/ !maze[p.X + 1, p.Y].Visited)
+			if (!maze[maze.FindIndex(a => a.X == p.X + 1 && a.Y == p.Y)].Visited)
 			{
 				list.Add(new Neighbour
 						{
@@ -205,7 +166,6 @@ public static class MazeGenerator
 								X = p.X + 1,
 								Y = p.Y
 							},
-							//SharedWall = WallState.RIGHT
 							Wall = SharedWall.Right
 						});
 			}
@@ -214,23 +174,29 @@ public static class MazeGenerator
 		return list;
 	}
 
-	public static WallStateBool[,] Generate(int width, int height)
+	public static List<WallStateBool> Generate(int width, int height)
 	{
-		WallStateBool[,] maze = new WallStateBool[width, height];
-		//WallState initial = WallState.RIGHT | WallState.LEFT | WallState.DOWN | WallState.UP; // Add wall states using pipe 
+		var maze = new List<WallStateBool>();
 		
 		// Provide each cell with the initial wall state
 		for (int i = 0; i < width; i++)
 		{
 			for (int j = 0; j < height; j++)
 			{
-				maze[i, j].Top = true;
-				maze[i, j].Bottom = true;
-				maze[i, j].Left = true;
-				maze[i, j].Right = true;
+				maze.Add(new WallStateBool
+				{
+					Top = true,
+					Bottom = true,
+					Left = true,
+					Right = true,
+					Visited = false,
+					X = i,
+					Y = j
+				});
 			}
 		}
 
 		return RecursiveBacktracker(maze, width, height);
+		//return maze;
 	}
 }
