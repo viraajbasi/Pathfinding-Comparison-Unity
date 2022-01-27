@@ -50,15 +50,15 @@ public static class MazeGenerator
 
 		while (posStack.Count > 0)
 		{
-			var current = posStack.Pop();
+			var current = posStack.Pop/*Peek*/();
 			var neighbours = GetUnvisitedNeighbours(current, maze, width, height);
 
 			if (neighbours.Count > 0)
 			{
 				posStack.Push(current);
 
-				var rndIndex = rng.Next(0, neighbours.Count);
-				var rndNeigbour = neighbours[rndIndex];
+				//var rndIndex = rng.Next(0, neighbours.Count);
+				var rndNeigbour = neighbours[rng.Next(0, neighbours.Count)];
 				var nPos = rndNeigbour.Position;
 
 				switch (rndNeigbour.Wall)
@@ -95,11 +95,11 @@ public static class MazeGenerator
 						break;
 				}
 
+				maze[maze.FindIndex(a => a.X == nPos.X && a.Y == nPos.Y)].Visited = true;
 				posStack.Push(nPos);
 			}
 		}
 		
-		Debug.Log("Reached end.");
 		return maze;
 	}
 
