@@ -5,40 +5,45 @@ using System.IO;
 public class AboutScreen : MonoBehaviour
 {
     public TMP_Text algorithmInformation;
-
-    public void Start()
+    public string DataPath;
+    
+    private void Start()
     {
         algorithmInformation.text = "Choose an algorithm.";
+        // Find data path
+        DataPath = Application.dataPath;
+        // Output the Game data path to the console
+        Debug.Log("dataPath : " + DataPath);
     }
     
-    public void DijkstraInfo()
+    private void DijkstraInfo()
     {
         ReadInfoAndShow("Dijkstra");
     }
     
-    public void AStarInfo()
+    private void AStarInfo()
     {
         ReadInfoAndShow("AStar");
     }
     
-    public void BellmanFordInfo()
+    private void BellmanFordInfo()
     {
         ReadInfoAndShow("BellmanFord");
     }
     
-    public void RecursiveBacktrackerInfo()
+    private void RecursiveBacktrackerInfo()
     {
         ReadInfoAndShow("RecursiveBacktracker");
     }
     
-    public void KruskalInfo()
+    private void KruskalInfo()
     {
         ReadInfoAndShow("Kruskal");
     }
     
     private void ReadInfoAndShow(string filename)
     {
-        string path = $"Assets/Resources/{filename}.txt";
+        string path = $"{DataPath}/Resources/{filename}.txt";
         StreamReader streamReader = new StreamReader(path);
 
         algorithmInformation.text = streamReader.ReadToEnd();

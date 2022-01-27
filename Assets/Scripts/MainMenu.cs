@@ -6,37 +6,37 @@ public class MainMenu : MonoBehaviour
 	public GameObject aboutScreen;
 	public GameObject startScreen;
 
-	public void OpenStart()
+	private void OpenStart()
 	{
 		startScreen.SetActive(true);
 	}
 
-	public void CloseStart()
+	private void CloseStart()
 	{
 		startScreen.SetActive(false);
 	}
 	
-	public void OpenOptions()
+	private void OpenOptions()
 	{
 		optionsScreen.SetActive(true);
 	}
 
-	public void CloseOptions()
+	private void CloseOptions()
 	{
 		optionsScreen.SetActive(false);
 	}
 
-	public void OpenAbout()
+	private void OpenAbout()
 	{
 		aboutScreen.SetActive(true);
 	}
 
-	public void CloseAbout()
+	private	void CloseAbout()
 	{
 		aboutScreen.SetActive(false);
 	}
 
-	public void QuitGame()
+	private void QuitGame()
 	{
 		Application.Quit();
 		Debug.Log("Quitting...");

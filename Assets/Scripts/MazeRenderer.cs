@@ -12,7 +12,7 @@ public class MazeRenderer : MonoBehaviour
 	public Transform floorPrefab;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         var maze = MazeGenerator.Generate(width, height);
         Draw(maze);

@@ -1,4 +1,4 @@
-using UnityEditor;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,7 +15,16 @@ public class StartScreen : MonoBehaviour
     public GameObject helpScreen;
     public ErrorScreen errorScript;
 
-    public void BeginProgram()
+
+    private void Start()
+    {
+        PlayerPrefs.DeleteKey("Dijkstra");
+        PlayerPrefs.DeleteKey("A*");
+        PlayerPrefs.DeleteKey("BellmanFord");
+        PlayerPrefs.DeleteKey("RecursiveBacktracker");
+        PlayerPrefs.DeleteKey("Kruskal");
+    }
+    private void BeginProgram()
     {
         StoreToggleState(dijkstraToggle.isOn, astarToggle.isOn, bellmanfordToggle.isOn, recursiveBacktrackerToggle.isOn, kruskalToggle.isOn);
         if (dijkstraToggle.isOn | astarToggle.isOn  | bellmanfordToggle.isOn | userSolvesToggle.isOn && recursiveBacktrackerToggle.isOn | kruskalToggle.isOn)
@@ -35,17 +44,17 @@ public class StartScreen : MonoBehaviour
         }
     }
 
-    public void OpenHelp()
+    private void OpenHelp()
     {
         helpScreen.SetActive(true);
     }
 
-    public void CloseHelp()
+    private void CloseHelp()
     {
         helpScreen.SetActive(false);
     }
 
-    public void StoreToggleState(bool d, bool a, bool bf, bool rb, bool k)
+    private void StoreToggleState(bool d, bool a, bool bf, bool rb, bool k)
     {
         PlayerPrefs.SetInt("Dijkstra", (d ? 1 : 0));
         PlayerPrefs.SetInt("A*", (a ? 1 : 0));

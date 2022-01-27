@@ -20,7 +20,7 @@ public class OptionsScreen : MonoBehaviour
 	private int _selectedResolution;
 
 	// Start is called before the first frame update
-    void Start()
+    private void Start()
     {
        fullscreenTog.isOn = Screen.fullScreen;
        vsyncTog.isOn = QualitySettings.vSyncCount != 0;
@@ -47,14 +47,14 @@ public class OptionsScreen : MonoBehaviour
 	   sfxLabel.text = Mathf.RoundToInt(sfxSlider.value + 80).ToString();
     }
 
-    public void ApplyGraphics()
+    private void ApplyGraphics()
     {
 	    QualitySettings.vSyncCount = vsyncTog.isOn ? 1 : 0;
 
 	    Screen.SetResolution(_resolutions[_selectedResolution].width, _resolutions[_selectedResolution].height, fullscreenTog.isOn);
     }
 
-	public void ResLeft()
+	private void ResLeft()
 	{
 		_selectedResolution--;
 
@@ -66,7 +66,7 @@ public class OptionsScreen : MonoBehaviour
 		UpdateResLabel();
 	}
 
-	public void ResRight()
+	private void ResRight()
 	{
 		_selectedResolution++;
 
@@ -83,7 +83,7 @@ public class OptionsScreen : MonoBehaviour
 		resolutionLabel.text = _resolutions[_selectedResolution].width + " x " + _resolutions[_selectedResolution].height;
 	}
 
-	public void SetMasterVolume()
+	private void SetMasterVolume()
 	{
 		masterLabel.text = Mathf.RoundToInt(masterSlider.value + 80).ToString();
 		theMixer.SetFloat("MasterVol", masterSlider.value);
@@ -91,7 +91,7 @@ public class OptionsScreen : MonoBehaviour
 		PlayerPrefs.SetFloat("MasterVolume", masterSlider.value);
 	}
 	
-	public void SetMusicVolume()
+	private void SetMusicVolume()
 	{
 		musicLabel.text = Mathf.RoundToInt(musicSlider.value + 80).ToString();
 		theMixer.SetFloat("MusicVol", musicSlider.value);
@@ -99,7 +99,7 @@ public class OptionsScreen : MonoBehaviour
 		PlayerPrefs.SetFloat("MusicVolume", musicSlider.value);
 	}
 	
-	public void SetSFXVolume()
+	private void SetSFXVolume()
 	{
 		sfxLabel.text = Mathf.RoundToInt(sfxSlider.value + 80).ToString();
 		theMixer.SetFloat("SFXVol", sfxSlider.value);
