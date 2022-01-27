@@ -1,1 +1,9 @@
-Recursive Backtracker
+This method is not unique to maze generation and can be implemented in many problems. It requires memory that is proportional in size to the maze.
+
+The general execution of the Recursive Backtracker algorithm is as follows:
+1.	Choose a starting point in the field.
+2.	Randomly choose a wall at that point and carve a passage through to the adjacent cell, but only if the adjacent cell has not been visited yet. This becomes the new current cell.
+3.	If all adjacent cells have been visited, back up to the last cell that has uncarved walls and repeat.
+4.	The algorithm ends when the process has backed all the way up to the starting point.
+
+A limitation of this algorithm is that it requires sufficient memory to store the entire maze. It also requires stack space proportional to the size of the maze, therefore it can be inefficient for larger maze.

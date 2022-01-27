@@ -1,1 +1,9 @@
-AStar
+This algorithm was created as a part of the ‘Shakey Project’, which had the aim of building a mobile robot that could plan its own actions. Nils Nilsson originally proposed using the ‘Graph Traverser algorithm’ which is guided by a heuristic function, the estimated distance from the current node to the goal node, but entirely ignored the distance from the start node to the current node. Bertram Raphael suggested adding both of these functions instead, and Peter Hard invented the concept of admissibility and consistency which is essential to the execution of this algorithm.
+
+The algorithm is very similar to Dijkstra's Algorithm. The largest difference stems from the "heuristic function". A* essentially estimates the true shortest distance to the goal node and uses this to determine the path it takes.
+
+The heuristic function could be anything, however to have an accurate outcome for the shortest path the function must be admissable. It can never overestimate the distance to the goal node. Common examples of heuristics include:
+	• The Euclidian distance.
+	• The Manhattan distance.
+
+Similar to Dijkstra’s Algorithm, all nodes are stored in a priority queue. At each node, the node with the lowest f(x) value is removed from the queue and the f(x) and g(x) values of its neighbours are updated accordingly, and these neighbours are added to the queue. The algorithm continues until a removed node is the goal node. The f(x) value of the goal node is the shortest path since the h(x) value will be zero at the goal. To display the shortest path, the previous nodes of each visited node can be recorded in a fashion similar to that seen in Dijkstra’s Algorithm.

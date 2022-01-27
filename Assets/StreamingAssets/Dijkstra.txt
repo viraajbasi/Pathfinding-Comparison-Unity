@@ -1,1 +1,5 @@
-Dijkstra
+Dijkstra’s algorithm was conceived in 1956 and published in 1959 by Dr. Edsger W. Dijkstra. According to Dijkstra the algorithm was created in 20 minutes when he was sitting in a café with his fiancée. The original algorithm found the shortest path between 2 given nodes, but more common variants find the shortest path to each node from a fixed start node. 
+
+The algorithm records the shortest distance from each node to the source node and updates this value if a shorter path is found. It will continue execution until all the nodes in the graph have been added to the path, therefore we will end up with a path that connects the source node to all other nodes following the shortest path to each.
+
+The algorithm uses a priority queue where the node with the shortest distance from the start node will receive the highest priority. All nodes initially have a shortest distance of infinity and the start node will have a shortest distance of 0 with itself. All nodes are added to the priority queue and are checked in ascending order. Nodes are removed once they are visited.

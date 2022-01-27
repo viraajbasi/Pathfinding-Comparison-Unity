@@ -1,1 +1,9 @@
-Bellman-Ford
+The algorithm was first proposed by Alfonso Shimbel in 1955 but is named after Richard Bellman and Lester Ford Jr who published it in 1958 and 1956 respectively. This algorithm has its uses in distance-vector routing protocols, which determine the best route for data packets based on distance, measured by the number of routers that the packets are required to pass. This is incorporated in the ‘Routing Information Protocol’. This algorithm is also useful in situations where there are negative weights present on the graph, unlike both Dijkstra’s Algorithm and the A* algorithm.
+
+This algorithm and Dijkstra’s share many similarities:
+
+1.	Both use a method of ‘relaxation’ where approximations to the correct distance are replaced by better ones until the solution is reached.
+
+2.	The approximate distance to each node is always an overestimate of the true distance.
+
+These algorithms differ in the method they use to select the closest node. While Dijkstra uses a priority queue to greedily select the closest vertex that has not yet been processed and performs the relaxation process on all its outgoing edges; Bellman-Ford relaxes all edges. This allows the algorithm to execute with one less iteration than the number of nodes and allows a wider range of inputs.
