@@ -3,9 +3,7 @@ using UnityEngine;
 
 public class MazeRenderer : MonoBehaviour
 {
-	[Range(1, 50)]
 	public int width = 10;
-	[Range(1, 50)]
 	public int height = 10;
 	public float size = 1f;
 	public Transform wallPrefab;

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Random = System.Random;
 
 public class Position
 {
@@ -37,7 +36,7 @@ public static class MazeGenerator
 {
 	private static List<WallStateBool> RecursiveBacktracker(List<WallStateBool> maze, int width, int height)
 	{
-		var rng = new Random();
+		var rng = new System.Random();
 		var posStack = new Stack<Position>();
 		var pos = new Position
 		{
@@ -50,14 +49,12 @@ public static class MazeGenerator
 
 		while (posStack.Count > 0)
 		{
-			var current = posStack.Pop/*Peek*/();
+			var current = posStack.Pop();
 			var neighbours = GetUnvisitedNeighbours(current, maze, width, height);
 
 			if (neighbours.Count > 0)
 			{
 				posStack.Push(current);
-
-				//var rndIndex = rng.Next(0, neighbours.Count);
 				var rndNeigbour = neighbours[rng.Next(0, neighbours.Count)];
 				var nPos = rndNeigbour.Position;
 
