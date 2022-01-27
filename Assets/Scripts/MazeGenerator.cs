@@ -103,6 +103,11 @@ public static class MazeGenerator
 		return maze;
 	}
 
+	private static List<WallStateBool> Kruskal(List<WallStateBool> maze, int width, int height)
+	{
+		return maze;
+	}
+
 	private static List<Neighbour> GetUnvisitedNeighbours(Position p, List<WallStateBool> maze, int width, int height)
 	{
 		var list = new List<Neighbour>();
@@ -196,7 +201,11 @@ public static class MazeGenerator
 			}
 		}
 
+		if (PlayerPrefs.GetInt("Kruskal") == 1)
+		{
+			return Kruskal(maze, width, height);
+		}
+
 		return RecursiveBacktracker(maze, width, height);
-		//return maze;
 	}
 }

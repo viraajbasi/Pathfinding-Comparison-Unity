@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -16,6 +17,7 @@ public class StartScreen : MonoBehaviour
 
     public void BeginProgram()
     {
+        StoreToggleState(dijkstraToggle.isOn, astarToggle.isOn, bellmanfordToggle.isOn, recursiveBacktrackerToggle.isOn, kruskalToggle.isOn);
         if (dijkstraToggle.isOn | astarToggle.isOn  | bellmanfordToggle.isOn | userSolvesToggle.isOn && recursiveBacktrackerToggle.isOn | kruskalToggle.isOn)
         {
             SceneManager.LoadScene(mainProgram);
@@ -41,5 +43,14 @@ public class StartScreen : MonoBehaviour
     public void CloseHelp()
     {
         helpScreen.SetActive(false);
+    }
+
+    public void StoreToggleState(bool d, bool a, bool bf, bool rb, bool k)
+    {
+        PlayerPrefs.SetInt("Dijkstra", (d ? 1 : 0));
+        PlayerPrefs.SetInt("A*", (a ? 1 : 0));
+        PlayerPrefs.SetInt("BellmanFord", (bf ? 1 : 0));
+        PlayerPrefs.SetInt("RecursiveBacktracker", (rb ? 1 : 0));
+        PlayerPrefs.SetInt("Kruskal", (k ? 1 : 0));
     }
 }
