@@ -1224,19 +1224,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1996933006215596206}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50d9c0db1f9c953a38b2df9d10db4e75, type: 3}
+  m_Script: {fileID: 11500000, guid: 3595166a189484494ad3dd38a3c5b2e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fullscreenTog: {fileID: 1996933007187581852}
-  vsyncTog: {fileID: 1996933006933695364}
-  resolutionLabel: {fileID: 6971473820230772473}
-  theMixer: {fileID: 24100000, guid: a153598143f9b147ebc2e110cb56d8f2, type: 2}
-  masterLabel: {fileID: 1996933006926696071}
-  musicLabel: {fileID: 1996933007420029045}
-  sfxLabel: {fileID: 1996933006443862807}
-  masterSlider: {fileID: 1996933006632476877}
-  musicSlider: {fileID: 1996933005952368649}
-  sfxSlider: {fileID: 1996933005576351181}
+  FullscreenToggle: {fileID: 1996933007187581852}
+  VSyncToggle: {fileID: 1996933006933695364}
+  ResolutionLabel: {fileID: 1996933005622206558}
+  Mixer: {fileID: 24100000, guid: a153598143f9b147ebc2e110cb56d8f2, type: 2}
+  MasterLabel: {fileID: 1996933006926696071}
+  MusicLabel: {fileID: 1996933007420029045}
+  SFXLabel: {fileID: 1996933006443862807}
+  MasterSlider: {fileID: 1996933006632476877}
+  MusicSlider: {fileID: 1996933005952368649}
+  SFXSlider: {fileID: 1996933005576351181}
 --- !u!1 &1996933006234033804
 GameObject:
   m_ObjectHideFlags: 0
@@ -4131,17 +4131,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8865654165178271144, guid: 8e80a00ac01351d368f9a23027f587d1, type: 3}
   m_PrefabInstance: {fileID: 1996933006424962992}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6971473820230772473 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8865654166504870217, guid: 8e80a00ac01351d368f9a23027f587d1, type: 3}
-  m_PrefabInstance: {fileID: 1996933006424962992}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1996933006979156462
 PrefabInstance:
   m_ObjectHideFlags: 0

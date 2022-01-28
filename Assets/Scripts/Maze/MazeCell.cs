@@ -1,9 +1,11 @@
-public class WallStateBool
+public class MazeCell
 {
 	public bool Top;
 	public bool Bottom;
 	public bool Left;
 	public bool Right;
 	public bool Visited;
+	public bool StartNode;
+	public bool GoalNode;
 	public Position Coordinates;
 }

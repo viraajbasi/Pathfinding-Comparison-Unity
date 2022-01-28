@@ -3,24 +3,24 @@ using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
-    public AudioMixer theMixer;
+    public AudioMixer Mixer;
     
     // Start is called before the first frame update
     private void Start()
     {
         if (PlayerPrefs.HasKey("MasterVolume"))
         {
-            theMixer.SetFloat("MasterVol", PlayerPrefs.GetFloat("MasterVolume"));
+        Mixer.SetFloat("MasterVol", PlayerPrefs.GetFloat("MasterVolume"));
         }
         
         if (PlayerPrefs.HasKey("MusicVolume"))
         {
-            theMixer.SetFloat("MusicVol", PlayerPrefs.GetFloat("MusicVolume"));
+            Mixer.SetFloat("MusicVol", PlayerPrefs.GetFloat("MusicVolume"));
         }
         
         if (PlayerPrefs.HasKey("SFXVolume"))
         {
-            theMixer.SetFloat("SFXVol", PlayerPrefs.GetFloat("SFXVolume"));
+            Mixer.SetFloat("SFXVol", PlayerPrefs.GetFloat("SFXVolume"));
         }
     }
 }

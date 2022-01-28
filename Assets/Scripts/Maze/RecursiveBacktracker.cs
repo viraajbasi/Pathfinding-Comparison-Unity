@@ -1,30 +1,30 @@
 using System.Collections.Generic;
 
-public static class RecursiveBacktracker
+public class RecursiveBacktracker
 {
-    public static List<WallStateBool> Algorithm(List<WallStateBool> maze, int width, int height)
+    public static List<MazeCell> Algorithm(List<MazeCell> maze, int width, int height)
 	{
 		var rng = new System.Random();
-		var posStack = new Stack<Position>();
-		var pos = new Position
+		var positionStack = new Stack<Position>();
+		var position = new Position
 		{
 			X = rng.Next(0, width),
 			Y = rng.Next(0, height)
 		};
 		
-		maze[maze.FindIndex(a => a.Coordinates.X == pos.X && a.Coordinates.Y == pos.Y)].Visited = true;
-		posStack.Push(pos);
+		maze[maze.FindIndex(a => a.Coordinates.X == position.X && a.Coordinates.Y == position.Y)].Visited = true;
+		positionStack.Push(position);
 
-		while (posStack.Count > 0)
+		while (positionStack.Count > 0)
 		{
-			var current = posStack.Pop();
+			var current = positionStack.Pop();
 			var neighbours = GetUnvisitedNeighbours(current, maze, width, height);
 
 			if (neighbours.Count > 0)
 			{
-				posStack.Push(current);
+				positionStack.Push(current);
 				var rndNeigbour = neighbours[rng.Next(0, neighbours.Count)];
-				var nPos = rndNeigbour.Coordinates;
+				var neighbourPosition = rndNeigbour.Coordinates;
 
 				switch (rndNeigbour.Wall)
 				{
@@ -47,89 +47,89 @@ public static class RecursiveBacktracker
 				{
 					// Determine the shared wall from neighbouring cell and remove it .
 					case SharedWall.Top:
-						maze[maze.FindIndex(a => a.Coordinates.X == nPos.X && a.Coordinates.Y == nPos.Y)].Bottom = false;
+						maze[maze.FindIndex(a => a.Coordinates.X == neighbourPosition.X && a.Coordinates.Y == neighbourPosition.Y)].Bottom = false;
 						break;
 					case SharedWall.Bottom:
-						maze[maze.FindIndex(a => a.Coordinates.X == nPos.X && a.Coordinates.Y == nPos.Y)].Top = false;
+						maze[maze.FindIndex(a => a.Coordinates.X == neighbourPosition.X && a.Coordinates.Y == neighbourPosition.Y)].Top = false;
 						break;
 					case SharedWall.Left:
-						maze[maze.FindIndex(a => a.Coordinates.X == nPos.X && a.Coordinates.Y == nPos.Y)].Right = false;
+						maze[maze.FindIndex(a => a.Coordinates.X == neighbourPosition.X && a.Coordinates.Y == neighbourPosition.Y)].Right = false;
 						break;
 					case SharedWall.Right:
-						maze[maze.FindIndex(a => a.Coordinates.X == nPos.X && a.Coordinates.Y == nPos.Y)].Left = false;
+						maze[maze.FindIndex(a => a.Coordinates.X == neighbourPosition.X && a.Coordinates.Y == neighbourPosition.Y)].Left = false;
 						break;
 				}
 
-				maze[maze.FindIndex(a => a.Coordinates.X == nPos.X && a.Coordinates.Y == nPos.Y)].Visited = true;
-				posStack.Push(nPos);
+				maze[maze.FindIndex(a => a.Coordinates.X == neighbourPosition.X && a.Coordinates.Y == neighbourPosition.Y)].Visited = true;
+				positionStack.Push(neighbourPosition);
 			}
 		}
 		
 		return maze;
 	}
 
-	private static List<Neighbour> GetUnvisitedNeighbours(Position p, List<WallStateBool> maze, int width, int height)
+	private static List<Neighbour> GetUnvisitedNeighbours(Position position, List<MazeCell> maze, int width, int height)
 	{
 		var list = new List<Neighbour>();
 
-		if (p.X > 0) // Left Wall
+		if (position.X > 0) // Left Wall
 		{
-			if (!maze[maze.FindIndex(a => a.Coordinates.X == p.X - 1 && a.Coordinates.Y == p.Y)].Visited)
+			if (!maze[maze.FindIndex(a => a.Coordinates.X == position.X - 1 && a.Coordinates.Y == position.Y)].Visited)
 			{
 				list.Add(new Neighbour
 						{
 							Coordinates = new Position
 							{
-								X = p.X - 1,
-								Y = p.Y,
+								X = position.X - 1,
+								Y = position.Y,
 							},
 							Wall = SharedWall.Left
 						});
 			}
 		}
 
-		if (p.Y > 0) // Bottom Wall
+		if (position.Y > 0) // Bottom Wall
 		{
-			if (!maze[maze.FindIndex(a => a.Coordinates.X == p.X && a.Coordinates.Y == p.Y - 1)].Visited)
+			if (!maze[maze.FindIndex(a => a.Coordinates.X == position.X && a.Coordinates.Y == position.Y - 1)].Visited)
 			{
 				list.Add(new Neighbour
 						{
 							Coordinates = new Position
 							{
-								X = p.X,
-								Y = p.Y - 1
+								X = position.X,
+								Y = position.Y - 1
 							},
 							Wall = SharedWall.Bottom
 						});
 			}
 		}
 
-		if (p.Y < height - 1) // Top Wall
+		if (position.Y < height - 1) // Top Wall
 		{
-			if (!maze[maze.FindIndex(a => a.Coordinates.X == p.X && a.Coordinates.Y == p.Y + 1)].Visited)
+			if (!maze[maze.FindIndex(a => a.Coordinates.X == position.X && a.Coordinates.Y == position.Y + 1)].Visited)
 			{
 				list.Add(new Neighbour
 						{
 							Coordinates = new Position
 							{
-								X = p.X,
-								Y = p.Y + 1
+								X = position.X,
+								Y = position.Y + 1
 							},
 							Wall = SharedWall.Top
 						});
 			}
 		}
 
-		if (p.X < width - 1) // Right Wall
+		if (position.X < width - 1) // Right Wall
 		{
-			if (!maze[maze.FindIndex(a => a.Coordinates.X == p.X + 1 && a.Coordinates.Y == p.Y)].Visited)
+			if (!maze[maze.FindIndex(a => a.Coordinates.X == position.X + 1 && a.Coordinates.Y == position.Y)].Visited)
 			{
 				list.Add(new Neighbour
 						{
 							Coordinates = new Position
 							{
-								X = p.X + 1,
-								Y = p.Y
+								X = position.X + 1,
+								Y = position.Y
 							},
 							Wall = SharedWall.Right
 						});

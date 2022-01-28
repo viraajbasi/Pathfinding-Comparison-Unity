@@ -15,16 +15,16 @@ public class Render : MonoBehaviour
         Draw(Generate(width, height));
     }
 
-	private List<WallStateBool> Generate(int width, int height)
+	private List<MazeCell> Generate(int width, int height)
 	{
-		var maze = new List<WallStateBool>();
+		var maze = new List<MazeCell>();
 		
 		// Provide each cell with the initial wall state
 		for (int i = 0; i < width; i++)
 		{
 			for (int j = 0; j < height; j++)
 			{
-				maze.Add(new WallStateBool
+				maze.Add(new MazeCell
 				{
 					Top = true,
 					Bottom = true,
@@ -40,6 +40,9 @@ public class Render : MonoBehaviour
 			}
 		}
 
+		maze[maze.FindIndex(a => a.Coordinates.X == 0 && a.Coordinates.Y == 0)].StartNode = true;
+		maze[maze.FindIndex(a => a.Coordinates.X == width - 1 && a.Coordinates.Y == height - 1)].GoalNode = true;
+
 		if (PlayerPrefs.GetInt("Kruskal") == 1)
 		{
 			return Kruskal.Algorithm(maze, width, height);
@@ -48,7 +51,7 @@ public class Render : MonoBehaviour
 		return RecursiveBacktracker.Algorithm(maze, width, height);
 	}
     
-    private void Draw(List<WallStateBool> maze)
+    private void Draw(List<MazeCell> maze)
 	{
 		var floor = Instantiate(floorPrefab, transform);
 		floor.localScale = new Vector3(width, 1, height);

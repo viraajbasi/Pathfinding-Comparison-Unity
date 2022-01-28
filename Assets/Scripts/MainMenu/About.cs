@@ -2,13 +2,24 @@ using UnityEngine;
 using TMPro;
 using System.IO;
 
-public class AboutScreen : MonoBehaviour
+public class About : MonoBehaviour
 {
-    public TMP_Text algorithmInformation;
+    public TMP_Text AlgorithmInformation;
+    public GameObject AboutScreen;
+    
+    public void OpenAbout()
+	{
+		AboutScreen.SetActive(true);
+	}
+
+	public	void CloseAbout()
+	{
+		AboutScreen.SetActive(false);
+	}
     
     private void Start()
     {
-        algorithmInformation.text = "Choose an algorithm.";
+        AlgorithmInformation.text = "Choose an algorithm.";
     }
     
     private void DijkstraInfo()
@@ -39,6 +50,6 @@ public class AboutScreen : MonoBehaviour
     private void ReadInfoAndShow(string filename)
     {
         var streamReader = new StreamReader(Path.Combine(Application.streamingAssetsPath, filename));
-        algorithmInformation.text = streamReader.ReadToEnd();
+        AlgorithmInformation.text = streamReader.ReadToEnd();
     }
 }
