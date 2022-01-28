@@ -1,15 +1,15 @@
 using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 public class RecursiveBacktracker
 {
     public static List<MazeCell> Algorithm(List<MazeCell> maze, int width, int height)
 	{
-		var rng = new System.Random();
 		var positionStack = new Stack<Position>();
 		var position = new Position
 		{
-			X = rng.Next(0, width),
-			Y = rng.Next(0, height)
+			X = Random.Range(0, width),
+			Y = Random.Range(0, height)
 		};
 		
 		maze[maze.FindIndex(a => a.Coordinates.X == position.X && a.Coordinates.Y == position.Y)].Visited = true;
@@ -23,7 +23,7 @@ public class RecursiveBacktracker
 			if (neighbours.Count > 0)
 			{
 				positionStack.Push(current);
-				var rndNeigbour = neighbours[rng.Next(0, neighbours.Count)];
+				var rndNeigbour = neighbours[Random.Range(0, neighbours.Count)];
 				var neighbourPosition = rndNeigbour.Coordinates;
 
 				switch (rndNeigbour.Wall)
