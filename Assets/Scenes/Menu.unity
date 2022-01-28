@@ -4095,7 +4095,6 @@ GameObject:
   - component: {fileID: 1473822647}
   - component: {fileID: 1473822646}
   - component: {fileID: 1473822645}
-  - component: {fileID: 1473822648}
   m_Layer: 5
   m_Name: StartScreen
   m_TagString: Untagged
@@ -4153,9 +4152,9 @@ MonoBehaviour:
   RecursiveBacktrackerToggle: {fileID: 832397366}
   KruskalToggle: {fileID: 415155722}
   UserSolvesToggle: {fileID: 784763885}
-  HelpScreen: {fileID: 0}
+  HelpScreen: {fileID: 6194943621482479330}
   StartScreen: {fileID: 1473822643}
-  ErrorScript: {fileID: 0}
+  ErrorScript: {fileID: 6194943621482479333}
 --- !u!114 &1473822646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4194,20 +4193,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1473822643}
   m_CullTransparentMesh: 1
---- !u!114 &1473822648
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1473822643}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e6db033d1d7b4af2a29de0d8c7fe2cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ErrorScreen: {fileID: 6194943621482479330}
-  ErrorMessage: {fileID: 6194943621482479329}
 --- !u!1 &1527748850
 GameObject:
   m_ObjectHideFlags: 0
@@ -5793,14 +5778,14 @@ PrefabInstance:
     - target: {fileID: 3990334578318009095, guid: 62ae4974d7dbb4d45abb126873866a5a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 6194943621482479333}
     - target: {fileID: 3990334578318009095, guid: 62ae4974d7dbb4d45abb126873866a5a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: CloseErrorScreen
       objectReference: {fileID: 0}
     - target: {fileID: 3990334578318009095, guid: 62ae4974d7dbb4d45abb126873866a5a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ErrorScreen, Assembly-CSharp
+      value: Error, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 4768160130689263296, guid: 62ae4974d7dbb4d45abb126873866a5a, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -5841,7 +5826,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8271794604946340439, guid: 62ae4974d7dbb4d45abb126873866a5a, type: 3}
   m_PrefabInstance: {fileID: 6194943621482479327}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6194943621482479335
+--- !u!114 &6194943621482479333
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

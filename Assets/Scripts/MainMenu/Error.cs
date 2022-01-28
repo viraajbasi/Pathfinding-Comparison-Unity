@@ -12,7 +12,7 @@ public class Error : MonoBehaviour
         ErrorScreen.SetActive(true);
     }
 
-    private void CloseErrorScreen()
+    public void CloseErrorScreen()
     {
         ErrorScreen.SetActive(false);
     }
