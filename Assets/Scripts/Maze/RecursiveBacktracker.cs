@@ -28,7 +28,6 @@ public class RecursiveBacktracker
 
 				switch (rndNeigbour.Wall)
 				{
-					// Determine the shared wall from current cell and remove it.
 					case SharedWall.Top:
 						maze[maze.FindIndex(a => a.Coordinates.X == current.X && a.Coordinates.Y == current.Y)].Top = false;
 						break;
@@ -45,7 +44,6 @@ public class RecursiveBacktracker
 				
 				switch (rndNeigbour.Wall)
 				{
-					// Determine the shared wall from neighbouring cell and remove it .
 					case SharedWall.Top:
 						maze[maze.FindIndex(a => a.Coordinates.X == neighbourPosition.X && a.Coordinates.Y == neighbourPosition.Y)].Bottom = false;
 						break;

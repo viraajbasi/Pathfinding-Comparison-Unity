@@ -18,7 +18,6 @@ public class Render : MonoBehaviour
 	{
 		var maze = new List<MazeCell>();
 		
-		// Provide each cell with the initial wall state
 		for (int i = 0; i < width; i++)
 		{
 			for (int j = 0; j < height; j++)
