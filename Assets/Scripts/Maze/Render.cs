@@ -12,9 +12,41 @@ public class Render : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        var maze = Generator.Generate(width, height);
-        Draw(maze);
+        Draw(Generate(width, height));
     }
+
+	private List<WallStateBool> Generate(int width, int height)
+	{
+		var maze = new List<WallStateBool>();
+		
+		// Provide each cell with the initial wall state
+		for (int i = 0; i < width; i++)
+		{
+			for (int j = 0; j < height; j++)
+			{
+				maze.Add(new WallStateBool
+				{
+					Top = true,
+					Bottom = true,
+					Left = true,
+					Right = true,
+					Visited = false,
+					Coordinates = new Position
+					{
+						X = i,
+						Y = j
+					}
+				});
+			}
+		}
+
+		if (PlayerPrefs.GetInt("Kruskal") == 1)
+		{
+			return Kruskal.Algorithm(maze, width, height);
+		}
+
+		return RecursiveBacktracker.Algorithm(maze, width, height);
+	}
     
     private void Draw(List<WallStateBool> maze)
 	{
@@ -25,17 +57,16 @@ public class Render : MonoBehaviour
 		{
 			for (int j = 0; j < height; j++)
 			{
-				var cell = maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)];
 				var pos = new Vector3(-width / 2 + i, 0, -height / 2 + j);
 
-				if (cell.Top)
+				if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Top)
 				{
 					var topWall = Instantiate(wallPrefab, transform) as Transform;
 					topWall.position = pos + new Vector3(0, 0, size / 2);
 					topWall.localScale = new Vector3(size, topWall.localScale.y, topWall.localScale.z);
 				}
 
-				if (cell.Left)
+				if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Left)
 				{
 					var leftWall = Instantiate(wallPrefab, transform) as Transform;
 					leftWall.position = pos + new Vector3(-size / 2, 0, 0);
@@ -45,7 +76,7 @@ public class Render : MonoBehaviour
 
 				if (i == width - 1)
 				{
-					if (cell.Right)
+					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Right)
 					{
 						var rightWall = Instantiate(wallPrefab, transform) as Transform;
 						rightWall.position = pos + new Vector3(+size / 2, 0, 0);
@@ -56,7 +87,7 @@ public class Render : MonoBehaviour
 
 				if (j == 0)
 				{
-					if (cell.Bottom)
+					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Bottom)
 					{
 						var bottomWall = Instantiate(wallPrefab, transform) as Transform;
 						bottomWall.position = pos + new Vector3(0, 0, -size / 2);
