@@ -9,7 +9,6 @@ public class Render : MonoBehaviour
 	public Transform wallPrefab;
 	public Transform floorPrefab;
 
-    // Start is called before the first frame update
     private void Start()
     {
         Draw(Generate(width, height));
