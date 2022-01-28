@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MazeRenderer : MonoBehaviour
+public class Render : MonoBehaviour
 {
 	public int width = 10;
 	public int height = 10;
@@ -12,7 +12,7 @@ public class MazeRenderer : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        var maze = MazeGenerator.Generate(width, height);
+        var maze = Generator.Generate(width, height);
         Draw(maze);
     }
     
@@ -25,7 +25,7 @@ public class MazeRenderer : MonoBehaviour
 		{
 			for (int j = 0; j < height; j++)
 			{
-				var cell = maze[maze.FindIndex(a => a.X == i && a.Y == j)];
+				var cell = maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)];
 				var pos = new Vector3(-width / 2 + i, 0, -height / 2 + j);
 
 				if (cell.Top)

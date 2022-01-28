@@ -12,7 +12,7 @@ public static class RecursiveBacktracker
 			Y = rng.Next(0, height)
 		};
 		
-		maze[maze.FindIndex(a => a.X == pos.X && a.Y == pos.Y)].Visited = true;
+		maze[maze.FindIndex(a => a.Coordinates.X == pos.X && a.Coordinates.Y == pos.Y)].Visited = true;
 		posStack.Push(pos);
 
 		while (posStack.Count > 0)
@@ -24,22 +24,22 @@ public static class RecursiveBacktracker
 			{
 				posStack.Push(current);
 				var rndNeigbour = neighbours[rng.Next(0, neighbours.Count)];
-				var nPos = rndNeigbour.Position;
+				var nPos = rndNeigbour.Coordinates;
 
 				switch (rndNeigbour.Wall)
 				{
 					// Determine the shared wall from current cell and remove it.
 					case SharedWall.Top:
-						maze[maze.FindIndex(a => a.X == current.X && a.Y == current.Y)].Top = false;
+						maze[maze.FindIndex(a => a.Coordinates.X == current.X && a.Coordinates.Y == current.Y)].Top = false;
 						break;
 					case SharedWall.Bottom:
-						maze[maze.FindIndex(a => a.X == current.X && a.Y == current.Y)].Bottom = false;
+						maze[maze.FindIndex(a => a.Coordinates.X == current.X && a.Coordinates.Y == current.Y)].Bottom = false;
 						break;
 					case SharedWall.Left:
-						maze[maze.FindIndex(a => a.X == current.X && a.Y == current.Y)].Left = false;
+						maze[maze.FindIndex(a => a.Coordinates.X == current.X && a.Coordinates.Y == current.Y)].Left = false;
 						break;
 					case SharedWall.Right:
-						maze[maze.FindIndex(a => a.X == current.X && a.Y == current.Y)].Right = false;
+						maze[maze.FindIndex(a => a.Coordinates.X == current.X && a.Coordinates.Y == current.Y)].Right = false;
 						break;
 				}
 				
@@ -47,20 +47,20 @@ public static class RecursiveBacktracker
 				{
 					// Determine the shared wall from neighbouring cell and remove it .
 					case SharedWall.Top:
-						maze[maze.FindIndex(a => a.X == nPos.X && a.Y == nPos.Y)].Bottom = false;
+						maze[maze.FindIndex(a => a.Coordinates.X == nPos.X && a.Coordinates.Y == nPos.Y)].Bottom = false;
 						break;
 					case SharedWall.Bottom:
-						maze[maze.FindIndex(a => a.X == nPos.X && a.Y == nPos.Y)].Top = false;
+						maze[maze.FindIndex(a => a.Coordinates.X == nPos.X && a.Coordinates.Y == nPos.Y)].Top = false;
 						break;
 					case SharedWall.Left:
-						maze[maze.FindIndex(a => a.X == nPos.X && a.Y == nPos.Y)].Right = false;
+						maze[maze.FindIndex(a => a.Coordinates.X == nPos.X && a.Coordinates.Y == nPos.Y)].Right = false;
 						break;
 					case SharedWall.Right:
-						maze[maze.FindIndex(a => a.X == nPos.X && a.Y == nPos.Y)].Left = false;
+						maze[maze.FindIndex(a => a.Coordinates.X == nPos.X && a.Coordinates.Y == nPos.Y)].Left = false;
 						break;
 				}
 
-				maze[maze.FindIndex(a => a.X == nPos.X && a.Y == nPos.Y)].Visited = true;
+				maze[maze.FindIndex(a => a.Coordinates.X == nPos.X && a.Coordinates.Y == nPos.Y)].Visited = true;
 				posStack.Push(nPos);
 			}
 		}
@@ -74,11 +74,11 @@ public static class RecursiveBacktracker
 
 		if (p.X > 0) // Left Wall
 		{
-			if (!maze[maze.FindIndex(a => a.X == p.X - 1 && a.Y == p.Y)].Visited)
+			if (!maze[maze.FindIndex(a => a.Coordinates.X == p.X - 1 && a.Coordinates.Y == p.Y)].Visited)
 			{
 				list.Add(new Neighbour
 						{
-							Position = new Position
+							Coordinates = new Position
 							{
 								X = p.X - 1,
 								Y = p.Y,
@@ -90,11 +90,11 @@ public static class RecursiveBacktracker
 
 		if (p.Y > 0) // Bottom Wall
 		{
-			if (!maze[maze.FindIndex(a => a.X == p.X && a.Y == p.Y - 1)].Visited)
+			if (!maze[maze.FindIndex(a => a.Coordinates.X == p.X && a.Coordinates.Y == p.Y - 1)].Visited)
 			{
 				list.Add(new Neighbour
 						{
-							Position = new Position
+							Coordinates = new Position
 							{
 								X = p.X,
 								Y = p.Y - 1
@@ -106,11 +106,11 @@ public static class RecursiveBacktracker
 
 		if (p.Y < height - 1) // Top Wall
 		{
-			if (!maze[maze.FindIndex(a => a.X == p.X && a.Y == p.Y + 1)].Visited)
+			if (!maze[maze.FindIndex(a => a.Coordinates.X == p.X && a.Coordinates.Y == p.Y + 1)].Visited)
 			{
 				list.Add(new Neighbour
 						{
-							Position = new Position
+							Coordinates = new Position
 							{
 								X = p.X,
 								Y = p.Y + 1
@@ -122,11 +122,11 @@ public static class RecursiveBacktracker
 
 		if (p.X < width - 1) // Right Wall
 		{
-			if (!maze[maze.FindIndex(a => a.X == p.X + 1 && a.Y == p.Y)].Visited)
+			if (!maze[maze.FindIndex(a => a.Coordinates.X == p.X + 1 && a.Coordinates.Y == p.Y)].Visited)
 			{
 				list.Add(new Neighbour
 						{
-							Position = new Position
+							Coordinates = new Position
 							{
 								X = p.X + 1,
 								Y = p.Y

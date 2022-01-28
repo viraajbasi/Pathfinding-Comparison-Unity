@@ -1,38 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Position
-{
-	public int X;
-	public int Y;
-}
-
-public struct Neighbour
-{
-	public Position Position;
-	public SharedWall Wall;
-}
-
-public enum SharedWall
-{
-	Top,
-	Bottom,
-	Left,
-	Right
-}
-
-public class WallStateBool
-{
-	public bool Top;
-	public bool Bottom;
-	public bool Left;
-	public bool Right;
-	public bool Visited;
-	public int X;
-	public int Y;
-}
-
-public static class MazeGenerator
+public static class Generator
 {
 	public static List<WallStateBool> Generate(int width, int height)
 	{
@@ -50,8 +19,11 @@ public static class MazeGenerator
 					Left = true,
 					Right = true,
 					Visited = false,
-					X = i,
-					Y = j
+					Coordinates = new Position
+					{
+						X = i,
+						Y = j
+					}
 				});
 			}
 		}
