@@ -10,7 +10,6 @@ public class Begin : MonoBehaviour
     public Toggle RecursiveBacktrackerToggle;
     public Toggle KruskalToggle;
     public Toggle UserSolvesToggle;
-    public GameObject HelpScreen;
     public GameObject StartScreen;
     public Error ErrorScript;
 
@@ -35,9 +34,9 @@ public class Begin : MonoBehaviour
 
     private void BeginProgram()
     {
-        StoreToggleState(DijkstraToggle.isOn, AStarToggle.isOn, BellmanFordToggle.isOn, RecursiveBacktrackerToggle.isOn, KruskalToggle.isOn);
         if (DijkstraToggle.isOn | AStarToggle.isOn  | BellmanFordToggle.isOn | UserSolvesToggle.isOn && RecursiveBacktrackerToggle.isOn | KruskalToggle.isOn)
         {
+            StoreToggleState(DijkstraToggle.isOn, AStarToggle.isOn, BellmanFordToggle.isOn, RecursiveBacktrackerToggle.isOn, KruskalToggle.isOn);
             SceneManager.LoadScene("Game");
         }
         else
@@ -51,16 +50,6 @@ public class Begin : MonoBehaviour
                 ErrorScript.OpenErrorScreen("Ensure a pathfinding algorithm is chosen.");
             }
         }
-    }
-
-    private void OpenHelp()
-    {
-        HelpScreen.SetActive(true);
-    }
-
-    private void CloseHelp()
-    {
-        HelpScreen.SetActive(false);
     }
 
     private void StoreToggleState(bool d, bool a, bool bf, bool rb, bool k)

@@ -12,15 +12,11 @@ public class About : MonoBehaviour
 		AboutScreen.SetActive(true);
 	}
 
-	public	void CloseAbout()
+	public void CloseAbout()
 	{
 		AboutScreen.SetActive(false);
+        AlgorithmInformation.text = "Choose an algorithm...";
 	}
-    
-    private void Start()
-    {
-        AlgorithmInformation.text = "Choose an algorithm.";
-    }
     
     private void DijkstraInfo()
     {
