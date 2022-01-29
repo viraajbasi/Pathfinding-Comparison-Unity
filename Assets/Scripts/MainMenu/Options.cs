@@ -17,8 +17,8 @@ public class Options : MonoBehaviour
 	public Slider SFXSlider;
 	public GameObject OptionsScreen;
 	
-	private Resolution[] resolutions;
-	private int selectedResolution;
+	private Resolution[] _resolutions;
+	private int _selectedResolution;
 
 	public void OpenOptions()
 	{
@@ -34,13 +34,13 @@ public class Options : MonoBehaviour
     {
        FullscreenToggle.isOn = Screen.fullScreen;
        VSyncToggle.isOn = QualitySettings.vSyncCount != 0;
-       resolutions = Screen.resolutions;
+       _resolutions = Screen.resolutions;
        
-	   for (int i = 0; i < resolutions.Length; i++)
+	   for (int i = 0; i < _resolutions.Length; i++)
 	   {
-		   if (Screen.width == resolutions[i].width && Screen.height == resolutions[i].height)
+		   if (Screen.width == _resolutions[i].width && Screen.height == _resolutions[i].height)
 		   {
-			   selectedResolution = i;
+			   _selectedResolution = i;
 			   UpdateResLabel();
 			   break;
 		   }
@@ -61,16 +61,16 @@ public class Options : MonoBehaviour
     {
 	    QualitySettings.vSyncCount = VSyncToggle.isOn ? 1 : 0;
 
-	    Screen.SetResolution(resolutions[selectedResolution].width, resolutions[selectedResolution].height, FullscreenToggle.isOn);
+	    Screen.SetResolution(_resolutions[_selectedResolution].width, _resolutions[_selectedResolution].height, FullscreenToggle.isOn);
     }
 
 	private void ResLeft()
 	{
-		selectedResolution--;
+		_selectedResolution--;
 
-		if (selectedResolution < 0)
+		if (_selectedResolution < 0)
 		{
-			selectedResolution = resolutions.Length - 1;
+			_selectedResolution = _resolutions.Length - 1;
 		}
 
 		UpdateResLabel();
@@ -78,11 +78,11 @@ public class Options : MonoBehaviour
 
 	private void ResRight()
 	{
-		selectedResolution++;
+		_selectedResolution++;
 
-		if (selectedResolution > resolutions.Length - 1)
+		if (_selectedResolution > _resolutions.Length - 1)
 		{
-			selectedResolution = 0;
+			_selectedResolution = 0;
 		}
 
 		UpdateResLabel();
@@ -90,7 +90,7 @@ public class Options : MonoBehaviour
 
 	private void UpdateResLabel()
 	{
-		ResolutionLabel.text = resolutions[selectedResolution].width + " x " + resolutions[selectedResolution].height;
+		ResolutionLabel.text = _resolutions[_selectedResolution].width + " x " + _resolutions[_selectedResolution].height;
 	}
 
 	private void SetMasterVolume()
