@@ -2,50 +2,53 @@ using UnityEngine;
 using TMPro;
 using System.IO;
 
-public class About : MonoBehaviour
+namespace MainMenu
 {
-    public TMP_Text AlgorithmInformation;
-    public GameObject AboutScreen;
-    
-    public void OpenAbout()
-	{
-		AboutScreen.SetActive(true);
-	}
+    public class About : MonoBehaviour
+    {
+        public TMP_Text algorithmInformation;
+        public GameObject aboutScreen;
 
-	public void CloseAbout()
-	{
-		AboutScreen.SetActive(false);
-        AlgorithmInformation.text = "Choose an algorithm...";
-	}
-    
-    private void DijkstraInfo()
-    {
-        ReadInfoAndShow("Dijkstra.txt");
-    }
-    
-    private void AStarInfo()
-    {
-        ReadInfoAndShow("AStar.txt");
-    }
-    
-    private void BellmanFordInfo()
-    {
-        ReadInfoAndShow("BellmanFord.txt");
-    }
-    
-    private void RecursiveBacktrackerInfo()
-    {
-        ReadInfoAndShow("RecursiveBacktracker.txt");
-    }
-    
-    private void KruskalInfo()
-    {
-        ReadInfoAndShow("Kruskal.txt");
-    }
-    
-    private void ReadInfoAndShow(string filename)
-    {
-        var streamReader = new StreamReader(Path.Combine(Application.streamingAssetsPath, filename));
-        AlgorithmInformation.text = streamReader.ReadToEnd();
+        public void OpenAbout()
+        {
+            aboutScreen.SetActive(true);
+        }
+
+        public void CloseAbout()
+        {
+            aboutScreen.SetActive(false);
+            algorithmInformation.text = "Choose an algorithm...";
+        }
+
+        public void DijkstraInfo()
+        {
+            ReadInfoAndShow("Dijkstra.txt");
+        }
+
+        public void AStarInfo()
+        {
+            ReadInfoAndShow("AStar.txt");
+        }
+
+        public void BellmanFordInfo()
+        {
+            ReadInfoAndShow("BellmanFord.txt");
+        }
+
+        public void RecursiveBacktrackerInfo()
+        {
+            ReadInfoAndShow("RecursiveBacktracker.txt");
+        }
+
+        public void KruskalInfo()
+        {
+            ReadInfoAndShow("Kruskal.txt");
+        }
+
+        private void ReadInfoAndShow(string filename)
+        {
+            var streamReader = new StreamReader(Path.Combine(Application.streamingAssetsPath, filename));
+            algorithmInformation.text = streamReader.ReadToEnd();
+        }
     }
 }

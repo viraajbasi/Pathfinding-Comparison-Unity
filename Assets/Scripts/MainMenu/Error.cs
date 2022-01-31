@@ -1,19 +1,22 @@
 using UnityEngine;
 using TMPro;
 
-public class Error : MonoBehaviour
+namespace MainMenu
 {
-    public GameObject ErrorScreen;
-    public TMP_Text ErrorMessage;
-    
-    public void OpenErrorScreen(string message)
+    public class Error : MonoBehaviour
     {
-        ErrorMessage.text = message;
-        ErrorScreen.SetActive(true);
-    }
+        public GameObject errorScreen;
+        public TMP_Text errorMessage;
 
-    public void CloseErrorScreen()
-    {
-        ErrorScreen.SetActive(false);
+        public void OpenErrorScreen(string message)
+        {
+            errorMessage.text = message;
+            errorScreen.SetActive(true);
+        }
+
+        public void CloseErrorScreen()
+        {
+            errorScreen.SetActive(false);
+        }
     }
 }

@@ -1,25 +1,28 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class AudioManager : MonoBehaviour
+namespace MainMenu
 {
-    public AudioMixer Mixer;
-    
-    private void Start()
+    public class AudioManager : MonoBehaviour
     {
-        if (PlayerPrefs.HasKey("MasterVolume"))
+        public AudioMixer mixer;
+
+        private void Start()
         {
-        Mixer.SetFloat("MasterVol", PlayerPrefs.GetFloat("MasterVolume"));
-        }
-        
-        if (PlayerPrefs.HasKey("MusicVolume"))
-        {
-            Mixer.SetFloat("MusicVol", PlayerPrefs.GetFloat("MusicVolume"));
-        }
-        
-        if (PlayerPrefs.HasKey("SFXVolume"))
-        {
-            Mixer.SetFloat("SFXVol", PlayerPrefs.GetFloat("SFXVolume"));
+            if (PlayerPrefs.HasKey("MasterVolume"))
+            {
+                mixer.SetFloat("MasterVol", PlayerPrefs.GetFloat("MasterVolume"));
+            }
+
+            if (PlayerPrefs.HasKey("MusicVolume"))
+            {
+                mixer.SetFloat("MusicVol", PlayerPrefs.GetFloat("MusicVolume"));
+            }
+
+            if (PlayerPrefs.HasKey("SFXVolume"))
+            {
+                mixer.SetFloat("SFXVol", PlayerPrefs.GetFloat("SFXVolume"));
+            }
         }
     }
 }

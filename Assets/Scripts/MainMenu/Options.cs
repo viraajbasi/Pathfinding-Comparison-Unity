@@ -3,117 +3,122 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Audio;
 
-public class Options : MonoBehaviour
+namespace MainMenu
 {
-    public Toggle FullscreenToggle;
-	public Toggle VSyncToggle;
-	public TMP_Text ResolutionLabel;
-	public AudioMixer Mixer;
-	public TMP_Text MasterLabel;
-	public TMP_Text MusicLabel;
-	public TMP_Text SFXLabel;
-	public Slider MasterSlider;
-	public Slider MusicSlider;
-	public Slider SFXSlider;
-	public GameObject OptionsScreen;
-	
-	private Resolution[] _resolutions;
-	private int _selectedResolution;
-
-	public void OpenOptions()
+	public class Options : MonoBehaviour
 	{
-		OptionsScreen.SetActive(true);
-	}
+		public Toggle fullscreenToggle;
+		public Toggle vSyncToggle;
+		public TMP_Text resolutionLabel;
+		public AudioMixer mixer;
+		public TMP_Text masterLabel;
+		public TMP_Text musicLabel;
+		public TMP_Text sfxLabel;
+		public Slider masterSlider;
+		public Slider musicSlider;
+		public Slider sfxSlider;
+		public GameObject optionsScreen;
 
-	public void CloseOptions()
-	{
-		OptionsScreen.SetActive(false);
-	}
-	
-	private void Start()
-    {
-       FullscreenToggle.isOn = Screen.fullScreen;
-       VSyncToggle.isOn = QualitySettings.vSyncCount != 0;
-       _resolutions = Screen.resolutions;
-       
-	   for (int i = 0; i < _resolutions.Length; i++)
-	   {
-		   if (Screen.width == _resolutions[i].width && Screen.height == _resolutions[i].height)
-		   {
-			   _selectedResolution = i;
-			   UpdateResLabel();
-			   break;
-		   }
-	   }
-	   
-	   Mixer.GetFloat("MasterVol", out float volume);
-	   MasterSlider.value = volume;
-	   MasterLabel.text = Mathf.RoundToInt(MasterSlider.value + 80).ToString();
-	   Mixer.GetFloat("MusicVol", out volume);
-	   MusicSlider.value = volume;
-	   MusicLabel.text = Mathf.RoundToInt(MusicSlider.value + 80).ToString();
-	   Mixer.GetFloat("SFXVol", out volume);
-	   SFXSlider.value = volume;
-	   SFXLabel.text = Mathf.RoundToInt(SFXSlider.value + 80).ToString();
-    }
+		private Resolution[] _resolutions;
+		private int _selectedResolution;
 
-    private void ApplyGraphics()
-    {
-	    QualitySettings.vSyncCount = VSyncToggle.isOn ? 1 : 0;
-
-	    Screen.SetResolution(_resolutions[_selectedResolution].width, _resolutions[_selectedResolution].height, FullscreenToggle.isOn);
-    }
-
-	private void ResLeft()
-	{
-		_selectedResolution--;
-
-		if (_selectedResolution < 0)
+		public void OpenOptions()
 		{
-			_selectedResolution = _resolutions.Length - 1;
+			optionsScreen.SetActive(true);
 		}
 
-		UpdateResLabel();
-	}
-
-	private void ResRight()
-	{
-		_selectedResolution++;
-
-		if (_selectedResolution > _resolutions.Length - 1)
+		public void CloseOptions()
 		{
-			_selectedResolution = 0;
+			optionsScreen.SetActive(false);
 		}
 
-		UpdateResLabel();
-	}
+		public void ApplyGraphics()
+		{
+			QualitySettings.vSyncCount = vSyncToggle.isOn ? 1 : 0;
 
-	private void UpdateResLabel()
-	{
-		ResolutionLabel.text = _resolutions[_selectedResolution].width + " x " + _resolutions[_selectedResolution].height;
-	}
+			Screen.SetResolution(_resolutions[_selectedResolution].width, _resolutions[_selectedResolution].height,
+				fullscreenToggle.isOn);
+		}
 
-	private void SetMasterVolume()
-	{
-		MasterLabel.text = Mathf.RoundToInt(MasterSlider.value + 80).ToString();
-		Mixer.SetFloat("MasterVol", MasterSlider.value);
+		public void ResLeft()
+		{
+			_selectedResolution--;
+
+			if (_selectedResolution < 0)
+			{
+				_selectedResolution = _resolutions.Length - 1;
+			}
+
+			UpdateResLabel();
+		}
+
+		public void ResRight()
+		{
+			_selectedResolution++;
+
+			if (_selectedResolution > _resolutions.Length - 1)
+			{
+				_selectedResolution = 0;
+			}
+
+			UpdateResLabel();
+		}
+
+		public void SetMasterVolume()
+		{
+			masterLabel.text = Mathf.RoundToInt(masterSlider.value + 80).ToString();
+			mixer.SetFloat("MasterVol", masterSlider.value);
+
+			PlayerPrefs.SetFloat("MasterVolume", masterSlider.value);
+		}
+
+		public void SetMusicVolume()
+		{
+			musicLabel.text = Mathf.RoundToInt(musicSlider.value + 80).ToString();
+			mixer.SetFloat("MusicVol", musicSlider.value);
+
+			PlayerPrefs.SetFloat("MusicVolume", musicSlider.value);
+		}
+
+		public void SetSfxVolume()
+		{
+			sfxLabel.text = Mathf.RoundToInt(sfxSlider.value + 80).ToString();
+			mixer.SetFloat("SFXVol", sfxSlider.value);
+
+			PlayerPrefs.SetFloat("SFXVolume", sfxSlider.value);
+		}
 		
-		PlayerPrefs.SetFloat("MasterVolume", MasterSlider.value);
-	}
-	
-	private void SetMusicVolume()
-	{
-		MusicLabel.text = Mathf.RoundToInt(MusicSlider.value + 80).ToString();
-		Mixer.SetFloat("MusicVol", MusicSlider.value);
+		private void UpdateResLabel()
+		{
+			resolutionLabel.text = _resolutions[_selectedResolution].width + " x " +
+			                       _resolutions[_selectedResolution].height;
+		}
 		
-		PlayerPrefs.SetFloat("MusicVolume", MusicSlider.value);
-	}
-	
-	private void SetSFXVolume()
-	{
-		SFXLabel.text = Mathf.RoundToInt(SFXSlider.value + 80).ToString();
-		Mixer.SetFloat("SFXVol", SFXSlider.value);
-		
-		PlayerPrefs.SetFloat("SFXVolume", SFXSlider.value);
+		private void Start()
+		{
+			fullscreenToggle.isOn = Screen.fullScreen;
+			vSyncToggle.isOn = QualitySettings.vSyncCount != 0;
+			_resolutions = Screen.resolutions;
+
+			for (int i = 0; i < _resolutions.Length; i++)
+			{
+				if (Screen.width == _resolutions[i].width && Screen.height == _resolutions[i].height)
+				{
+					_selectedResolution = i;
+					UpdateResLabel();
+					break;
+				}
+			}
+
+			mixer.GetFloat("MasterVol", out float volume);
+			masterSlider.value = volume;
+			masterLabel.text = Mathf.RoundToInt(masterSlider.value + 80).ToString();
+			mixer.GetFloat("MusicVol", out volume);
+			musicSlider.value = volume;
+			musicLabel.text = Mathf.RoundToInt(musicSlider.value + 80).ToString();
+			mixer.GetFloat("SFXVol", out volume);
+			sfxSlider.value = volume;
+			sfxLabel.text = Mathf.RoundToInt(sfxSlider.value + 80).ToString();
+		}
 	}
 }

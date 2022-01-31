@@ -1,16 +1,20 @@
 using UnityEngine;
+using TMPro;
 
-public class Help : MonoBehaviour
+namespace MainMenu
 {
-    public GameObject HelpScreen;
-    
-    public void OpenHelpScreen()
+    public class Help : MonoBehaviour
     {
-        HelpScreen.SetActive(true);
-    }
+        public GameObject helpScreen;
 
-    public void CloseHelpScreen()
-    {
-        HelpScreen.SetActive(false);
+        public void OpenHelpScreen()
+        {
+            helpScreen.SetActive(true);
+        }
+
+        public void CloseHelpScreen()
+        {
+            helpScreen.SetActive(false);
+        }
     }
 }

@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 
-public static class Kruskal
+namespace Maze
 {
-	public static List<MazeCell> Algorithm(List<MazeCell> maze, int width, int height)
+	public static class Kruskal
 	{
-		return maze;
+		public static List<MazeCell> Algorithm(List<MazeCell> maze, int width, int height)
+		{
+			return maze;
+		}
 	}
 }

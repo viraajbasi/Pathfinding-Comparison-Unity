@@ -1,5 +1,8 @@
-public class Position
+namespace Maze
 {
-    public int X;
-    public int Y;
+    public class Position
+    {
+        public int X;
+        public int Y;
+    }
 }

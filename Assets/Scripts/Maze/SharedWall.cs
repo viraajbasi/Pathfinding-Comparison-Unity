@@ -1,7 +1,10 @@
-public enum SharedWall
+namespace Maze
 {
-    Top,
-    Bottom,
-    Left,
-    Right
+    public enum SharedWall
+    {
+        Top,
+        Bottom,
+        Left,
+        Right
+    }
 }

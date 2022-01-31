@@ -1,10 +1,13 @@
 using UnityEngine;
 
-public class Quit : MonoBehaviour
+namespace MainMenu
 {
-	public void QuitGame()
+	public class Quit : MonoBehaviour
 	{
-		Application.Quit();
-		Debug.Log("Quitting...");
+		public void QuitGame()
+		{
+			Application.Quit();
+			Debug.Log("Quitting...");
+		}
 	}
 }

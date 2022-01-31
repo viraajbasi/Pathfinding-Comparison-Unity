@@ -1,98 +1,109 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Render : MonoBehaviour
+namespace Maze
 {
-	public int width = 10;
-	public int height = 10;
-	public float size = 1f;
-	public Transform wallPrefab;
-	public Transform floorPrefab;
-
-    private void Start()
-    {
-        Draw(Generate(width, height));
-    }
-
-	private List<MazeCell> Generate(int width, int height)
+	public class Render : MonoBehaviour
 	{
-		var maze = new List<MazeCell>();
-		
-		for (int i = 0; i < width; i++)
+		public int width = 10;
+		public int height = 10;
+		public float size = 1f;
+		public Transform wallPrefab;
+		public Transform floorPrefab;
+
+		private void Start()
 		{
-			for (int j = 0; j < height; j++)
+			Draw(Generate(width, height));
+		}
+
+		private List<MazeCell> Generate(int w, int h)
+		{
+			var maze = new List<MazeCell>();
+
+			for (int i = 0; i < w; i++)
 			{
-				maze.Add(new MazeCell
+				for (int j = 0; j < h; j++)
 				{
-					Top = true,
-					Bottom = true,
-					Left = true,
-					Right = true,
-					Visited = false,
-					Coordinates = new Position
+					maze.Add(new MazeCell
 					{
-						X = i,
-						Y = j
-					}
-				});
+						Top = true,
+						Bottom = true,
+						Left = true,
+						Right = true,
+						Visited = false,
+						Coordinates = new Position
+						{
+							X = i,
+							Y = j
+						}
+					});
+				}
 			}
-		}
 
-		maze[maze.FindIndex(a => a.Coordinates.X == 0 && a.Coordinates.Y == 0)].StartNode = true;
-		maze[maze.FindIndex(a => a.Coordinates.X == width - 1 && a.Coordinates.Y == height - 1)].GoalNode = true;
+			maze[maze.FindIndex(a => a.Coordinates.X == 0 && a.Coordinates.Y == 0)].StartNode = true;
+			maze[maze.FindIndex(a => a.Coordinates.X == w - 1 && a.Coordinates.Y == h - 1)].GoalNode = true;
 
-		if (PlayerPrefs.GetInt("Kruskal") == 1)
-		{
-			return Kruskal.Algorithm(maze, width, height);
-		}
-
-		return RecursiveBacktracker.Algorithm(maze, width, height);
-	}
-    
-    private void Draw(List<MazeCell> maze)
-	{
-		var floor = Instantiate(floorPrefab, transform);
-		floor.localScale = new Vector3(width, 1, height);
-
-		for (int i = 0; i < width; i++)
-		{
-			for (int j = 0; j < height; j++)
+			if (PlayerPrefs.GetInt("Kruskal") == 1)
 			{
-				var pos = new Vector3(-width / 2 + i, 0, -height / 2 + j);
+				return Kruskal.Algorithm(maze, w, h);
+			}
 
-				if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Top)
-				{
-					var topWall = Instantiate(wallPrefab, transform) as Transform;
-					topWall.position = pos + new Vector3(0, 0, size / 2);
-					topWall.localScale = new Vector3(size, topWall.localScale.y, topWall.localScale.z);
-				}
+			return RecursiveBacktracker.Algorithm(maze, w, h);
+		}
 
-				if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Left)
-				{
-					var leftWall = Instantiate(wallPrefab, transform) as Transform;
-					leftWall.position = pos + new Vector3(-size / 2, 0, 0);
-					leftWall.localScale = new Vector3(size, leftWall.localScale.y, leftWall.localScale.z);
-					leftWall.eulerAngles = new Vector3(0, 90, 0);
-				}
+		private void Draw(List<MazeCell> maze)
+		{
+			var floor = Instantiate(floorPrefab, transform);
+			floor.localScale = new Vector3(width, 1, height);
 
-				if (i == width - 1)
+			for (int i = 0; i < width; i++)
+			{
+				for (int j = 0; j < height; j++)
 				{
-					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Right)
+					var pos = new Vector3(-width / 2 + i, 0, -height / 2 + j);
+
+					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Top)
 					{
-						var rightWall = Instantiate(wallPrefab, transform) as Transform;
-						rightWall.position = pos + new Vector3(+size / 2, 0, 0);
-						rightWall.localScale = new Vector3(size, rightWall.localScale.y, rightWall.localScale.z);
-						rightWall.eulerAngles = new Vector3(0, 90, 0);
+						var topWall = Instantiate(wallPrefab, transform);
+						topWall.position = pos + new Vector3(0, 0, size / 2);
+						var localScale = topWall.localScale;
+						localScale = new Vector3(size, localScale.y, localScale.z);
+						topWall.localScale = localScale;
 					}
-				}
 
-				if (j == 0)
-				{
-					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Bottom)
+					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Left)
 					{
-						var bottomWall = Instantiate(wallPrefab, transform) as Transform;
-						bottomWall.position = pos + new Vector3(0, 0, -size / 2);
-						bottomWall.localScale = new Vector3(size, bottomWall.localScale.y, bottomWall.localScale.z);
+						var leftWall = Instantiate(wallPrefab, transform);
+						leftWall.position = pos + new Vector3(-size / 2, 0, 0);
+						var localScale = leftWall.localScale;
+						localScale = new Vector3(size, localScale.y, localScale.z);
+						leftWall.localScale = localScale;
+						leftWall.eulerAngles = new Vector3(0, 90, 0);
+					}
+
+					if (i == width - 1)
+					{
+						if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Right)
+						{
+							var rightWall = Instantiate(wallPrefab, transform);
+							rightWall.position = pos + new Vector3(+size / 2, 0, 0);
+							var localScale = rightWall.localScale;
+							localScale = new Vector3(size, localScale.y, localScale.z);
+							rightWall.localScale = localScale;
+							rightWall.eulerAngles = new Vector3(0, 90, 0);
+						}
+					}
+
+					if (j == 0)
+					{
+						if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Bottom)
+						{
+							var bottomWall = Instantiate(wallPrefab, transform);
+							bottomWall.position = pos + new Vector3(0, 0, -size / 2);
+							var localScale = bottomWall.localScale;
+							localScale = new Vector3(size, localScale.y, localScale.z);
+							bottomWall.localScale = localScale;
+						}
 					}
 				}
 			}

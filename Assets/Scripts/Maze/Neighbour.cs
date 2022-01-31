@@ -1,5 +1,8 @@
-public class Neighbour
+namespace Maze
 {
-    public Position Coordinates;
-    public SharedWall Wall;
+    public class Neighbour
+    {
+        public Position Coordinates;
+        public SharedWall Wall;
+    }
 }
