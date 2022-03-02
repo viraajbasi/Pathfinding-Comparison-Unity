@@ -10,5 +10,6 @@ namespace Maze
 		public bool StartNode;
 		public bool GoalNode;
 		public Position Coordinates;
+		public int Cost;
 	}
 }

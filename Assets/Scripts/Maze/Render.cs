@@ -35,7 +35,8 @@ namespace Maze
 						{
 							X = i,
 							Y = j
-						}
+						},
+						Cost = 1
 					});
 				}
 			}
