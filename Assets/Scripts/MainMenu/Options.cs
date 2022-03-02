@@ -36,8 +36,7 @@ namespace MainMenu
 		{
 			QualitySettings.vSyncCount = vSyncToggle.isOn ? 1 : 0;
 
-			Screen.SetResolution(_resolutions[_selectedResolution].width, _resolutions[_selectedResolution].height,
-				fullscreenToggle.isOn);
+			Screen.SetResolution(_resolutions[_selectedResolution].width, _resolutions[_selectedResolution].height, fullscreenToggle.isOn);
 		}
 
 		public void ResLeft()
@@ -87,11 +86,21 @@ namespace MainMenu
 
 			PlayerPrefs.SetFloat("SFXVolume", sfxSlider.value);
 		}
+
+		public void ResetSound()
+		{
+			masterSlider.value = 0;
+			musicSlider.value = 0;
+			sfxSlider.value = 0;
+			
+			SetMasterVolume();
+			SetMusicVolume();
+			SetSfxVolume();
+		}
 		
 		private void UpdateResLabel()
 		{
-			resolutionLabel.text = _resolutions[_selectedResolution].width + " x " +
-			                       _resolutions[_selectedResolution].height;
+			resolutionLabel.text = _resolutions[_selectedResolution].width + " x " + _resolutions[_selectedResolution].height;
 		}
 		
 		private void Start()

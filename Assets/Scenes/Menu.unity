@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657815, g: 0.49641192, b: 0.57481617, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6321,6 +6321,10 @@ PrefabInstance:
     - target: {fileID: 6971473820321235972, guid: fcd389c1cdefed37a83721c587adb491, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6971473820802026561, guid: fcd389c1cdefed37a83721c587adb491, type: 3}
+      propertyPath: m_Name
+      value: ResetSound
       objectReference: {fileID: 0}
     - target: {fileID: 6971473820802026561, guid: fcd389c1cdefed37a83721c587adb491, type: 3}
       propertyPath: m_IsActive
