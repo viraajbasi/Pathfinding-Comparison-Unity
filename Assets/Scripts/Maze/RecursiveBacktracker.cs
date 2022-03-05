@@ -68,8 +68,7 @@ namespace Maze
 			return maze;
 		}
 
-		private static List<Neighbour> GetUnvisitedNeighbours(Position position, List<MazeCell> maze, int width,
-			int height)
+		private static List<Neighbour> GetUnvisitedNeighbours(Position position, List<MazeCell> maze, int width, int height)
 		{
 			var list = new List<Neighbour>();
 

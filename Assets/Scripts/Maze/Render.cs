@@ -10,6 +10,7 @@ namespace Maze
 		public float size = 1f;
 		public Transform wallPrefab;
 		public Transform floorPrefab;
+		public static List<MazeCell> SortedMaze = new List<MazeCell>();
 
 		private void Start()
 		{
@@ -43,13 +44,9 @@ namespace Maze
 
 			maze[maze.FindIndex(a => a.Coordinates.X == 0 && a.Coordinates.Y == 0)].StartNode = true;
 			maze[maze.FindIndex(a => a.Coordinates.X == w - 1 && a.Coordinates.Y == h - 1)].GoalNode = true;
-
-			if (PlayerPrefs.GetInt("Kruskal") == 1)
-			{
-				return Kruskal.Algorithm(maze, w, h);
-			}
-
-			return RecursiveBacktracker.Algorithm(maze, w, h);
+			
+			SortedMaze = PlayerPrefs.GetInt("Kruskal") == 1 ? Kruskal.Algorithm(maze, w, h) : RecursiveBacktracker.Algorithm(maze, w, h);
+			return SortedMaze;
 		}
 
 		private void Draw(List<MazeCell> maze)
