@@ -7,10 +7,10 @@ namespace Maze
 	{
 		public int width = 10;
 		public int height = 10;
-		public float size = 1f;
 		public Transform wallPrefab;
 		public Transform floorPrefab;
 		public static List<MazeCell> SortedMaze = new List<MazeCell>();
+		private float _size = 0.5f;
 
 		private void Start()
 		{
@@ -53,6 +53,8 @@ namespace Maze
 		{
 			var floor = Instantiate(floorPrefab, transform);
 			floor.localScale = new Vector3(width, 1, height);
+			var position = floor.transform.position;
+			floor.position = new Vector3(position.x - _size, 0, position.z - _size);
 
 			for (int i = 0; i < width; i++)
 			{
@@ -63,19 +65,13 @@ namespace Maze
 					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Top)
 					{
 						var topWall = Instantiate(wallPrefab, transform);
-						topWall.position = pos + new Vector3(0, 0, size / 2);
-						var localScale = topWall.localScale;
-						localScale = new Vector3(size, localScale.y, localScale.z);
-						topWall.localScale = localScale;
+						topWall.position = pos + new Vector3(0, 0, _size);
 					}
 
 					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Left)
 					{
 						var leftWall = Instantiate(wallPrefab, transform);
-						leftWall.position = pos + new Vector3(-size / 2, 0, 0);
-						var localScale = leftWall.localScale;
-						localScale = new Vector3(size, localScale.y, localScale.z);
-						leftWall.localScale = localScale;
+						leftWall.position = pos + new Vector3(-_size, 0, 0);
 						leftWall.eulerAngles = new Vector3(0, 90, 0);
 					}
 
@@ -84,10 +80,7 @@ namespace Maze
 						if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Right)
 						{
 							var rightWall = Instantiate(wallPrefab, transform);
-							rightWall.position = pos + new Vector3(+size / 2, 0, 0);
-							var localScale = rightWall.localScale;
-							localScale = new Vector3(size, localScale.y, localScale.z);
-							rightWall.localScale = localScale;
+							rightWall.position = pos + new Vector3(_size, 0, 0);
 							rightWall.eulerAngles = new Vector3(0, 90, 0);
 						}
 					}
@@ -97,10 +90,7 @@ namespace Maze
 						if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Bottom)
 						{
 							var bottomWall = Instantiate(wallPrefab, transform);
-							bottomWall.position = pos + new Vector3(0, 0, -size / 2);
-							var localScale = bottomWall.localScale;
-							localScale = new Vector3(size, localScale.y, localScale.z);
-							bottomWall.localScale = localScale;
+							bottomWall.position = pos + new Vector3(0, 0, -_size);
 						}
 					}
 				}
