@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Maze
 {
 	public class MazeCell
@@ -11,5 +13,6 @@ namespace Maze
 		public bool GoalNode;
 		public Position Coordinates;
 		public int Cost;
+		public Gizmos MazeNode;
 	}
 }

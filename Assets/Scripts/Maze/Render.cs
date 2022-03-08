@@ -37,7 +37,8 @@ namespace Maze
 							X = i,
 							Y = j
 						},
-						Cost = 1
+						Cost = 1,
+						MazeNode = new Gizmos()
 					});
 				}
 			}
@@ -61,7 +62,9 @@ namespace Maze
 				for (int j = 0; j < height; j++)
 				{
 					var pos = new Vector3(-width / 2 + i, 0, -height / 2 + j);
-
+					
+					
+					
 					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Top)
 					{
 						var topWall = Instantiate(wallPrefab, transform);
