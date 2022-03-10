@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.4465766, g: 0.49641156, b: 0.5748176, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657755, g: 0.4964127, b: 0.57481825, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -428,6 +428,7 @@ MonoBehaviour:
   height: 50
   wallPrefab: {fileID: 1902516651949330635, guid: 9e222d304eedc8dd7960a6dc2cb316e0, type: 3}
   floorPrefab: {fileID: 1041755580912881808, guid: 3fa3be0b668baeb96a31fff111017c12, type: 3}
+  mazeObjectPrefab: {fileID: 8253384322056163794, guid: 6fbe09a570c6a2a8daf6b02e74e77ab2, type: 3}
 --- !u!4 &1602929705
 Transform:
   m_ObjectHideFlags: 0

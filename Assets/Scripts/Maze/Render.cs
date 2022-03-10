@@ -9,6 +9,7 @@ namespace Maze
 		public int height = 10;
 		public Transform wallPrefab;
 		public Transform floorPrefab;
+		public Transform mazeObjectPrefab;
 		public static List<MazeCell> SortedMaze = new List<MazeCell>();
 		private float _size = 0.5f;
 
@@ -38,7 +39,7 @@ namespace Maze
 							Y = j
 						},
 						Cost = 1,
-						MazeNode = new Gizmos()
+						MazeNode = new GameObject()
 					});
 				}
 			}
@@ -62,9 +63,10 @@ namespace Maze
 				for (int j = 0; j < height; j++)
 				{
 					var pos = new Vector3(-width / 2 + i, 0, -height / 2 + j);
-					
-					
-					
+
+					var mazeObject = Instantiate(mazeObjectPrefab, transform);
+					mazeObject.localPosition = pos + new Vector3(0, -_size, 0);
+
 					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Top)
 					{
 						var topWall = Instantiate(wallPrefab, transform);

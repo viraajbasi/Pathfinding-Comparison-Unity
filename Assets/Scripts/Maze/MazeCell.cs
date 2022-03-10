@@ -13,6 +13,6 @@ namespace Maze
 		public bool GoalNode;
 		public Position Coordinates;
 		public int Cost;
-		public Gizmos MazeNode;
+		public GameObject MazeNode;
 	}
 }
