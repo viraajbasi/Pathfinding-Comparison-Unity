@@ -15,7 +15,7 @@ namespace Maze
 		public int Cost;
 		public GameObject MazeNode;
 
-		public MazeCell(bool top, bool bottom, bool left, bool right, bool visited, int x, int y, int cost, GameObject mazeNode)
+		public MazeCell(bool top, bool bottom, bool left, bool right, bool visited, int x, int y, int cost)
 		{
 			Top = top;
 			Bottom = bottom;
@@ -24,7 +24,6 @@ namespace Maze
 			Visited = visited;
 			Coordinates = new Position(x, y);
 			Cost = cost;
-			MazeNode = mazeNode;
 		}
 	}
 }

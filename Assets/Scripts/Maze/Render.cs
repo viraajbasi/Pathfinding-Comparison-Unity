@@ -26,9 +26,9 @@ namespace Maze
 			{
 				for (int j = 0; j < h; j++)
 				{
-					var currentPos = new Position(i, j);
-					var mazeNode = new GameObject();
-					maze.Add(new MazeCell(true, true, true, true, false, currentPos.X, currentPos.Y, 1, mazeNode));
+					maze.Add(PlayerPrefs.GetInt("BellmanFord") == 0
+						? new MazeCell(true, true, true, true, false, i, j, 1)
+						: new MazeCell(true, true, true, true, false, i, j, ReturnCost()));
 				}
 			}
 
@@ -41,10 +41,6 @@ namespace Maze
 
 		private void Draw(List<MazeCell> maze)
 		{
-			var floor = Instantiate(floorPrefab, transform);
-			floor.localScale = new Vector3(width / 10f, 1, height / 10f);
-			floor.position = new Vector3(0 - _size, 0, 0 - _size);
-
 			for (int i = 0; i < width; i++)
 			{
 				for (int j = 0; j < height; j++)
@@ -52,17 +48,36 @@ namespace Maze
 					var pos = new Vector3(-width / 2 + i, 0, -height / 2 + j);
 
 					var mazeObject = Instantiate(mazeObjectPrefab, transform);
+					mazeObject.name = $"Node ({i},{j})";
 					mazeObject.position = pos + new Vector3(0, _size, 0);
+					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].StartNode)
+					{
+						mazeObject.GetComponent<Renderer>().material.color = new Color(0, 204, 102);
+					}
+					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].GoalNode)
+					{
+						mazeObject.GetComponent<Renderer>().material.color = new Color(102, 190, 0);
+					}
 
+					var floor = Instantiate(floorPrefab, transform);
+					floor.name = $"Node ({i},{j}) Floor";
+					floor.position = pos;
+					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Cost < 0)
+					{
+						floor.GetComponent<Renderer>().material.color = new Color(0, 0, 179);
+					}
+					
 					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Top)
 					{
 						var topWall = Instantiate(wallPrefab, transform);
+						topWall.name = $"Node ({i},{j}) Top Wall";
 						topWall.position = pos + new Vector3(0, 0, _size);
 					}
 
 					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Left)
 					{
 						var leftWall = Instantiate(wallPrefab, transform);
+						leftWall.name = $"Node ({i},{j}) Left Wall";
 						leftWall.position = pos + new Vector3(-_size, 0, 0);
 						leftWall.eulerAngles = new Vector3(0, 90, 0);
 					}
@@ -72,6 +87,7 @@ namespace Maze
 						if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Right)
 						{
 							var rightWall = Instantiate(wallPrefab, transform);
+							rightWall.name = $"Node ({i},{j}) Right Wall";
 							rightWall.position = pos + new Vector3(_size, 0, 0);
 							rightWall.eulerAngles = new Vector3(0, 90, 0);
 						}
@@ -82,11 +98,22 @@ namespace Maze
 						if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Bottom)
 						{
 							var bottomWall = Instantiate(wallPrefab, transform);
+							bottomWall.name = $"Node ({i},{j}) Bottom Wall";
 							bottomWall.position = pos + new Vector3(0, 0, -_size);
 						}
 					}
 				}
 			}
+		}
+
+		private int ReturnCost()
+		{
+			if (Random.Range(-10, 10) < 0)
+			{
+				return -1;
+			}
+
+			return 1;
 		}
 	}
 }
