@@ -26,21 +26,9 @@ namespace Maze
 			{
 				for (int j = 0; j < h; j++)
 				{
-					maze.Add(new MazeCell
-					{
-						Top = true,
-						Bottom = true,
-						Left = true,
-						Right = true,
-						Visited = false,
-						Coordinates = new Position
-						{
-							X = i,
-							Y = j
-						},
-						Cost = 1,
-						MazeNode = new GameObject()
-					});
+					var currentPos = new Position(i, j);
+					var mazeNode = new GameObject();
+					maze.Add(new MazeCell(true, true, true, true, false, currentPos.X, currentPos.Y, 1, mazeNode));
 				}
 			}
 
@@ -54,9 +42,8 @@ namespace Maze
 		private void Draw(List<MazeCell> maze)
 		{
 			var floor = Instantiate(floorPrefab, transform);
-			floor.localScale = new Vector3(width, 1, height);
-			var position = floor.transform.position;
-			floor.position = new Vector3(position.x - _size, 0, position.z - _size);
+			floor.localScale = new Vector3(width / 10f, 1, height / 10f);
+			floor.position = new Vector3(0 - _size, 0, 0 - _size);
 
 			for (int i = 0; i < width; i++)
 			{
@@ -65,7 +52,7 @@ namespace Maze
 					var pos = new Vector3(-width / 2 + i, 0, -height / 2 + j);
 
 					var mazeObject = Instantiate(mazeObjectPrefab, transform);
-					mazeObject.localPosition = pos + new Vector3(0, -_size, 0);
+					mazeObject.position = pos + new Vector3(0, _size, 0);
 
 					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Top)
 					{

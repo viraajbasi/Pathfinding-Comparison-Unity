@@ -8,11 +8,7 @@ namespace Maze
 		public static List<MazeCell> Algorithm(List<MazeCell> maze, int width, int height)
 		{
 			var positionStack = new Stack<Position>();
-			var position = new Position
-			{
-				X = Random.Range(0, width),
-				Y = Random.Range(0, height)
-			};
+			var position = new Position(Random.Range(0, width), Random.Range(0, height));
 
 			maze[maze.FindIndex(a => a.Coordinates.X == position.X && a.Coordinates.Y == position.Y)].Visited = true;
 			positionStack.Push(position);
@@ -76,15 +72,7 @@ namespace Maze
 			{
 				if (!maze[maze.FindIndex(a => a.Coordinates.X == position.X - 1 && a.Coordinates.Y == position.Y)].Visited)
 				{
-					list.Add(new Neighbour
-					{
-						Coordinates = new Position
-						{
-							X = position.X - 1,
-							Y = position.Y,
-						},
-						Wall = SharedWall.Left
-					});
+					list.Add(new Neighbour(position.X - 1, position.Y, SharedWall.Left));
 				}
 			}
 
@@ -92,15 +80,7 @@ namespace Maze
 			{
 				if (!maze[maze.FindIndex(a => a.Coordinates.X == position.X && a.Coordinates.Y == position.Y - 1)].Visited)
 				{
-					list.Add(new Neighbour
-					{
-						Coordinates = new Position
-						{
-							X = position.X,
-							Y = position.Y - 1
-						},
-						Wall = SharedWall.Bottom
-					});
+					list.Add(new Neighbour(position.X, position.Y - 1, SharedWall.Bottom));
 				}
 			}
 
@@ -108,15 +88,7 @@ namespace Maze
 			{
 				if (!maze[maze.FindIndex(a => a.Coordinates.X == position.X && a.Coordinates.Y == position.Y + 1)].Visited)
 				{
-					list.Add(new Neighbour
-					{
-						Coordinates = new Position
-						{
-							X = position.X,
-							Y = position.Y + 1
-						},
-						Wall = SharedWall.Top
-					});
+					list.Add(new Neighbour(position.X, position.Y + 1, SharedWall.Top));
 				}
 			}
 
@@ -124,15 +96,7 @@ namespace Maze
 			{
 				if (!maze[maze.FindIndex(a => a.Coordinates.X == position.X + 1 && a.Coordinates.Y == position.Y)].Visited)
 				{
-					list.Add(new Neighbour
-					{
-						Coordinates = new Position
-						{
-							X = position.X + 1,
-							Y = position.Y
-						},
-						Wall = SharedWall.Right
-					});
+					list.Add(new Neighbour(position.X + 1, position.Y, SharedWall.Right));
 				}
 			}
 
