@@ -9,6 +9,7 @@ namespace MainMenu
 	{
 		public Toggle fullscreenToggle;
 		public Toggle vSyncToggle;
+		public Toggle fpsToggle;
 		public TMP_Text resolutionLabel;
 		public AudioMixer mixer;
 		public TMP_Text masterLabel;
@@ -37,6 +38,8 @@ namespace MainMenu
 			QualitySettings.vSyncCount = vSyncToggle.isOn ? 1 : 0;
 
 			Screen.SetResolution(_resolutions[_selectedResolution].width, _resolutions[_selectedResolution].height, fullscreenToggle.isOn);
+			
+			PlayerPrefs.SetInt("FPS", fpsToggle.isOn ? 1 : 0);
 		}
 
 		public void ResLeft()

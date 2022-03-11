@@ -56,11 +56,11 @@ namespace MainMenu
 
         private static void StoreToggleState(bool d, bool a, bool bf, bool rb, bool k)
         {
-            PlayerPrefs.SetInt("Dijkstra", (d ? 1 : 0));
-            PlayerPrefs.SetInt("A*", (a ? 1 : 0));
-            PlayerPrefs.SetInt("BellmanFord", (bf ? 1 : 0));
-            PlayerPrefs.SetInt("RecursiveBacktracker", (rb ? 1 : 0));
-            PlayerPrefs.SetInt("Kruskal", (k ? 1 : 0));
+            PlayerPrefs.SetInt("Dijkstra", d ? 1 : 0);
+            PlayerPrefs.SetInt("A*", a ? 1 : 0);
+            PlayerPrefs.SetInt("BellmanFord", bf ? 1 : 0);
+            PlayerPrefs.SetInt("RecursiveBacktracker", rb ? 1 : 0);
+            PlayerPrefs.SetInt("Kruskal", k ? 1 : 0);
         }
     }
 }
