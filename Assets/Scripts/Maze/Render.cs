@@ -11,7 +11,6 @@ namespace Maze
 		public Transform floorPrefab;
 		public Transform mazeObjectPrefab;
 		public static List<MazeCell> SortedMaze = new List<MazeCell>();
-		private float _size = 0.5f;
 
 		private void Start()
 		{
@@ -41,6 +40,7 @@ namespace Maze
 
 		private void Draw(List<MazeCell> maze)
 		{
+			var _size = 0.5f;
 			var topOffset = new Vector3(0, 0, _size);
 			var leftOffset = new Vector3(-_size, 0, 0);
 			var rightOffset = new Vector3(_size, 0, 0);
@@ -54,16 +54,18 @@ namespace Maze
 
 					maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode = Instantiate(mazeObjectPrefab, pos + new Vector3(0, _size, 0), Quaternion.identity,transform);
 					maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.name = $"Node ({i},{j})";
+					maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.gameObject.SetActive(false);
+					
 					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].StartNode)
 					{
 						maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.name = $"Node (Start) ({i},{j})";
-						maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.GetComponent<MeshRenderer>().enabled = true;
+						maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.gameObject.SetActive(true);
 						maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.GetComponent<Renderer>().material.color = new Color(0, 204, 102);
 					}
 					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].GoalNode)
 					{
 						maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.name = $"Node (Goal) ({i},{j})";
-						maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.GetComponent<MeshRenderer>().enabled = true;
+						maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.gameObject.SetActive(true);
 						maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.GetComponent<Renderer>().material.color = new Color(102, 190, 0);
 					}
 

@@ -11,6 +11,7 @@ namespace Maze
         private float _scrollSpeed = 20f;
         private float _minY = 20f;
         private float _maxY = 50f;
+        private Vector3 _initialPosition = new Vector3(0, 50, 0);
 
         private void Update()
         {
@@ -45,6 +46,11 @@ namespace Maze
             if (Input.GetKey(KeyCode.Minus))
             {
                 pos.y += _panSpeed * Time.deltaTime;
+            }
+
+            if (Input.GetKey(KeyCode.R))
+            {
+                pos = _initialPosition;
             }
 
             pos.y -= scroll * _scrollSpeed * Time.deltaTime * 100f;
