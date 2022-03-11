@@ -15,8 +15,8 @@ namespace Maze
 
 		private void Start()
 		{
-			GameObject.Find("Main Camera").transform.position = new Vector3(0, width, 0);
-			GameObject.Find("Main Camera").transform.eulerAngles = new Vector3(90, 0, 0);
+			Camera.current.transform.position = new Vector3(0, width, 0);
+			Camera.current.transform.eulerAngles = new Vector3(90, 0, 0);
 			Draw(Generate(width, height));
 		}
 
@@ -43,15 +43,19 @@ namespace Maze
 
 		private void Draw(List<MazeCell> maze)
 		{
+			var topOffset = new Vector3(0, 0, _size);
+			var leftOffset = new Vector3(-_size, 0, 0);
+			var rightOffset = new Vector3(_size, 0, 0);
+			var bottomOffset = new Vector3(0, 0, -_size);
+
 			for (int i = 0; i < width; i++)
 			{
 				for (int j = 0; j < height; j++)
 				{
 					var pos = new Vector3(-width / 2 + i, 0, -height / 2 + j);
 
-					maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode = Instantiate(mazeObjectPrefab, transform);
+					maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode = Instantiate(mazeObjectPrefab, pos + new Vector3(0, _size, 0), Quaternion.identity,transform);
 					maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.name = $"Node ({i},{j})";
-					maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.position = pos + new Vector3(0, _size, 0);
 					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].StartNode)
 					{
 						maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.name = $"Node (Start) ({i},{j})";
@@ -65,9 +69,8 @@ namespace Maze
 						maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.GetComponent<Renderer>().material.color = new Color(102, 190, 0);
 					}
 
-					var floor = Instantiate(floorPrefab, transform);
+					var floor = Instantiate(floorPrefab, pos, Quaternion.identity, transform);
 					floor.name = $"Node ({i},{j}) Floor";
-					floor.position = pos;
 					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Cost < 0)
 					{
 						floor.GetComponent<Renderer>().material.color = new Color(0, 0, 179);
@@ -75,27 +78,22 @@ namespace Maze
 					
 					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Top)
 					{
-						var topWall = Instantiate(wallPrefab, transform);
+						var topWall = Instantiate(wallPrefab, pos + topOffset, Quaternion.identity, transform);
 						topWall.name = $"Node ({i},{j}) Top Wall";
-						topWall.position = pos + new Vector3(0, 0, _size);
 					}
 
 					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Left)
 					{
-						var leftWall = Instantiate(wallPrefab, transform);
+						var leftWall = Instantiate(wallPrefab, pos + leftOffset, Quaternion.Euler(0, 90, 0), transform);
 						leftWall.name = $"Node ({i},{j}) Left Wall";
-						leftWall.position = pos + new Vector3(-_size, 0, 0);
-						leftWall.eulerAngles = new Vector3(0, 90, 0);
 					}
 
 					if (i == width - 1)
 					{
 						if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Right)
 						{
-							var rightWall = Instantiate(wallPrefab, transform);
+							var rightWall = Instantiate(wallPrefab, pos + rightOffset, Quaternion.Euler(0, 90, 0), transform);
 							rightWall.name = $"Node ({i},{j}) Right Wall";
-							rightWall.position = pos + new Vector3(_size, 0, 0);
-							rightWall.eulerAngles = new Vector3(0, 90, 0);
 						}
 					}
 
@@ -103,9 +101,8 @@ namespace Maze
 					{
 						if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Bottom)
 						{
-							var bottomWall = Instantiate(wallPrefab, transform);
+							var bottomWall = Instantiate(wallPrefab, pos + bottomOffset, Quaternion.identity, transform);
 							bottomWall.name = $"Node ({i},{j}) Bottom Wall";
-							bottomWall.position = pos + new Vector3(0, 0, -_size);
 						}
 					}
 				}
@@ -114,7 +111,9 @@ namespace Maze
 
 		private int ReturnCost()
 		{
-			if (Random.Range(-10, 10) < 0)
+			int rndIndex = Random.Range(-10, 10);
+
+			if (rndIndex < 0)
 			{
 				return -1;
 			}
