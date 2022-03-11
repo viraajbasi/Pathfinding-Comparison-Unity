@@ -18,7 +18,7 @@ namespace MainMenu
             {
                 fpsObject.SetActive(false);
             }
-            
+
             _time += Time.deltaTime;
            
             _frameCount++;
