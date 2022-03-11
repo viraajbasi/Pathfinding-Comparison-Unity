@@ -110,6 +110,7 @@ namespace MainMenu
 		{
 			fullscreenToggle.isOn = Screen.fullScreen;
 			vSyncToggle.isOn = QualitySettings.vSyncCount != 0;
+			fpsToggle.isOn = PlayerPrefs.GetInt("FPS") == 1;
 			_resolutions = Screen.resolutions;
 
 			for (int i = 0; i < _resolutions.Length; i++)
