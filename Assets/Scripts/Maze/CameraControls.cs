@@ -1,83 +1,59 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraControls : MonoBehaviour
+namespace Maze
 {
-    private float mainSpeed = 100.0f;
-    private float shiftAdd = 250.0f;
-    private float maxShift = 10000.0f;
-    private float camSens = 0.25f;
-    private Vector3 lastMouse = new Vector3(255, 255, 255);
-    private float totalRun = 1.0f;
-
-    private void Update()
+    public class CameraControls : MonoBehaviour
     {
-        lastMouse = Input.mousePosition - lastMouse;
-        lastMouse = new Vector3(-lastMouse.y * camSens, lastMouse.x * camSens, 0);
-        lastMouse = new Vector3(transform.eulerAngles.x + lastMouse.x, transform.eulerAngles.y + lastMouse.y, 0);
-        transform.eulerAngles = lastMouse;
-        lastMouse = Input.mousePosition;
+        private float _panSpeed = 20f;
+        private float _panBorderThickness = 10f;
+        private float _xLimit = 20f;
+        private float _yLimit = 20f;
+        private float _scrollSpeed = 20f;
+        private float _minY = 20f;
+        private float _maxY = 50f;
 
-        var p = GetBaseInput();
-        if (p.sqrMagnitude > 0)
+        private void Update()
         {
-            if (Input.GetKey(KeyCode.LeftShift))
+            var pos = transform.position;
+            var scroll = Input.GetAxis("Mouse ScrollWheel");
+
+            if (Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y >= Screen.height - _panBorderThickness)
             {
-                totalRun += Time.deltaTime;
-                p = p * totalRun * shiftAdd;
-                p.x = Mathf.Clamp(p.x, -maxShift, maxShift);
-                p.y = Mathf.Clamp(p.y, -maxShift, maxShift);
-                p.z = Mathf.Clamp(p.z, -maxShift, maxShift);
-            }
-            else
-            {
-                totalRun = Mathf.Clamp(totalRun * 0.5f, 1f, 1000f);
-                p = p * mainSpeed;
+                pos.z += _panSpeed * Time.deltaTime;
             }
 
-            p = p * Time.deltaTime;
-            var newPosition = transform.position;
-
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKey(KeyCode.DownArrow) || Input.mousePosition.y <= _panBorderThickness)
             {
-                transform.Translate(p);
-                newPosition.x = transform.position.x;
-                newPosition.z = transform.position.z;
-                transform.position = newPosition;
+                pos.z -= _panSpeed * Time.deltaTime;
             }
-            else
+
+            if (Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x >= Screen.width - _panBorderThickness)
             {
-                transform.Translate(p);
+                pos.x += _panSpeed * Time.deltaTime;
             }
+
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.mousePosition.x <= _panBorderThickness)
+            {
+                pos.x -= _panSpeed * Time.deltaTime;
+            }
+
+            if (Input.GetKey(KeyCode.Equals))
+            {
+                pos.y -= _panSpeed * Time.deltaTime;
+            }
+
+            if (Input.GetKey(KeyCode.Minus))
+            {
+                pos.y += _panSpeed * Time.deltaTime;
+            }
+
+            pos.y -= scroll * _scrollSpeed * Time.deltaTime * 100f;
+
+            pos.x = Mathf.Clamp(pos.x, -_xLimit, _xLimit);
+            pos.z = Mathf.Clamp(pos.z, -_yLimit, _yLimit);
+            pos.y = Mathf.Clamp(pos.y, _minY, _maxY);
+
+            transform.position = pos;
         }
-
-    }
-
-    private Vector3 GetBaseInput()
-    {
-        var pVelocity = new Vector3();
-
-        if (Input.GetKey(KeyCode.W))
-        {
-            pVelocity += new Vector3(0, 0, 1);
-        }
-
-        if (Input.GetKey(KeyCode.S))
-        {
-            pVelocity += new Vector3(0, 0, -1);
-        }
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            pVelocity += new Vector3(-1, 0, 0);
-        }
-
-        if (Input.GetKey(KeyCode.D))
-        {
-            pVelocity += new Vector3(1, 0, 0);
-        }
-
-        return pVelocity;
     }
 }

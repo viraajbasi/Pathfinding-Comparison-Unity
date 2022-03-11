@@ -15,8 +15,6 @@ namespace Maze
 
 		private void Start()
 		{
-			GameObject.Find("Main Camera").transform.position = new Vector3(0, width, 0);
-			GameObject.Find("Main Camera").transform.eulerAngles = new Vector3(90, 0, 0);
 			Draw(Generate(width, height));
 		}
 
