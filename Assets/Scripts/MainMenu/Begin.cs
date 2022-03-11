@@ -27,11 +27,9 @@ namespace MainMenu
         
         public void BeginProgram()
         {
-            if (dijkstraToggle.isOn | aStarToggle.isOn | bellmanFordToggle.isOn | userSolvesToggle.isOn &&
-                recursiveBacktrackerToggle.isOn | kruskalToggle.isOn)
+            if (dijkstraToggle.isOn | aStarToggle.isOn | bellmanFordToggle.isOn | userSolvesToggle.isOn && recursiveBacktrackerToggle.isOn | kruskalToggle.isOn)
             {
-                StoreToggleState(dijkstraToggle.isOn, aStarToggle.isOn, bellmanFordToggle.isOn,
-                    recursiveBacktrackerToggle.isOn, kruskalToggle.isOn);
+                StoreToggleState(dijkstraToggle.isOn, aStarToggle.isOn, bellmanFordToggle.isOn,recursiveBacktrackerToggle.isOn, kruskalToggle.isOn);
                 SceneManager.LoadScene("Game");
             }
             else

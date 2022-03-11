@@ -13,7 +13,7 @@ namespace Maze
 		public bool GoalNode;
 		public Position Coordinates;
 		public int Cost;
-		public GameObject MazeNode;
+		public Transform MazeNode;
 
 		public MazeCell(bool top, bool bottom, bool left, bool right, bool visited, int x, int y, int cost)
 		{

@@ -15,6 +15,8 @@ namespace Maze
 
 		private void Start()
 		{
+			GameObject.Find("Main Camera").transform.position = new Vector3(0, width, 0);
+			GameObject.Find("Main Camera").transform.eulerAngles = new Vector3(90, 0, 0);
 			Draw(Generate(width, height));
 		}
 
@@ -47,16 +49,20 @@ namespace Maze
 				{
 					var pos = new Vector3(-width / 2 + i, 0, -height / 2 + j);
 
-					var mazeObject = Instantiate(mazeObjectPrefab, transform);
-					mazeObject.name = $"Node ({i},{j})";
-					mazeObject.position = pos + new Vector3(0, _size, 0);
+					maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode = Instantiate(mazeObjectPrefab, transform);
+					maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.name = $"Node ({i},{j})";
+					maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.position = pos + new Vector3(0, _size, 0);
 					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].StartNode)
 					{
-						mazeObject.GetComponent<Renderer>().material.color = new Color(0, 204, 102);
+						maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.name = $"Node (Start) ({i},{j})";
+						maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.GetComponent<MeshRenderer>().enabled = true;
+						maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.GetComponent<Renderer>().material.color = new Color(0, 204, 102);
 					}
 					if (maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].GoalNode)
 					{
-						mazeObject.GetComponent<Renderer>().material.color = new Color(102, 190, 0);
+						maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.name = $"Node (Goal) ({i},{j})";
+						maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.GetComponent<MeshRenderer>().enabled = true;
+						maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode.GetComponent<Renderer>().material.color = new Color(102, 190, 0);
 					}
 
 					var floor = Instantiate(floorPrefab, transform);
