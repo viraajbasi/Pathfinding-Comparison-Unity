@@ -1,3 +1,5 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -13,7 +15,10 @@ namespace MainMenu
         public Toggle kruskalToggle;
         public Toggle userSolvesToggle;
         public GameObject startScreen;
-        public Error errorScript;
+        public GameObject loadingScreen;
+        public GameObject errorScreen;
+        public Slider loadingBar;
+        public TMP_Text errorMessage;
 
         public void OpenStart()
         {
@@ -30,19 +35,24 @@ namespace MainMenu
             if (dijkstraToggle.isOn | aStarToggle.isOn | bellmanFordToggle.isOn | userSolvesToggle.isOn && recursiveBacktrackerToggle.isOn | kruskalToggle.isOn)
             {
                 StoreToggleState(dijkstraToggle.isOn, aStarToggle.isOn, bellmanFordToggle.isOn,recursiveBacktrackerToggle.isOn, kruskalToggle.isOn);
-                SceneManager.LoadScene("Game");
+                StartCoroutine(LoadAsync("Game"));
             }
             else
             {
                 if (recursiveBacktrackerToggle.isOn == false && kruskalToggle.isOn == false)
                 {
-                    errorScript.OpenErrorScreen("Ensure a maze generation algorithm is chosen.");
+                    OpenErrorScreen("Ensure a maze generation algorithm is chosen.");
                 }
                 else
                 {
-                    errorScript.OpenErrorScreen("Ensure a pathfinding algorithm is chosen.");
+                    OpenErrorScreen("Ensure a pathfinding algorithm is chosen.");
                 }
             }
+        }
+        
+        public void CloseErrorScreen()
+        {
+            errorScreen.SetActive(false);
         }
         
         private void Start()
@@ -61,6 +71,26 @@ namespace MainMenu
             PlayerPrefs.SetInt("BellmanFord", bf ? 1 : 0);
             PlayerPrefs.SetInt("RecursiveBacktracker", rb ? 1 : 0);
             PlayerPrefs.SetInt("Kruskal", k ? 1 : 0);
+        }
+
+        private IEnumerator LoadAsync(string sceneName)
+        {
+            var operation = SceneManager.LoadSceneAsync(sceneName);
+            loadingScreen.SetActive(true);
+        
+            while (!operation.isDone)
+            {
+                var progress = Mathf.Clamp01(operation.progress / 0.9f);
+                loadingBar.value = progress;
+            
+                yield return null;
+            }
+        }
+        
+        private void OpenErrorScreen(string message)
+        {
+            errorMessage.text = message;
+            errorScreen.SetActive(true);
         }
     }
 }
