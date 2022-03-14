@@ -4,7 +4,7 @@ namespace Maze
 {
     public class CameraControls : MonoBehaviour
     {
-        private float _panSpeed = 20f;
+        private float _panSpeed;
         private float _panBorderThickness = 10f;
         private float _xLimit = 20f;
         private float _yLimit = 20f;
@@ -17,6 +17,12 @@ namespace Maze
         {
             var pos = transform.position;
             var scroll = Input.GetAxis("Mouse ScrollWheel");
+            _panSpeed = 20f;
+
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            {
+                _panSpeed = 40f;
+            }
 
             if (Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y >= Screen.height - _panBorderThickness)
             {
