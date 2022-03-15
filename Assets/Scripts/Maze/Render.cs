@@ -50,6 +50,7 @@ namespace Maze
 			{
 				for (int j = 0; j < height; j++)
 				{
+					maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].Visited = false;
 					var pos = new Vector3(-width / 2 + i, 0, -height / 2 + j);
 
 					maze[maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j)].MazeNode = Instantiate(mazeObjectPrefab, pos + new Vector3(0, _size, 0), Quaternion.identity,transform);
