@@ -64,8 +64,8 @@ namespace Maze
             pos.x = Mathf.Clamp(pos.x, -_xLimit, _xLimit);
             pos.z = Mathf.Clamp(pos.z, -_yLimit, _yLimit);
             pos.y = Mathf.Clamp(pos.y, _minY, _maxY);
-
-            transform.position = pos;
+            
+            transform.position = Vector3.Lerp(transform.position, pos, Time.deltaTime * 100f);
         }
     }
 }
