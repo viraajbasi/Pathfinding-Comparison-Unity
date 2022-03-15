@@ -34,7 +34,7 @@ namespace MainMenu
         {
             if (dijkstraToggle.isOn | aStarToggle.isOn | bellmanFordToggle.isOn | userSolvesToggle.isOn && recursiveBacktrackerToggle.isOn | kruskalToggle.isOn)
             {
-                StoreToggleState(dijkstraToggle.isOn, aStarToggle.isOn, bellmanFordToggle.isOn,recursiveBacktrackerToggle.isOn, kruskalToggle.isOn);
+                StoreToggleState(dijkstraToggle.isOn, aStarToggle.isOn, bellmanFordToggle.isOn, userSolvesToggle.isOn, recursiveBacktrackerToggle.isOn, kruskalToggle.isOn);
                 StartCoroutine(LoadAsync("Game"));
             }
             else
@@ -61,16 +61,18 @@ namespace MainMenu
             PlayerPrefs.DeleteKey("A*");
             PlayerPrefs.DeleteKey("BellmanFord");
             PlayerPrefs.DeleteKey("RecursiveBacktracker");
+            PlayerPrefs.DeleteKey("UserSolves");
             PlayerPrefs.DeleteKey("Kruskal");
         }
 
-        private static void StoreToggleState(bool d, bool a, bool bf, bool rb, bool k)
+        private static void StoreToggleState(bool dijkstra, bool aStar, bool bellmanFord, bool userSolves, bool recursiveBacktracker, bool kruskal)
         {
-            PlayerPrefs.SetInt("Dijkstra", d ? 1 : 0);
-            PlayerPrefs.SetInt("A*", a ? 1 : 0);
-            PlayerPrefs.SetInt("BellmanFord", bf ? 1 : 0);
-            PlayerPrefs.SetInt("RecursiveBacktracker", rb ? 1 : 0);
-            PlayerPrefs.SetInt("Kruskal", k ? 1 : 0);
+            PlayerPrefs.SetInt("Dijkstra", dijkstra ? 1 : 0);
+            PlayerPrefs.SetInt("A*", aStar ? 1 : 0);
+            PlayerPrefs.SetInt("BellmanFord", bellmanFord ? 1 : 0);
+            PlayerPrefs.SetInt("UserSolves", userSolves ? 1 : 0);
+            PlayerPrefs.SetInt("RecursiveBacktracker", recursiveBacktracker ? 1 : 0);
+            PlayerPrefs.SetInt("Kruskal", kruskal ? 1 : 0);
         }
 
         private IEnumerator LoadAsync(string sceneName)
