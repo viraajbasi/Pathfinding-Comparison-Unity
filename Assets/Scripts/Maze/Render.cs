@@ -26,6 +26,16 @@ namespace Maze
 					SortedMaze[currentIndex].Visited = false;
 				}
 			}
+			
+			Debug.Log(PlayerPrefs.GetInt("UserSolves"));
+		}
+
+		private void Update()
+		{
+			if (PlayerPrefs.GetInt("UserSolves") == 1)
+			{
+				UserSolves.HandleKeyInput();
+			}
 		}
 
 		private List<MazeCell> GenerateRandomMaze(int w, int h)
