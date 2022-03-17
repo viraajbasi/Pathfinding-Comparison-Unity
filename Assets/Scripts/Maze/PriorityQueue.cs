@@ -9,7 +9,7 @@ namespace Maze
         private class Node
         {
             public int Priority { get; set; }
-            public T Object { get; set; }
+            public T Object { get; }
 
             public Node(int priority, T obj)
             {
