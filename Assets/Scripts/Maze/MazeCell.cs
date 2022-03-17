@@ -14,6 +14,7 @@ namespace Maze
 		public Position Coordinates;
 		public int Cost;
 		public Transform MazeNode;
+		public Transform Floor;
 
 		public MazeCell(bool top, bool bottom, bool left, bool right, bool visited, int x, int y, int cost)
 		{

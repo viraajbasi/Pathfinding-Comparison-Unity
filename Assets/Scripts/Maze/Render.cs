@@ -92,11 +92,11 @@ namespace Maze
 						maze[currentIndex].MazeNode.GetComponent<Renderer>().material.color = new Color(102, 190, 0);
 					}
 
-					var floor = Instantiate(floorPrefab, pos, Quaternion.identity, transform);
-					floor.name = $"Node ({i},{j}) Floor";
+					maze[currentIndex].Floor = Instantiate(floorPrefab, pos, Quaternion.identity, transform);
+					maze[currentIndex].Floor.gameObject.name = $"Node ({i},{j}) Floor";
 					if (maze[currentIndex].Cost < 0)
 					{
-						floor.GetComponent<Renderer>().material.color = new Color(0, 0, 179);
+						maze[currentIndex].Floor.gameObject.GetComponent<Renderer>().material.color = new Color(0, 0, 179);
 					}
 					
 					if (maze[currentIndex].Top)

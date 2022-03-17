@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using UnityEngine;
 
 namespace Maze
@@ -10,17 +9,19 @@ namespace Maze
         public static void HandleKeyInput()
         {
             var currentNodeIndex = Render.SortedMaze.FindIndex(a => a.Coordinates.X == _startPosition.X && a.Coordinates.Y == _startPosition.Y);
-            var currentNode = Render.SortedMaze[currentNodeIndex].MazeNode;
+            var topOffset = new Position(_startPosition.X, _startPosition.Y + 1);
+            var leftOffset = new Position(_startPosition.X - 1, _startPosition.Y);
+            var rightOffset = new Position(_startPosition.X + 1, _startPosition.Y);
+            var bottomOffset = new Position(_startPosition.X, _startPosition.Y - 1);
 
             if (Input.GetKey(KeyCode.W))
             {
-                Debug.Log("W");
-                var _topOffset = new Position(_startPosition.X, _startPosition.Y + 1);
                 var topNodeIndex = Render.SortedMaze.FindIndex(a => a.Coordinates.X == _startPosition.X && a.Coordinates.Y == _startPosition.Y + 1);
-                if (!Render.SortedMaze[topNodeIndex].Bottom)
+                if (!Render.SortedMaze[currentNodeIndex].Top)
                 {
-                    DrawLine(currentNode, Render.SortedMaze[topNodeIndex].MazeNode);
-                    _startPosition = _topOffset;
+                    Render.SortedMaze[currentNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.red;
+                    Render.SortedMaze[topNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
+                    _startPosition = topOffset;
                 }
             }
 
@@ -28,27 +29,24 @@ namespace Maze
             {
                 if (_startPosition.X > 0)
                 {
-                    Debug.Log("A");
-                    var _leftOffset = new Position(_startPosition.X - 1, _startPosition.Y);
-                    var leftNodeIndex = Render.SortedMaze.FindIndex(a =>
-                        a.Coordinates.X == _startPosition.X - 1 && a.Coordinates.Y == _startPosition.Y);
-                    if (!Render.SortedMaze[leftNodeIndex].Right && _startPosition.X >= 0)
+                    var leftNodeIndex = Render.SortedMaze.FindIndex(a => a.Coordinates.X == _startPosition.X - 1 && a.Coordinates.Y == _startPosition.Y);
+                    if (!Render.SortedMaze[currentNodeIndex].Left && _startPosition.X >= 0)
                     {
-                        DrawLine(currentNode, Render.SortedMaze[leftNodeIndex].MazeNode);
-                        _startPosition = _leftOffset;
+                        Render.SortedMaze[currentNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.red;
+                        Render.SortedMaze[leftNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
+                        _startPosition = leftOffset;
                     }
                 }
             }
 
             if (Input.GetKey(KeyCode.D))
             {
-                Debug.Log("D");
-                var _rightOffset = new Position(_startPosition.X + 1, _startPosition.Y);
                 var rightNodeIndex = Render.SortedMaze.FindIndex(a => a.Coordinates.X == _startPosition.X + 1 && a.Coordinates.Y == _startPosition.Y);
-                if (!Render.SortedMaze[rightNodeIndex].Left)
+                if (!Render.SortedMaze[currentNodeIndex].Right)
                 {
-                    DrawLine(currentNode, Render.SortedMaze[rightNodeIndex].MazeNode);
-                    _startPosition = _rightOffset;
+                    Render.SortedMaze[currentNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.red;
+                    Render.SortedMaze[rightNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
+                    _startPosition = rightOffset;
                 }
             }
 
@@ -56,32 +54,15 @@ namespace Maze
             {
                 if (_startPosition.Y > 0)
                 {
-                    Debug.Log("S");
-                    var _bottomOffset = new Position(_startPosition.X, _startPosition.Y - 1);
-                    var bottomNodeIndex = Render.SortedMaze.FindIndex(a =>
-                        a.Coordinates.X == _startPosition.X && a.Coordinates.Y == _startPosition.Y - 1);
-                    if (!Render.SortedMaze[bottomNodeIndex].Top && _startPosition.Y >= 0)
+                    var bottomNodeIndex = Render.SortedMaze.FindIndex(a => a.Coordinates.X == _startPosition.X && a.Coordinates.Y == _startPosition.Y - 1);
+                    if (!Render.SortedMaze[currentNodeIndex].Bottom && _startPosition.Y >= 0)
                     {
-                        DrawLine(currentNode, Render.SortedMaze[bottomNodeIndex].MazeNode);
-                        _startPosition = _bottomOffset;
+                        Render.SortedMaze[currentNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.red;
+                        Render.SortedMaze[bottomNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
+                        _startPosition = bottomOffset;
                     }
                 }
             }
-        }
-
-        private static void DrawLine(Transform original, Transform target)
-        {
-            Debug.Log("Moving...");
-            var lineRenderer = new LineRenderer
-            {
-                startColor = Color.red,
-                endColor = Color.red,
-                startWidth = 0.3f,
-                endWidth = 0.3f
-            };
-            
-            lineRenderer.SetPosition(0, original.position);
-            lineRenderer.SetPosition(1, target.position);
         }
     }
 }
