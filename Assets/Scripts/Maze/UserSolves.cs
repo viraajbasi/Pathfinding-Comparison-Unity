@@ -14,7 +14,7 @@ namespace Maze
             var rightOffset = new Position(_startPosition.X + 1, _startPosition.Y);
             var bottomOffset = new Position(_startPosition.X, _startPosition.Y - 1);
 
-            if (Input.GetKey(KeyCode.W))
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.W))
             {
                 var topNodeIndex = Render.SortedMaze.FindIndex(a => a.Coordinates.X == _startPosition.X && a.Coordinates.Y == _startPosition.Y + 1);
                 if (!Render.SortedMaze[currentNodeIndex].Top)
@@ -25,7 +25,7 @@ namespace Maze
                 }
             }
 
-            if (Input.GetKey(KeyCode.A))
+            if (Input.GetKeyDown(KeyCode.A) || Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.A))
             {
                 if (_startPosition.X > 0)
                 {
@@ -39,7 +39,7 @@ namespace Maze
                 }
             }
 
-            if (Input.GetKey(KeyCode.D))
+            if (Input.GetKeyDown(KeyCode.D) || Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.D))
             {
                 var rightNodeIndex = Render.SortedMaze.FindIndex(a => a.Coordinates.X == _startPosition.X + 1 && a.Coordinates.Y == _startPosition.Y);
                 if (!Render.SortedMaze[currentNodeIndex].Right)
@@ -50,7 +50,7 @@ namespace Maze
                 }
             }
 
-            if (Input.GetKey(KeyCode.S))
+            if (Input.GetKeyDown(KeyCode.S) || Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.S))
             {
                 if (_startPosition.Y > 0)
                 {

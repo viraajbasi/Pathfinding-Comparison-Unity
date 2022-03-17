@@ -31,7 +31,7 @@ namespace Maze
 
         public void Enqueue(int priority, T obj)
         {
-            Node node = new(priority, obj);
+            var node = new Node(priority, obj);
 
             _queue.Add(node);
 
