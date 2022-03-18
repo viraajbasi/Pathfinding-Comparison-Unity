@@ -9,19 +9,14 @@ namespace Maze
         public static void HandleKeyInput()
         {
             var currentNodeIndex = Render.SortedMaze.FindIndex(a => a.Coordinates.X == _startPosition.X && a.Coordinates.Y == _startPosition.Y);
-            var topOffset = new Position(_startPosition.X, _startPosition.Y + 1);
-            var leftOffset = new Position(_startPosition.X - 1, _startPosition.Y);
-            var rightOffset = new Position(_startPosition.X + 1, _startPosition.Y);
-            var bottomOffset = new Position(_startPosition.X, _startPosition.Y - 1);
-
+            
             if (Input.GetKeyDown(KeyCode.W) || Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.W))
             {
                 var topNodeIndex = Render.SortedMaze.FindIndex(a => a.Coordinates.X == _startPosition.X && a.Coordinates.Y == _startPosition.Y + 1);
+                var topOffset = new Position(_startPosition.X, _startPosition.Y + 1);
                 if (!Render.SortedMaze[currentNodeIndex].Top)
                 {
-                    Render.SortedMaze[currentNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.red;
-                    Render.SortedMaze[topNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
-                    _startPosition = topOffset;
+                    VisitAndColour(currentNodeIndex, topNodeIndex, topOffset);
                 }
             }
 
@@ -30,11 +25,10 @@ namespace Maze
                 if (_startPosition.X > 0)
                 {
                     var leftNodeIndex = Render.SortedMaze.FindIndex(a => a.Coordinates.X == _startPosition.X - 1 && a.Coordinates.Y == _startPosition.Y);
+                    var leftOffset = new Position(_startPosition.X - 1, _startPosition.Y);
                     if (!Render.SortedMaze[currentNodeIndex].Left && _startPosition.X >= 0)
                     {
-                        Render.SortedMaze[currentNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.red;
-                        Render.SortedMaze[leftNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
-                        _startPosition = leftOffset;
+                        VisitAndColour(currentNodeIndex, leftNodeIndex, leftOffset);
                     }
                 }
             }
@@ -42,11 +36,10 @@ namespace Maze
             if (Input.GetKeyDown(KeyCode.D) || Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.D))
             {
                 var rightNodeIndex = Render.SortedMaze.FindIndex(a => a.Coordinates.X == _startPosition.X + 1 && a.Coordinates.Y == _startPosition.Y);
+                var rightOffset = new Position(_startPosition.X + 1, _startPosition.Y);
                 if (!Render.SortedMaze[currentNodeIndex].Right)
                 {
-                    Render.SortedMaze[currentNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.red;
-                    Render.SortedMaze[rightNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
-                    _startPosition = rightOffset;
+                    VisitAndColour(currentNodeIndex, rightNodeIndex, rightOffset);
                 }
             }
 
@@ -55,14 +48,21 @@ namespace Maze
                 if (_startPosition.Y > 0)
                 {
                     var bottomNodeIndex = Render.SortedMaze.FindIndex(a => a.Coordinates.X == _startPosition.X && a.Coordinates.Y == _startPosition.Y - 1);
+                    var bottomOffset = new Position(_startPosition.X, _startPosition.Y - 1);
                     if (!Render.SortedMaze[currentNodeIndex].Bottom && _startPosition.Y >= 0)
                     {
-                        Render.SortedMaze[currentNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.red;
-                        Render.SortedMaze[bottomNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
-                        _startPosition = bottomOffset;
+                        VisitAndColour(currentNodeIndex, bottomNodeIndex, bottomOffset);
                     }
                 }
             }
+        }
+        
+        private static void VisitAndColour(int currentIndex, int nextIndex, Position pos)
+        {
+            Render.SortedMaze[nextIndex].Visited = true;
+            Render.SortedMaze[currentIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
+            Render.SortedMaze[nextIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.white;
+            _startPosition = pos;
         }
     }
 }
