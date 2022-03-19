@@ -32,7 +32,7 @@ namespace Maze
 		{
 			if (PlayerPrefs.GetInt("UserSolves") == 1)
 			{
-				UserSolves.HandleKeyInput();
+				UserSolves.HandleKeyInput(SortedMaze);
 			}
 		}
 
