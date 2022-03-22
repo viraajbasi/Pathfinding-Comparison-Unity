@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 namespace Maze
@@ -35,7 +34,8 @@ namespace Maze
 			if (PlayerPrefs.GetInt("Dijkstra") == 1)
 			{
 				_dijkstraMaze = Dijkstra.Algorithm(SortedMaze);
-				Dijkstra.GeneratePathToNode(_dijkstraMaze);
+				//Dijkstra.GeneratePathToNode(_dijkstraMaze);
+				Dijkstra.GeneratePathToNode(_dijkstraMaze, _dijkstraMaze.FindIndex(a => a.StartNode));
 			}
 		}
 

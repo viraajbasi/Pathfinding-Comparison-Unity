@@ -8,99 +8,92 @@ namespace Maze
     {
         public static List<MazeCell> Algorithm(List<MazeCell> mazeList)
         {
-            PriorityQueue<MazeCell> queue = new(true);
-            var traverseIndex = 0;
-            
-            foreach (var node in mazeList)
-            {
-                node.Distance = int.MaxValue;
-            }
+            var nodesToVisitQueue = new Queue<MazeCell>();
+            var targetNode = mazeList.Find(a => a.GoalNode);
+            nodesToVisitQueue.Enqueue(targetNode);
 
-            mazeList.Find(a => a.StartNode).Distance = 0;
-
-            while (queue.Count > 0)
+            while (nodesToVisitQueue.Count > 0)
             {
-                var currentNode = queue.Dequeue();
+                var currentNode = nodesToVisitQueue.Dequeue();
                 var currentNodeIndex = mazeList.FindIndex(a => a == currentNode);
-                var neighbourPositions = GenerateNeighbourPositionList(mazeList, currentNodeIndex);
-
-                foreach (var position in neighbourPositions)
+                
+                if (currentNode == targetNode)
                 {
-                    var neighbourIndex = mazeList.FindIndex(a => a.Coordinates.X == position.X && a.Coordinates.Y == position.Y);
-
-                    if (mazeList[neighbourIndex].Distance > 0)
-                    {
-                        if (mazeList[currentNodeIndex].Distance > mazeList[neighbourIndex].Distance + mazeList[neighbourIndex].Cost)
-                        {
-                            mazeList[neighbourIndex].Distance = mazeList[currentNodeIndex].Distance + mazeList[neighbourIndex].Cost;
-                            mazeList[neighbourIndex].Parent = mazeList[currentNodeIndex];
-                        }
-                        
-                        queue.UpdatePriority(mazeList[neighbourIndex], mazeList[neighbourIndex].Distance);
-                    }
+                    currentNode.Distance = 0;
                 }
+
+                var nextNodes = GenerateNeighbourList(mazeList, currentNodeIndex).Where(node => !node.Visited).ToList();
+                
+                foreach (var node in nextNodes)
+                {
+                    var index = mazeList.FindIndex(a => a == node);
+                    var newDistance = currentNode.Distance + node.Cost;
+                    mazeList[index].Distance = Mathf.Min(node.Distance, newDistance);
+                    
+                    nodesToVisitQueue.Enqueue(node);
+                }
+
+                mazeList[currentNodeIndex].Visited = true;
             }
 
             return mazeList;
         }
         
-        public static void GeneratePathToNode(List<MazeCell> mazeList)
+        public static void GeneratePathToNode(List<MazeCell> mazeList, int startNodeIndex) // TODO: FIX THE INFINITE LOOP
         {
-            var traverseIndex = 0;
-            mazeList.Find(a => a.StartNode).TraverseIndex = traverseIndex;
-            var currentIndex = mazeList.FindIndex(a => a.StartNode);
-
-            while (true)
+            if (mazeList.Count == 0 || mazeList[startNodeIndex].GoalNode)
             {
-                if (mazeList[currentIndex].GoalNode)
-                {
-                    break;
-                }
-
-                var neighbours = GenerateNeighbourPositionList(mazeList, currentIndex);
-                var distanceList = new List<int>();
-
-                traverseIndex++;
-
-                foreach (var neighbour in neighbours)
-                {
-                    var neighbourIndex = mazeList.FindIndex(a => a.Coordinates.X == neighbour.X && a.Coordinates.Y == neighbour.Y);
-                    distanceList.Add(mazeList[neighbourIndex].Distance);
-                }
-
-                var minDistance = distanceList.Min();
-
-                mazeList.Find(a => a.Distance == minDistance).TraverseIndex = traverseIndex;
-
-                currentIndex = mazeList.FindIndex(a => a.TraverseIndex == traverseIndex);
-
-                distanceList.Clear();
+                return;
             }
+            
+            mazeList[startNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
+
+            var minDistance = GenerateNeighbourList(mazeList, startNodeIndex).Min(a => a.Distance);
+            var nextNodeIndex = mazeList.FindIndex(a => a.Distance == minDistance);
+            
+            mazeList[nextNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
+            
+            GeneratePathToNode(mazeList, nextNodeIndex);
+
+            foreach (var n in mazeList)
+            {
+                Debug.Log($"{n.Coordinates.X},{n.Coordinates.Y} Distance = {n.Distance}");
+            }
+            
         }
 
-        private static List<Position> GenerateNeighbourPositionList(List<MazeCell> mazeList, int currentIndex)
+        private float CalculateNodeDistance(MazeCell currentNode, MazeCell targetNode)
         {
-            var list = new List<Position>();
+            return Mathf.Pow(currentNode.Coordinates.X + currentNode.Coordinates.Y, 2) - Mathf.Pow(targetNode.Coordinates.X + targetNode.Coordinates.Y, 2);
+        }
+
+        private static List<MazeCell> GenerateNeighbourList(List<MazeCell> mazeList, int currentIndex)
+        {
+            var list = new List<MazeCell>();
             var currentPosition = new Position(mazeList[currentIndex].Coordinates.X, mazeList[currentIndex].Coordinates.Y);
 
             if (!mazeList[currentIndex].Top)
             {
-                list.Add(new Position(currentPosition.X, currentPosition.Y + 1));
+                //list.Add(new Position(currentPosition.X, currentPosition.Y + 1));
+                list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X && a.Coordinates.Y == currentPosition.Y + 1));
             }
 
             if (!mazeList[currentIndex].Left)
             {
-                list.Add(new Position(currentPosition.X - 1, currentPosition.Y));
+                //list.Add(new Position(currentPosition.X - 1, currentPosition.Y));
+                list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X - 1 && a.Coordinates.Y == currentPosition.Y));
             }
 
             if (!mazeList[currentIndex].Right)
             {
-                list.Add(new Position(currentPosition.X + 1, currentPosition.Y));
+                //list.Add(new Position(currentPosition.X + 1, currentPosition.Y));
+                list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X + 1 && a.Coordinates.Y == currentPosition.Y));
             }
 
             if (!mazeList[currentIndex].Bottom)
             {
-                list.Add(new Position(currentPosition.X, currentPosition.Y - 1));
+                //list.Add(new Position(currentPosition.X, currentPosition.Y - 1));
+                list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X && a.Coordinates.Y == currentPosition.Y - 1));
             }
 
             return list;
