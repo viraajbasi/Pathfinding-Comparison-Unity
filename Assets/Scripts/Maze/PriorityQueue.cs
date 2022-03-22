@@ -29,7 +29,7 @@ namespace Maze
             _isMinPriorityQueue = isMinPriorityQueue;
         }
 
-        public void Enqueue(int priority, T obj)
+        public void Enqueue(T obj, int priority)
         {
             var node = new Node(priority, obj);
 

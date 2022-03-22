@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Maze
@@ -12,6 +13,10 @@ namespace Maze
 
 		private int _width = 50;
 		private int _height = 50;
+		private float _nextActionTime = 0.0f;
+		private float _period = 1f;
+		private int _traverseIndex = 0;
+		private List<MazeCell> _dijkstraMaze;
 
 		private void Start()
 		{
@@ -26,6 +31,12 @@ namespace Maze
 					SortedMaze[currentIndex].Visited = false;
 				}
 			}
+
+			if (PlayerPrefs.GetInt("Dijkstra") == 1)
+			{
+				_dijkstraMaze = Dijkstra.Algorithm(SortedMaze);
+				Dijkstra.GeneratePathToNode(_dijkstraMaze);
+			}
 		}
 
 		private void Update()
@@ -33,6 +44,10 @@ namespace Maze
 			if (PlayerPrefs.GetInt("UserSolves") == 1)
 			{
 				UserSolves.HandleKeyInput(SortedMaze);
+			}
+
+			if (PlayerPrefs.GetInt("Dijkstra") == 1)
+			{
 			}
 		}
 

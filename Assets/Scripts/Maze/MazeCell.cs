@@ -17,6 +17,7 @@ namespace Maze
 		public Transform Floor;
 		public int Distance;
 		public MazeCell Parent;
+		public int TraverseIndex;
 
 		public MazeCell(bool top, bool bottom, bool left, bool right, bool visited, int x, int y, int cost)
 		{
