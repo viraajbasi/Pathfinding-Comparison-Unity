@@ -39,32 +39,36 @@ namespace Maze
             return mazeList;
         }
         
-        public static void GeneratePathToNode(List<MazeCell> mazeList, int startNodeIndex) // TODO: FIX THE INFINITE LOOP
+        public static void GeneratePathToNode(List<MazeCell> mazeList, int startNodeIndex)
         {
-            if (mazeList.Count == 0 || mazeList[startNodeIndex].GoalNode)
+            while (true)
             {
-                return;
-            }
-            
-            mazeList[startNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
+                if (mazeList[startNodeIndex].GoalNode)
+                {
+                    mazeList[startNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
+                    break;
+                }
+                
+                mazeList[startNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
+                Debug.Log($"Index: {startNodeIndex}, Distance: {mazeList[startNodeIndex]}.Distance");
 
-            var minDistance = GenerateNeighbourList(mazeList, startNodeIndex).Min(a => a.Distance);
-            var nextNodeIndex = mazeList.FindIndex(a => a.Distance == minDistance);
-            
-            mazeList[nextNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
-            
-            GeneratePathToNode(mazeList, nextNodeIndex);
+                var neighbourList = GenerateNeighbourList(mazeList, startNodeIndex);
+                var nodeWithShortestDistance = FindShortestNode(neighbourList);
+                var nextNodeIndex = mazeList.FindIndex(a => a == nodeWithShortestDistance);
 
-            foreach (var n in mazeList)
-            {
-                Debug.Log($"{n.Coordinates.X},{n.Coordinates.Y} Distance = {n.Distance}");
+                startNodeIndex = nextNodeIndex;
             }
-            
         }
 
-        private float CalculateNodeDistance(MazeCell currentNode, MazeCell targetNode)
+        private static MazeCell FindShortestNode(List<MazeCell> neighbourList)
         {
-            return Mathf.Pow(currentNode.Coordinates.X + currentNode.Coordinates.Y, 2) - Mathf.Pow(targetNode.Coordinates.X + targetNode.Coordinates.Y, 2);
+            var distanceList = neighbourList.Select(n => n.Distance).ToList();
+
+            //return distanceList.Min();
+
+            var node = neighbourList.Find(a => a.Distance == distanceList.Min());
+
+            return node;
         }
 
         private static List<MazeCell> GenerateNeighbourList(List<MazeCell> mazeList, int currentIndex)
@@ -74,25 +78,21 @@ namespace Maze
 
             if (!mazeList[currentIndex].Top)
             {
-                //list.Add(new Position(currentPosition.X, currentPosition.Y + 1));
                 list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X && a.Coordinates.Y == currentPosition.Y + 1));
             }
 
             if (!mazeList[currentIndex].Left)
             {
-                //list.Add(new Position(currentPosition.X - 1, currentPosition.Y));
                 list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X - 1 && a.Coordinates.Y == currentPosition.Y));
             }
 
             if (!mazeList[currentIndex].Right)
             {
-                //list.Add(new Position(currentPosition.X + 1, currentPosition.Y));
                 list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X + 1 && a.Coordinates.Y == currentPosition.Y));
             }
 
             if (!mazeList[currentIndex].Bottom)
             {
-                //list.Add(new Position(currentPosition.X, currentPosition.Y - 1));
                 list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X && a.Coordinates.Y == currentPosition.Y - 1));
             }
 
