@@ -47,7 +47,7 @@ namespace Maze
             var nodeWithShortestDistance = FindShortestNode(neighbourList);
             var nextNodeIndex = mazeList.FindIndex(a => a == nodeWithShortestDistance);
 
-            Render.DijkstraIndex = nextNodeIndex;
+            Render.DijkstraStartNodeIndex = nextNodeIndex;
         }
 
         private static MazeCell FindShortestNode(List<MazeCell> neighbourList)

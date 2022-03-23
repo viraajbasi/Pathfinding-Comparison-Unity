@@ -25,7 +25,7 @@ namespace MainMenu
         
         private void Pause(bool gameCompleted)
         {
-            if (!GameCompleted)
+            if (!gameCompleted)
             {
                 pauseMenu.SetActive(true);
             }

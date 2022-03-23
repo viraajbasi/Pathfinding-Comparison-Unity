@@ -3,31 +3,36 @@ using System.Diagnostics;
 using MainMenu;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
+using Random = UnityEngine.Random;
 
 namespace Maze
 {
 	public class Render : MonoBehaviour
 	{
-		public static int DijkstraIndex;
+		public static int DijkstraStartNodeIndex;
 		public Transform wallPrefab;
 		public Transform floorPrefab;
 		public Transform mazeObjectPrefab;
 		public GameObject CompletedScreen;
 
+		private static Position _startPosition = new(0, 0);
 		private int _width = 100;
 		private int _height = 100;
 		private List<MazeCell> _sortedMaze;
 		private List<MazeCell> _dijkstraMaze;
 		private Stopwatch _stopwatch = new();
-		private static Position _startPosition = new(0, 0);
+
+		private void Awake()
+		{
+			PlayerPrefs.DeleteKey("MazeSolved");
+			PauseMenu.GameCompleted = false;
+		}
 
 		private void Start()
 		{
-			PlayerPrefs.DeleteKey("MazeSolved");
-			
 			if (PlayerPrefs.GetInt("UserSolves") == 1)
 			{
-				UserSolves.StartPosition = new Position(0, 0);
+				UserSolves.StartPosition = _startPosition;
 				_width = 20;
 				_height = 20;
 			}
@@ -49,6 +54,7 @@ namespace Maze
 				_stopwatch.Start();
 				_dijkstraMaze = Dijkstra.Algorithm(_sortedMaze);
 				_stopwatch.Stop();
+				DijkstraStartNodeIndex = _dijkstraMaze.FindIndex(a => a.StartNode);
 				Debug.Log($"Elapsed Milliseconds = {_stopwatch.ElapsedMilliseconds}");
 			}
 		}
@@ -66,14 +72,19 @@ namespace Maze
 				}
 			}
 
-			if (PlayerPrefs.GetInt("Dijkstra") == 1)
+			if (Input.GetKeyDown(KeyCode.H))
 			{
-				var endNodeIndex = _dijkstraMaze.FindIndex(a => a.GoalNode);
-				while (DijkstraIndex != endNodeIndex)
+				if (PlayerPrefs.GetInt("Dijkstra") == 1)
 				{
-					Dijkstra.GeneratePathToNode(_dijkstraMaze, DijkstraIndex);
+					var endNodeIndex = _dijkstraMaze.FindIndex(a => a.GoalNode);
+					
+					while (DijkstraStartNodeIndex != endNodeIndex)
+					{
+						Dijkstra.GeneratePathToNode(_dijkstraMaze, DijkstraStartNodeIndex);
+					}
+
+					_dijkstraMaze[endNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
 				}
-				_dijkstraMaze[endNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
 			}
 		}
 

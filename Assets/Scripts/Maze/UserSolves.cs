@@ -10,7 +10,6 @@ namespace Maze
         public static void HandleKeyInput(List<MazeCell> mazeList)
         {
             var currentNodeIndex = mazeList.FindIndex(a => a.Coordinates.X == StartPosition.X && a.Coordinates.Y == StartPosition.Y);
-            //var currentNodeIndex = mazeList.FindIndex(a => a.StartNode);
             if (mazeList[currentNodeIndex].GoalNode)
             {
                 PlayerPrefs.SetInt("MazeSolved", 1);
