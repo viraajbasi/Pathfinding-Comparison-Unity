@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using MainMenu;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -7,23 +8,26 @@ namespace Maze
 {
 	public class Render : MonoBehaviour
 	{
+		public static int DijkstraIndex;
 		public Transform wallPrefab;
 		public Transform floorPrefab;
 		public Transform mazeObjectPrefab;
-		public static int DijkstraIndex;
+		public GameObject CompletedScreen;
 
 		private int _width = 100;
 		private int _height = 100;
-		private float _nextActionTime = 0.0f;
-		private float _period = 1f;
 		private List<MazeCell> _sortedMaze;
 		private List<MazeCell> _dijkstraMaze;
 		private Stopwatch _stopwatch = new();
+		private static Position _startPosition = new(0, 0);
 
 		private void Start()
 		{
+			PlayerPrefs.DeleteKey("MazeSolved");
+			
 			if (PlayerPrefs.GetInt("UserSolves") == 1)
 			{
+				UserSolves.StartPosition = new Position(0, 0);
 				_width = 20;
 				_height = 20;
 			}
@@ -45,7 +49,7 @@ namespace Maze
 				_stopwatch.Start();
 				_dijkstraMaze = Dijkstra.Algorithm(_sortedMaze);
 				_stopwatch.Stop();
-				Debug.Log(_stopwatch.ElapsedMilliseconds);
+				Debug.Log($"Elapsed Milliseconds = {_stopwatch.ElapsedMilliseconds}");
 			}
 		}
 
@@ -54,6 +58,12 @@ namespace Maze
 			if (PlayerPrefs.GetInt("UserSolves") == 1)
 			{
 				UserSolves.HandleKeyInput(_sortedMaze);
+
+				if (PlayerPrefs.GetInt("MazeSolved") == 1)
+				{
+					PauseMenu.GameCompleted = true;
+					CompletedScreen.SetActive(true);
+				}
 			}
 
 			if (PlayerPrefs.GetInt("Dijkstra") == 1)

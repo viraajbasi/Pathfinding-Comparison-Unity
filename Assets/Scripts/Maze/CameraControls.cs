@@ -11,8 +11,26 @@ namespace Maze
         private float _scrollSpeed = 20f;
         private float _minY = 20f;
         private float _maxY = 100f;
-        private Vector3 _initialPosition = new Vector3(0, 100, 0);
+        private Vector3 _initialPosition;
+        private Camera _mainCamera;
 
+        private void Start()
+        {
+            _mainCamera = Camera.main;
+
+            if (PlayerPrefs.GetInt("UserSolves") == 1)
+            {
+                _initialPosition = new Vector3(0, 25, 0);
+            }
+            else
+            {
+                _initialPosition = new Vector3(0, 100, 0);
+            }
+            
+            _mainCamera.transform.position = _initialPosition;
+            _mainCamera.transform.eulerAngles = new Vector3(90, 0, 0);
+        }
+        
         private void Update()
         {
             var pos = transform.position;
