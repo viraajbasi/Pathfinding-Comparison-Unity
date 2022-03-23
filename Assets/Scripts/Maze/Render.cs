@@ -19,6 +19,12 @@ namespace Maze
 
 		private void Start()
 		{
+			if (PlayerPrefs.GetInt("UserSolves") == 1)
+			{
+				_width = 20;
+				_height = 20;
+			}
+			
 			_sortedMaze = GenerateRandomMaze(_width, _height);
 			DrawMaze(_sortedMaze);
 
