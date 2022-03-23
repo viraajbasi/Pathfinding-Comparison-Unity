@@ -8,12 +8,10 @@ namespace MainMenu
 {
     public class Begin : MonoBehaviour
     {
-        public Toggle dijkstraToggle;
-        public Toggle aStarToggle;
-        public Toggle bellmanFordToggle;
-        public Toggle recursiveBacktrackerToggle;
-        public Toggle kruskalToggle;
+        public Toggle pathfindingToggle;
         public Toggle userSolvesToggle;
+        public Toggle kruskalToggle;
+        public Toggle recursiveBacktrackerToggle;
         public GameObject startScreen;
         public GameObject loadingScreen;
         public GameObject errorScreen;
@@ -32,9 +30,9 @@ namespace MainMenu
         
         public void BeginProgram()
         {
-            if (dijkstraToggle.isOn | aStarToggle.isOn | bellmanFordToggle.isOn | userSolvesToggle.isOn && recursiveBacktrackerToggle.isOn | kruskalToggle.isOn)
+            if (pathfindingToggle.isOn | userSolvesToggle.isOn && kruskalToggle.isOn | recursiveBacktrackerToggle.isOn)
             {
-                StoreToggleState(dijkstraToggle.isOn, aStarToggle.isOn, bellmanFordToggle.isOn, userSolvesToggle.isOn, recursiveBacktrackerToggle.isOn, kruskalToggle.isOn);
+                StoreToggleState(pathfindingToggle.isOn, recursiveBacktrackerToggle.isOn);
                 StartCoroutine(LoadAsync("Game"));
             }
             else
@@ -65,14 +63,12 @@ namespace MainMenu
             PlayerPrefs.DeleteKey("Kruskal");
         }
 
-        private static void StoreToggleState(bool dijkstra, bool aStar, bool bellmanFord, bool userSolves, bool recursiveBacktracker, bool kruskal)
+        private static void StoreToggleState(bool pathfinding, bool recursiveBacktracker)
         {
-            PlayerPrefs.SetInt("Dijkstra", dijkstra ? 1 : 0);
-            PlayerPrefs.SetInt("A*", aStar ? 1 : 0);
-            PlayerPrefs.SetInt("BellmanFord", bellmanFord ? 1 : 0);
-            PlayerPrefs.SetInt("UserSolves", userSolves ? 1 : 0);
-            PlayerPrefs.SetInt("RecursiveBacktracker", recursiveBacktracker ? 1 : 0);
-            PlayerPrefs.SetInt("Kruskal", kruskal ? 1 : 0);
+            PlayerPrefs.SetInt("Pathfinding", pathfinding ? 1 : 0);
+            PlayerPrefs.SetInt("UserSolves", !pathfinding ? 1 : 0);
+            PlayerPrefs.SetInt("RecursiveBacktraker", recursiveBacktracker ? 1 : 0);
+            PlayerPrefs.SetInt("Kruskal", !recursiveBacktracker ? 1 : 0);
         }
 
         private IEnumerator LoadAsync(string sceneName)

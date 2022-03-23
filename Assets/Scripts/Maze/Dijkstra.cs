@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Maze
 {
-    public class Dijkstra : MonoBehaviour
+    public class Dijkstra
     {
         public static List<MazeCell> Algorithm(List<MazeCell> mazeList)
         {

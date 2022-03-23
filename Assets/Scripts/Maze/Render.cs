@@ -13,7 +13,7 @@ namespace Maze
 		public Transform wallPrefab;
 		public Transform floorPrefab;
 		public Transform mazeObjectPrefab;
-		public GameObject CompletedScreen;
+		public GameObject completedScreen;
 
 		private static Position _startPosition = new(0, 0);
 		private int _width = 100;
@@ -49,7 +49,7 @@ namespace Maze
 				}
 			}
 
-			if (PlayerPrefs.GetInt("Dijkstra") == 1)
+			if (PlayerPrefs.GetInt("Pathfinding") == 1)
 			{
 				_stopwatch.Start();
 				_dijkstraMaze = Dijkstra.Algorithm(_sortedMaze);
@@ -68,13 +68,13 @@ namespace Maze
 				if (PlayerPrefs.GetInt("MazeSolved") == 1)
 				{
 					PauseMenu.GameCompleted = true;
-					CompletedScreen.SetActive(true);
+					completedScreen.SetActive(true);
 				}
 			}
 
 			if (Input.GetKeyDown(KeyCode.H))
 			{
-				if (PlayerPrefs.GetInt("Dijkstra") == 1)
+				if (PlayerPrefs.GetInt("Pathfinding") == 1)
 				{
 					var endNodeIndex = _dijkstraMaze.FindIndex(a => a.GoalNode);
 					
@@ -103,7 +103,6 @@ namespace Maze
 			}
 
 			maze[maze.FindIndex(a => a.Coordinates.X == 0 && a.Coordinates.Y == 0)].StartNode = true;
-
 			maze[maze.FindIndex(a => a.Coordinates.X == w - 1 && a.Coordinates.Y == h - 1)].GoalNode = true;
 
 			var newMaze = PlayerPrefs.GetInt("Kruskal") == 1 ? Kruskal.Algorithm(maze, w, h) : RecursiveBacktracker.Algorithm(maze, w, h);
@@ -128,7 +127,7 @@ namespace Maze
 					maze[currentIndex].MazeNode = Instantiate(mazeObjectPrefab, pos + new Vector3(0, size, 0), Quaternion.identity,transform);
 					maze[currentIndex].MazeNode.name = $"Node ({i},{j})";
 					maze[currentIndex].MazeNode.gameObject.SetActive(false);
-					
+
 					if (maze[currentIndex].StartNode)
 					{
 						maze[currentIndex].MazeNode.name = $"Node (Start) ({i},{j})";

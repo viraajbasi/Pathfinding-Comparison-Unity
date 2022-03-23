@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.4465766, g: 0.49641156, b: 0.5748176, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657755, g: 0.4964127, b: 0.57481825, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -161,7 +161,7 @@ MeshCollider:
   m_GameObject: {fileID: 219340146}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -1174,11 +1174,11 @@ RectTransform:
   m_Father: {fileID: 1411960223}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -356.07, y: 191.2}
-  m_SizeDelta: {x: 87.8606, y: 23.5699}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 87.860596, y: 23.569885}
+  m_Pivot: {x: 0, y: 1}
 --- !u!224 &1480423432 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8865654165178271144, guid: 8e80a00ac01351d368f9a23027f587d1, type: 3}
@@ -1479,7 +1479,7 @@ MonoBehaviour:
   wallPrefab: {fileID: 1902516651949330635, guid: 9e222d304eedc8dd7960a6dc2cb316e0, type: 3}
   floorPrefab: {fileID: 1041755580912881808, guid: 3fa3be0b668baeb96a31fff111017c12, type: 3}
   mazeObjectPrefab: {fileID: 8253384322056163794, guid: 6fbe09a570c6a2a8daf6b02e74e77ab2, type: 3}
-  CompletedScreen: {fileID: 531358302}
+  completedScreen: {fileID: 531358302}
 --- !u!4 &1602929705
 Transform:
   m_ObjectHideFlags: 0
