@@ -225,7 +225,7 @@ Transform:
   m_GameObject: {fileID: 219340146}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -1, z: 0}
-  m_LocalScale: {x: 20, y: 1, z: 20}
+  m_LocalScale: {x: 100, y: 1, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -565,7 +565,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 50, z: 0}
+  m_LocalPosition: {x: 0, y: 100, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1113,7 +1113,6 @@ MonoBehaviour:
   wallPrefab: {fileID: 1902516651949330635, guid: 9e222d304eedc8dd7960a6dc2cb316e0, type: 3}
   floorPrefab: {fileID: 1041755580912881808, guid: 3fa3be0b668baeb96a31fff111017c12, type: 3}
   mazeObjectPrefab: {fileID: 8253384322056163794, guid: 6fbe09a570c6a2a8daf6b02e74e77ab2, type: 3}
-  linePrefab: {fileID: 4624708129846756914, guid: 7394bcef223bd4c87a8c26a60a260b14, type: 3}
 --- !u!4 &1602929705
 Transform:
   m_ObjectHideFlags: 0

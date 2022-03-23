@@ -42,7 +42,6 @@ namespace Maze
         public static void GeneratePathToNode(List<MazeCell> mazeList, int startNodeIndex)
         {
             mazeList[startNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
-            Debug.Log($"Index: {startNodeIndex}, Distance: {mazeList[startNodeIndex]}.Distance");
 
             var neighbourList = GenerateNeighbourList(mazeList, startNodeIndex);
             var nodeWithShortestDistance = FindShortestNode(neighbourList);

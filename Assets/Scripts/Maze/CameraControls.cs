@@ -6,12 +6,12 @@ namespace Maze
     {
         private float _panSpeed;
         private float _panBorderThickness = 10f;
-        private float _xLimit = 20f;
-        private float _yLimit = 20f;
+        private float _xLimit = 40f;
+        private float _yLimit = 40f;
         private float _scrollSpeed = 20f;
         private float _minY = 20f;
-        private float _maxY = 50f;
-        private Vector3 _initialPosition = new Vector3(0, 50, 0);
+        private float _maxY = 100f;
+        private Vector3 _initialPosition = new Vector3(0, 100, 0);
 
         private void Update()
         {

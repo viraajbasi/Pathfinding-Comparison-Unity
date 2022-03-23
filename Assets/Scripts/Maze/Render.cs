@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Maze
 {
@@ -10,12 +12,13 @@ namespace Maze
 		public Transform mazeObjectPrefab;
 		public static int DijkstraIndex;
 
-		private int _width = 50;
-		private int _height = 50;
+		private int _width = 100;
+		private int _height = 100;
 		private float _nextActionTime = 0.0f;
 		private float _period = 1f;
 		private List<MazeCell> _sortedMaze;
 		private List<MazeCell> _dijkstraMaze;
+		private Stopwatch _stopwatch = new();
 
 		private void Start()
 		{
@@ -39,7 +42,10 @@ namespace Maze
 
 			if (PlayerPrefs.GetInt("Dijkstra") == 1)
 			{
+				_stopwatch.Start();
 				_dijkstraMaze = Dijkstra.Algorithm(_sortedMaze);
+				_stopwatch.Stop();
+				Debug.Log(_stopwatch.ElapsedMilliseconds);
 			}
 		}
 
