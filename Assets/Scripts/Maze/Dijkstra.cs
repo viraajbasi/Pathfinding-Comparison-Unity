@@ -41,31 +41,19 @@ namespace Maze
         
         public static void GeneratePathToNode(List<MazeCell> mazeList, int startNodeIndex)
         {
-            while (true)
-            {
-                if (mazeList[startNodeIndex].GoalNode)
-                {
-                    mazeList[startNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
-                    break;
-                }
-                
-                mazeList[startNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
-                Debug.Log($"Index: {startNodeIndex}, Distance: {mazeList[startNodeIndex]}.Distance");
+            mazeList[startNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
+            Debug.Log($"Index: {startNodeIndex}, Distance: {mazeList[startNodeIndex]}.Distance");
 
-                var neighbourList = GenerateNeighbourList(mazeList, startNodeIndex);
-                var nodeWithShortestDistance = FindShortestNode(neighbourList);
-                var nextNodeIndex = mazeList.FindIndex(a => a == nodeWithShortestDistance);
+            var neighbourList = GenerateNeighbourList(mazeList, startNodeIndex);
+            var nodeWithShortestDistance = FindShortestNode(neighbourList);
+            var nextNodeIndex = mazeList.FindIndex(a => a == nodeWithShortestDistance);
 
-                startNodeIndex = nextNodeIndex;
-            }
+            Render.DijkstraIndex = nextNodeIndex;
         }
 
         private static MazeCell FindShortestNode(List<MazeCell> neighbourList)
         {
             var distanceList = neighbourList.Select(n => n.Distance).ToList();
-
-            //return distanceList.Min();
-
             var node = neighbourList.Find(a => a.Distance == distanceList.Min());
 
             return node;

@@ -8,34 +8,32 @@ namespace Maze
 		public Transform wallPrefab;
 		public Transform floorPrefab;
 		public Transform mazeObjectPrefab;
-		public static List<MazeCell> SortedMaze;
+		public static int DijkstraIndex;
 
 		private int _width = 50;
 		private int _height = 50;
 		private float _nextActionTime = 0.0f;
 		private float _period = 1f;
-		private int _traverseIndex = 0;
+		private List<MazeCell> _sortedMaze;
 		private List<MazeCell> _dijkstraMaze;
 
 		private void Start()
 		{
-			SortedMaze = GenerateRandomMaze(_width, _height);
-			DrawMaze(SortedMaze);
+			_sortedMaze = GenerateRandomMaze(_width, _height);
+			DrawMaze(_sortedMaze);
 
 			for (int i = 0; i < _width; i++)
 			{
 				for (int j = 0; j < _height; j++)
 				{
-					var currentIndex = SortedMaze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j);
-					SortedMaze[currentIndex].Visited = false;
+					var currentIndex = _sortedMaze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j);
+					_sortedMaze[currentIndex].Visited = false;
 				}
 			}
 
 			if (PlayerPrefs.GetInt("Dijkstra") == 1)
 			{
-				_dijkstraMaze = Dijkstra.Algorithm(SortedMaze);
-				//Dijkstra.GeneratePathToNode(_dijkstraMaze);
-				Dijkstra.GeneratePathToNode(_dijkstraMaze, _dijkstraMaze.FindIndex(a => a.StartNode));
+				_dijkstraMaze = Dijkstra.Algorithm(_sortedMaze);
 			}
 		}
 
@@ -43,11 +41,17 @@ namespace Maze
 		{
 			if (PlayerPrefs.GetInt("UserSolves") == 1)
 			{
-				UserSolves.HandleKeyInput(SortedMaze);
+				UserSolves.HandleKeyInput(_sortedMaze);
 			}
 
 			if (PlayerPrefs.GetInt("Dijkstra") == 1)
 			{
+				var endNodeIndex = _dijkstraMaze.FindIndex(a => a.GoalNode);
+				while (DijkstraIndex != endNodeIndex)
+				{
+					Dijkstra.GeneratePathToNode(_dijkstraMaze, DijkstraIndex);
+				}
+				_dijkstraMaze[endNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
 			}
 		}
 
@@ -75,11 +79,11 @@ namespace Maze
 
 		private void DrawMaze(List<MazeCell> maze)
 		{
-			var _size = 0.5f;
-			var topOffset = new Vector3(0, 0, _size);
-			var leftOffset = new Vector3(-_size, 0, 0);
-			var rightOffset = new Vector3(_size, 0, 0);
-			var bottomOffset = new Vector3(0, 0, -_size);
+			var size = 0.5f;
+			var topOffset = new Vector3(0, 0, size);
+			var leftOffset = new Vector3(-size, 0, 0);
+			var rightOffset = new Vector3(size, 0, 0);
+			var bottomOffset = new Vector3(0, 0, -size);
 
 			for (int i = 0; i < _width; i++)
 			{
@@ -88,7 +92,7 @@ namespace Maze
 					var currentIndex = maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j);
 					var pos = new Vector3(-_width / 2 + i, 0, -_height / 2 + j);
 
-					maze[currentIndex].MazeNode = Instantiate(mazeObjectPrefab, pos + new Vector3(0, _size, 0), Quaternion.identity,transform);
+					maze[currentIndex].MazeNode = Instantiate(mazeObjectPrefab, pos + new Vector3(0, size, 0), Quaternion.identity,transform);
 					maze[currentIndex].MazeNode.name = $"Node ({i},{j})";
 					maze[currentIndex].MazeNode.gameObject.SetActive(false);
 					
