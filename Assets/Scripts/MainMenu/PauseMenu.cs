@@ -33,6 +33,11 @@ namespace MainMenu
             Time.timeScale = 0f;
             _isPaused = true;
         }
+
+        private void Start()
+        {
+            Resume();
+        }
         
         private void Update()
         {

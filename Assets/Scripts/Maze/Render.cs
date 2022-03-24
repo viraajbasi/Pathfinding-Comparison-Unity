@@ -21,13 +21,7 @@ namespace Maze
 		private List<MazeCell> _sortedMaze;
 		private List<MazeCell> _dijkstraMaze;
 		private Stopwatch _stopwatch = new();
-
-		private void Awake()
-		{
-			PlayerPrefs.DeleteKey("MazeSolved");
-			PauseMenu.GameCompleted = false;
-		}
-
+		
 		private void Start()
 		{
 			if (PlayerPrefs.GetInt("UserSolves") == 1)
@@ -35,6 +29,8 @@ namespace Maze
 				UserSolves.StartPosition = _startPosition;
 				_width = 20;
 				_height = 20;
+				PlayerPrefs.DeleteKey("MazeSolved");
+				PauseMenu.GameCompleted = false;
 			}
 			
 			_sortedMaze = GenerateRandomMaze(_width, _height);
