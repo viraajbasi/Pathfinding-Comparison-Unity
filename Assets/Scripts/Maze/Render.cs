@@ -12,12 +12,15 @@ namespace Maze
 		public static int DijkstraStartNodeIndex;
 		public Transform wallPrefab;
 		public Transform floorPrefab;
-		public Transform mazeObjectPrefab;
+		public Transform startEndPrefab;
+		public Transform wallObject;
+		public Transform floorObject;
 		public GameObject completedScreen;
 
 		private static Position _startPosition = new(0, 0);
 		private int _width = 100;
 		private int _height = 100;
+		private bool _alreadyDisplayedPath = true;
 		private List<MazeCell> _sortedMaze;
 		private List<MazeCell> _dijkstraMaze;
 		private Stopwatch _stopwatch = new();
@@ -35,7 +38,6 @@ namespace Maze
 			
 			_sortedMaze = GenerateRandomMaze(_width, _height);
 			DrawMaze(_sortedMaze);
-
 			for (int i = 0; i < _width; i++)
 			{
 				for (int j = 0; j < _height; j++)
@@ -43,15 +45,6 @@ namespace Maze
 					var currentIndex = _sortedMaze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j);
 					_sortedMaze[currentIndex].Visited = false;
 				}
-			}
-
-			if (PlayerPrefs.GetInt("Pathfinding") == 1)
-			{
-				_stopwatch.Start();
-				_dijkstraMaze = Dijkstra.Algorithm(_sortedMaze);
-				_stopwatch.Stop();
-				DijkstraStartNodeIndex = _dijkstraMaze.FindIndex(a => a.StartNode);
-				Debug.Log($"Elapsed Milliseconds = {_stopwatch.ElapsedMilliseconds}");
 			}
 		}
 
@@ -67,19 +60,46 @@ namespace Maze
 					completedScreen.SetActive(true);
 				}
 			}
-
-			if (Input.GetKeyDown(KeyCode.H))
+			
+			if (PlayerPrefs.GetInt("Pathfinding") == 1)
 			{
-				if (PlayerPrefs.GetInt("Pathfinding") == 1)
+				if (Input.GetKeyDown(KeyCode.H))
 				{
-					var endNodeIndex = _dijkstraMaze.FindIndex(a => a.GoalNode);
-					
-					while (DijkstraStartNodeIndex != endNodeIndex)
-					{
-						Dijkstra.GeneratePathToNode(_dijkstraMaze, DijkstraStartNodeIndex);
-					}
+					_alreadyDisplayedPath = !_alreadyDisplayedPath;
+					_stopwatch.Start();
+					_dijkstraMaze = Dijkstra.Algorithm(_sortedMaze);
+					_stopwatch.Stop();
+					DijkstraStartNodeIndex = _dijkstraMaze.FindIndex(a => a.StartNode);
+					Debug.Log($"Elapsed Milliseconds = {_stopwatch.ElapsedMilliseconds}");
 
-					_dijkstraMaze[endNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
+					var endNodeIndex = _dijkstraMaze.FindIndex(a => a.GoalNode);
+
+					if (_alreadyDisplayedPath)
+					{
+						while (DijkstraStartNodeIndex != endNodeIndex)
+						{
+							Dijkstra.GeneratePathToNode(_dijkstraMaze, DijkstraStartNodeIndex);
+						}
+
+						_dijkstraMaze[endNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color =
+							Color.black;
+						_dijkstraMaze[endNodeIndex].Floor.gameObject.SetActive(true);
+
+						foreach (var n in _dijkstraMaze)
+						{
+							if (n.Floor.gameObject.GetComponent<Renderer>().material.color != Color.black)
+							{
+								n.Floor.gameObject.SetActive(false);
+							}
+						}
+					}
+					else
+					{
+						foreach (var n in _dijkstraMaze)
+						{
+							n.Floor.gameObject.SetActive(false);
+						}
+					}
 				}
 			}
 		}
@@ -113,6 +133,10 @@ namespace Maze
 			var rightOffset = new Vector3(size, 0, 0);
 			var bottomOffset = new Vector3(0, 0, -size);
 
+			var bigFloor = Instantiate(floorPrefab, new Vector3(-size, -size, -size), Quaternion.identity, transform);
+			bigFloor.localScale = new Vector3(_width / 10, 1, _height / 10);
+			bigFloor.name = "Big floor";
+
 			for (int i = 0; i < _width; i++)
 			{
 				for (int j = 0; j < _height; j++)
@@ -120,25 +144,22 @@ namespace Maze
 					var currentIndex = maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j);
 					var pos = new Vector3(-_width / 2 + i, 0, -_height / 2 + j);
 
-					maze[currentIndex].MazeNode = Instantiate(mazeObjectPrefab, pos + new Vector3(0, size, 0), Quaternion.identity,transform);
-					maze[currentIndex].MazeNode.name = $"Node ({i},{j})";
-					maze[currentIndex].MazeNode.gameObject.SetActive(false);
-
 					if (maze[currentIndex].StartNode)
 					{
+						maze[currentIndex].MazeNode = Instantiate(startEndPrefab, pos + new Vector3(0, size, 0), Quaternion.identity,transform);
 						maze[currentIndex].MazeNode.name = $"Node (Start) ({i},{j})";
-						maze[currentIndex].MazeNode.gameObject.SetActive(true);
 						maze[currentIndex].MazeNode.GetComponent<Renderer>().material.color = new Color(0, 204, 102);
 					}
-					if (maze[currentIndex].GoalNode)
+					else if (maze[currentIndex].GoalNode)
 					{
+						maze[currentIndex].MazeNode = Instantiate(startEndPrefab, pos + new Vector3(0, size, 0), Quaternion.identity,transform);
 						maze[currentIndex].MazeNode.name = $"Node (Goal) ({i},{j})";
-						maze[currentIndex].MazeNode.gameObject.SetActive(true);
 						maze[currentIndex].MazeNode.GetComponent<Renderer>().material.color = new Color(102, 190, 0);
 					}
 
-					maze[currentIndex].Floor = Instantiate(floorPrefab, pos, Quaternion.identity, transform);
+					maze[currentIndex].Floor = Instantiate(floorPrefab, pos, Quaternion.identity, floorObject);
 					maze[currentIndex].Floor.gameObject.name = $"Node ({i},{j}) Floor";
+					maze[currentIndex].Floor.gameObject.SetActive(false);
 					if (maze[currentIndex].Cost < 0)
 					{
 						maze[currentIndex].Floor.gameObject.GetComponent<Renderer>().material.color = new Color(0, 0, 179);
@@ -146,13 +167,13 @@ namespace Maze
 					
 					if (maze[currentIndex].Top)
 					{
-						var topWall = Instantiate(wallPrefab, pos + topOffset, Quaternion.identity, transform);
+						var topWall = Instantiate(wallPrefab, pos + topOffset, Quaternion.identity, wallObject);
 						topWall.name = $"Node ({i},{j}) Top Wall";
 					}
 
 					if (maze[currentIndex].Left)
 					{
-						var leftWall = Instantiate(wallPrefab, pos + leftOffset, Quaternion.Euler(0, 90, 0), transform);
+						var leftWall = Instantiate(wallPrefab, pos + leftOffset, Quaternion.Euler(0, 90, 0), wallObject);
 						leftWall.name = $"Node ({i},{j}) Left Wall";
 					}
 
@@ -160,7 +181,7 @@ namespace Maze
 					{
 						if (maze[currentIndex].Right)
 						{
-							var rightWall = Instantiate(wallPrefab, pos + rightOffset, Quaternion.Euler(0, 90, 0), transform);
+							var rightWall = Instantiate(wallPrefab, pos + rightOffset, Quaternion.Euler(0, 90, 0), wallObject);
 							rightWall.name = $"Node ({i},{j}) Right Wall";
 						}
 					}
@@ -169,7 +190,7 @@ namespace Maze
 					{
 						if (maze[currentIndex].Bottom)
 						{
-							var bottomWall = Instantiate(wallPrefab, pos + bottomOffset, Quaternion.identity, transform);
+							var bottomWall = Instantiate(wallPrefab, pos + bottomOffset, Quaternion.identity, wallObject);
 							bottomWall.name = $"Node ({i},{j}) Bottom Wall";
 						}
 					}

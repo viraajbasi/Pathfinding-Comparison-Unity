@@ -67,6 +67,10 @@ namespace Maze
             mazeList[nextIndex].Visited = true;
             mazeList[currentIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
             mazeList[nextIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.white;
+            
+            mazeList[currentIndex].Floor.gameObject.SetActive(true);
+            mazeList[nextIndex].Floor.gameObject.SetActive(true);
+            
             StartPosition = pos;
         }
     }
