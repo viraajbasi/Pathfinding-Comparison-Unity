@@ -27,13 +27,13 @@ namespace Maze
 		
 		private void Start()
 		{
+			PauseMenu.GameCompleted = false;
 			if (PlayerPrefs.GetInt("UserSolves") == 1)
 			{
 				UserSolves.StartPosition = _startPosition;
 				_width = 20;
 				_height = 20;
 				PlayerPrefs.DeleteKey("MazeSolved");
-				PauseMenu.GameCompleted = false;
 			}
 			
 			_sortedMaze = GenerateRandomMaze(_width, _height);

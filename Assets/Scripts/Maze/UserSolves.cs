@@ -15,7 +15,7 @@ namespace Maze
                 PlayerPrefs.SetInt("MazeSolved", 1);
             }
             
-            if (Input.GetKeyDown(KeyCode.W) || Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.W))
+            if (Input.GetKeyDown(KeyCode.W))
             {
                 var topNodeIndex = mazeList.FindIndex(a => a.Coordinates.X == StartPosition.X && a.Coordinates.Y == StartPosition.Y + 1);
                 var topOffset = new Position(StartPosition.X, StartPosition.Y + 1);
@@ -25,7 +25,7 @@ namespace Maze
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.A) || Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.A))
+            if (Input.GetKeyDown(KeyCode.A))
             {
                 if (StartPosition.X > 0)
                 {
@@ -38,7 +38,7 @@ namespace Maze
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.D) || Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.D))
+            if (Input.GetKeyDown(KeyCode.D))
             {
                 var rightNodeIndex = mazeList.FindIndex(a => a.Coordinates.X == StartPosition.X + 1 && a.Coordinates.Y == StartPosition.Y);
                 var rightOffset = new Position(StartPosition.X + 1, StartPosition.Y);
@@ -48,7 +48,7 @@ namespace Maze
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.S) || Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.S))
+            if (Input.GetKeyDown(KeyCode.S))
             {
                 if (StartPosition.Y > 0)
                 {
