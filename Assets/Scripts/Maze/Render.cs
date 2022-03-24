@@ -23,6 +23,7 @@ namespace Maze
 		private bool _alreadyDisplayedPath;
 		private List<MazeCell> _sortedMaze;
 		private List<MazeCell> _dijkstraMaze;
+		private List<MazeCell> _aStarMaze;
 		private Stopwatch _stopwatch = new();
 		
 		private void Start()
@@ -42,8 +43,7 @@ namespace Maze
 			{
 				for (int j = 0; j < _height; j++)
 				{
-					var currentIndex = _sortedMaze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j);
-					_sortedMaze[currentIndex].Visited = false;
+					_sortedMaze.Find(a => a.Coordinates.X == i && a.Coordinates.Y == j).Visited = false;
 				}
 			}
 		}
@@ -101,6 +101,14 @@ namespace Maze
 						}
 					}
 				}
+
+				if (Input.GetKeyDown(KeyCode.J))
+				{
+					_stopwatch.Start();
+					_aStarMaze = AStar.Algorithm(_sortedMaze);
+					_stopwatch.Stop();
+					Debug.Log(_stopwatch.ElapsedMilliseconds);
+				}
 			}
 		}
 
@@ -118,8 +126,8 @@ namespace Maze
 				}
 			}
 
-			maze[maze.FindIndex(a => a.Coordinates.X == 0 && a.Coordinates.Y == 0)].StartNode = true;
-			maze[maze.FindIndex(a => a.Coordinates.X == w - 1 && a.Coordinates.Y == h - 1)].GoalNode = true;
+			maze.Find(a => a.Coordinates.X == 0 && a.Coordinates.Y == 0).StartNode = true;
+			maze.Find(a => a.Coordinates.X == w - 1 && a.Coordinates.Y == h - 1).GoalNode = true;
 
 			var newMaze = PlayerPrefs.GetInt("Kruskal") == 1 ? Kruskal.Algorithm(maze, w, h) : RecursiveBacktracker.Algorithm(maze, w, h);
 			return newMaze;
@@ -208,6 +216,34 @@ namespace Maze
 			}
 
 			return 1;
+		}
+		
+		private static List<MazeCell> GenerateNeighbourList(List<MazeCell> mazeList, int currentIndex)
+		{
+			var list = new List<MazeCell>();
+			var currentPosition = new Position(mazeList[currentIndex].Coordinates.X, mazeList[currentIndex].Coordinates.Y);
+
+			if (!mazeList[currentIndex].Top)
+			{
+				list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X && a.Coordinates.Y == currentPosition.Y + 1));
+			}
+
+			if (!mazeList[currentIndex].Left)
+			{
+				list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X - 1 && a.Coordinates.Y == currentPosition.Y));
+			}
+
+			if (!mazeList[currentIndex].Right)
+			{
+				list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X + 1 && a.Coordinates.Y == currentPosition.Y));
+			}
+
+			if (!mazeList[currentIndex].Bottom)
+			{
+				list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X && a.Coordinates.Y == currentPosition.Y - 1));
+			}
+
+			return list;
 		}
 	}
 }
