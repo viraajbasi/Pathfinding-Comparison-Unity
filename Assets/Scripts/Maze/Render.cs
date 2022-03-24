@@ -20,7 +20,7 @@ namespace Maze
 		private static Position _startPosition = new(0, 0);
 		private int _width = 100;
 		private int _height = 100;
-		private bool _alreadyDisplayedPath = true;
+		private bool _alreadyDisplayedPath;
 		private List<MazeCell> _sortedMaze;
 		private List<MazeCell> _dijkstraMaze;
 		private Stopwatch _stopwatch = new();
