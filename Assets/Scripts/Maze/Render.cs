@@ -25,6 +25,7 @@ namespace Maze
 		private List<MazeCell> _dijkstraMaze;
 		private List<MazeCell> _aStarMaze;
 		private Stopwatch _stopwatch = new();
+		private int _endNodeIndex;
 		
 		private void Start()
 		{
@@ -46,6 +47,16 @@ namespace Maze
 					_sortedMaze.Find(a => a.Coordinates.X == i && a.Coordinates.Y == j).Visited = false;
 				}
 			}
+
+			if (PlayerPrefs.GetInt("Pathfinding") == 1)
+			{
+				_stopwatch.Start();
+				_dijkstraMaze = Dijkstra.Algorithm(_sortedMaze);
+				_stopwatch.Stop();
+				Debug.Log($"Elapsed Milliseconds = {_stopwatch.ElapsedMilliseconds}");
+				DijkstraStartNodeIndex = _dijkstraMaze.FindIndex(a => a.StartNode);
+				_endNodeIndex = _dijkstraMaze.FindIndex(a => a.GoalNode);
+			}
 		}
 
 		private void Update()
@@ -66,32 +77,16 @@ namespace Maze
 				if (Input.GetKeyDown(KeyCode.H))
 				{
 					_alreadyDisplayedPath = !_alreadyDisplayedPath;
-					_stopwatch.Start();
-					_dijkstraMaze = Dijkstra.Algorithm(_sortedMaze);
-					_stopwatch.Stop();
-					DijkstraStartNodeIndex = _dijkstraMaze.FindIndex(a => a.StartNode);
-					Debug.Log($"Elapsed Milliseconds = {_stopwatch.ElapsedMilliseconds}");
-
-					var endNodeIndex = _dijkstraMaze.FindIndex(a => a.GoalNode);
-
+					
 					if (_alreadyDisplayedPath)
 					{
-						while (DijkstraStartNodeIndex != endNodeIndex)
+						while (DijkstraStartNodeIndex != _endNodeIndex)
 						{
 							Dijkstra.GeneratePathToNode(_dijkstraMaze, DijkstraStartNodeIndex);
 						}
 
-						_dijkstraMaze[endNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color =
-							Color.black;
-						_dijkstraMaze[endNodeIndex].Floor.gameObject.SetActive(true);
-
-						foreach (var n in _dijkstraMaze)
-						{
-							if (n.Floor.gameObject.GetComponent<Renderer>().material.color != Color.black)
-							{
-								n.Floor.gameObject.SetActive(false);
-							}
-						}
+						_dijkstraMaze[_endNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
+						_dijkstraMaze[_endNodeIndex].Floor.gameObject.SetActive(true);
 					}
 					else
 					{
