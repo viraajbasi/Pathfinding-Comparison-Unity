@@ -1,16 +1,18 @@
+using System;
 using UnityEngine;
 
 namespace Maze
 {
     public class CameraControls : MonoBehaviour
     {
+        private const float PanBorderThickness = 10f;
+        private const float ScrollSpeed = 20f;
+
+        private float _maxY;
+        private float _minY;
+        private float _xLimit;
+        private float _zLimit;
         private float _panSpeed;
-        private float _panBorderThickness = 10f;
-        private float _xLimit = 40f;
-        private float _yLimit = 40f;
-        private float _scrollSpeed = 20f;
-        private float _minY = 20f;
-        private float _maxY = 70f;
         private Vector3 _initialPosition;
         private Camera _mainCamera;
 
@@ -18,17 +20,32 @@ namespace Maze
         {
             _mainCamera = Camera.main;
 
+            if (_mainCamera == null)
+            {
+                throw new Exception("Camera not found");
+            }
+
             if (PlayerPrefs.GetInt("UserSolves") == 1)
             {
-                _initialPosition = new Vector3(0, 25, 0);
+                _maxY = 25;
+                _minY = 10;
+                _xLimit = 5;
+                _zLimit = 5;
+                _initialPosition = new Vector3(0, _maxY, 0);
             }
             else
             {
-                _initialPosition = new Vector3(0, 100, 0);
+                _maxY = 70;
+                _minY = 15;
+                _xLimit = 30;
+                _zLimit = 30;
+                _initialPosition = new Vector3(0, _maxY, 0);
             }
             
-            _mainCamera.transform.position = _initialPosition;
-            _mainCamera.transform.eulerAngles = new Vector3(90, 0, 0);
+            var camTransform = _mainCamera.transform;
+
+            camTransform.position = _initialPosition;
+            camTransform.eulerAngles = new Vector3(90, 0, 0);
         }
         
         private void Update()
@@ -42,22 +59,22 @@ namespace Maze
                 _panSpeed = 40f;
             }
 
-            if (Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y >= Screen.height - _panBorderThickness)
+            if (Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y >= Screen.height - PanBorderThickness)
             {
                 pos.z += _panSpeed * Time.deltaTime;
             }
 
-            if (Input.GetKey(KeyCode.DownArrow) || Input.mousePosition.y <= _panBorderThickness)
+            if (Input.GetKey(KeyCode.DownArrow) || Input.mousePosition.y <= PanBorderThickness)
             {
                 pos.z -= _panSpeed * Time.deltaTime;
             }
 
-            if (Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x >= Screen.width - _panBorderThickness)
+            if (Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x >= Screen.width - PanBorderThickness)
             {
                 pos.x += _panSpeed * Time.deltaTime;
             }
 
-            if (Input.GetKey(KeyCode.LeftArrow) || Input.mousePosition.x <= _panBorderThickness)
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.mousePosition.x <= PanBorderThickness)
             {
                 pos.x -= _panSpeed * Time.deltaTime;
             }
@@ -77,10 +94,10 @@ namespace Maze
                 pos = _initialPosition;
             }
 
-            pos.y -= scroll * _scrollSpeed * Time.deltaTime * 100f;
+            pos.y -= scroll * ScrollSpeed * Time.deltaTime * 100f;
 
             pos.x = Mathf.Clamp(pos.x, -_xLimit, _xLimit);
-            pos.z = Mathf.Clamp(pos.z, -_yLimit, _yLimit);
+            pos.z = Mathf.Clamp(pos.z, -_zLimit, _zLimit);
             pos.y = Mathf.Clamp(pos.y, _minY, _maxY);
             
             transform.position = Vector3.Lerp(transform.position, pos, Time.deltaTime * 100f);

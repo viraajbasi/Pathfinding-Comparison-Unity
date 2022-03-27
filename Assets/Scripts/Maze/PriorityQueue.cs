@@ -75,7 +75,7 @@ namespace Maze
 
         public void UpdatePriority(T obj, int priority)
         {
-            for (int i = 0; i <= _heapSize; i++)
+            for (var i = 0; i <= _heapSize; i++)
             {
                 var node = _queue[i];
 

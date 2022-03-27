@@ -114,7 +114,7 @@ namespace MainMenu
 			fpsToggle.isOn = PlayerPrefs.GetInt("FPS") == 1;
 			_resolutions = Screen.resolutions;
 
-			for (int i = 0; i < _resolutions.Length; i++)
+			for (var i = 0; i < _resolutions.Length; i++)
 			{
 				if (Screen.width == _resolutions[i].width && Screen.height == _resolutions[i].height)
 				{
@@ -124,7 +124,7 @@ namespace MainMenu
 				}
 			}
 
-			mixer.GetFloat("MasterVol", out float volume);
+			mixer.GetFloat("MasterVol", out var volume);
 			masterSlider.value = volume;
 			masterLabel.text = Mathf.RoundToInt(masterSlider.value + 80).ToString();
 			mixer.GetFloat("MusicVol", out volume);

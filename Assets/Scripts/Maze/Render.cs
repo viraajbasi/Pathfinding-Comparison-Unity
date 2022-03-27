@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using MainMenu;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -20,6 +19,8 @@ namespace Maze
 		public GameObject completedScreen;
 		public Material pathMaterial;
 		public Material defaultFloorMaterial;
+		
+		private const float Offset = 0.5f;
 
 		private static readonly Position StartPosition = new(0, 0);
 		
@@ -47,9 +48,9 @@ namespace Maze
 			
 			_sortedMaze = GenerateRandomMaze(_width, _height);
 			DrawMaze(_sortedMaze);
-			for (int i = 0; i < _width; i++)
+			for (var i = 0; i < _width; i++)
 			{
-				for (int j = 0; j < _height; j++)
+				for (var j = 0; j < _height; j++)
 				{
 					_sortedMaze.Find(a => a.Coordinates.X == i && a.Coordinates.Y == j).Visited = false;
 				}
@@ -96,19 +97,11 @@ namespace Maze
 
 					if (_dijkstraAlreadyDisplayed)
 					{
-						foreach (var node in _dijkstraMaze.Where(node => node.Path))
-						{
-							node.Floor.gameObject.transform.GetComponent<Renderer>().material = pathMaterial;
-							node.Floor.parent = pathDijkstra;
-						}
+						ChangeParentOfObjects(pathDijkstra, pathMaterial, _dijkstraMaze);
 					}
 					else
 					{
-						foreach (var node in _dijkstraMaze.Where(node => node.Path))
-						{
-							node.Floor.gameObject.GetComponent<Renderer>().material = defaultFloorMaterial;
-							node.Floor.parent = floorObject;
-						}
+						ChangeParentOfObjects(floorObject, defaultFloorMaterial, _dijkstraMaze);
 					}
 					
 					pathDijkstra.gameObject.SetActive(_dijkstraAlreadyDisplayed);
@@ -120,19 +113,11 @@ namespace Maze
 
 					if (_aStarAlreadyDisplayed)
 					{
-						foreach (var node in _aStarMaze.Where(node => node.Path))
-						{
-							node.Floor.gameObject.transform.GetComponent<Renderer>().material = pathMaterial;
-							node.Floor.transform.parent = pathAStar;
-						}
+						ChangeParentOfObjects(pathAStar, pathMaterial, _aStarMaze);
 					}
 					else
 					{
-						foreach (var node in _aStarMaze.Where(node => node.Path))
-						{
-							node.Floor.gameObject.GetComponent<Renderer>().material = defaultFloorMaterial;
-							node.Floor.parent = floorObject;
-						}
+						ChangeParentOfObjects(floorObject, defaultFloorMaterial, _aStarMaze);
 					}
 					
 					pathAStar.gameObject.SetActive(_aStarAlreadyDisplayed);
@@ -148,9 +133,9 @@ namespace Maze
 		{
 			var maze = new List<MazeCell>();
 
-			for (int i = 0; i < w; i++)
+			for (var i = 0; i < w; i++)
 			{
-				for (int j = 0; j < h; j++)
+				for (var j = 0; j < h; j++)
 				{
 					maze.Add(new MazeCell(true, true, true, true, false, i, j, 1));
 				}
@@ -159,34 +144,32 @@ namespace Maze
 			maze.Find(a => a.Coordinates.X == 0 && a.Coordinates.Y == 0).StartNode = true;
 			maze.Find(a => a.Coordinates.X == w - 1 && a.Coordinates.Y == h - 1).GoalNode = true;
 
-			var newMaze = PlayerPrefs.GetInt("Kruskal") == 1 ? Kruskal.Algorithm(maze, w, h) : RecursiveBacktracker.Algorithm(maze, w, h);
-			return newMaze;
+			return PlayerPrefs.GetInt("Kruskal") == 1 ? Kruskal.Algorithm(maze, w, h) : RecursiveBacktracker.Algorithm(maze, w, h);
 		}
 
 		private void DrawMaze(List<MazeCell> maze)
 		{
-			var size = 0.5f;
-			var topOffset = new Vector3(0, 0, size);
-			var leftOffset = new Vector3(-size, 0, 0);
-			var rightOffset = new Vector3(size, 0, 0);
-			var bottomOffset = new Vector3(0, 0, -size);
+			var topOffset = new Vector3(0, 0, Offset);
+			var leftOffset = new Vector3(-Offset, 0, 0);
+			var rightOffset = new Vector3(Offset, 0, 0);
+			var bottomOffset = new Vector3(0, 0, -Offset);
 			
-			for (int i = 0; i < _width; i++)
+			for (var i = 0; i < _width; i++)
 			{
-				for (int j = 0; j < _height; j++)
+				for (var j = 0; j < _height; j++)
 				{
 					var currentIndex = maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j);
 					var pos = new Vector3(-_width / 2 + i, 0, -_height / 2 + j);
 
 					if (maze[currentIndex].StartNode)
 					{
-						maze[currentIndex].MazeNode = Instantiate(startEndPrefab, pos + new Vector3(0, size, 0), Quaternion.identity,transform);
+						maze[currentIndex].MazeNode = Instantiate(startEndPrefab, pos + new Vector3(0, Offset, 0), Quaternion.identity,transform);
 						maze[currentIndex].MazeNode.name = $"Node (Start) ({i},{j})";
 						maze[currentIndex].MazeNode.GetComponent<Renderer>().material.color = new Color(0, 204, 102);
 					}
 					else if (maze[currentIndex].GoalNode)
 					{
-						maze[currentIndex].MazeNode = Instantiate(startEndPrefab, pos + new Vector3(0, size, 0), Quaternion.identity,transform);
+						maze[currentIndex].MazeNode = Instantiate(startEndPrefab, pos + new Vector3(0, Offset, 0), Quaternion.identity,transform);
 						maze[currentIndex].MazeNode.name = $"Node (Goal) ({i},{j})";
 						maze[currentIndex].MazeNode.GetComponent<Renderer>().material.color = new Color(102, 190, 0);
 					}
@@ -224,6 +207,15 @@ namespace Maze
 						}
 					}
 				}
+			}
+		}
+
+		private void ChangeParentOfObjects(Transform parent, Material newMaterial, List<MazeCell> mazeList)
+		{
+			foreach (var node in mazeList)
+			{
+				node.Floor.gameObject.GetComponent<Renderer>().material = newMaterial;
+				node.Floor.parent = parent;
 			}
 		}
 	}

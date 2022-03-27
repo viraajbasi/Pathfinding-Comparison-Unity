@@ -2,8 +2,8 @@ namespace Maze
 {
     public class Neighbour
     {
-        public Position Coordinates;
-        public SharedWall Wall;
+        public readonly Position Coordinates;
+        public readonly SharedWall Wall;
 
         public Neighbour(int x, int y, SharedWall wall)
         {

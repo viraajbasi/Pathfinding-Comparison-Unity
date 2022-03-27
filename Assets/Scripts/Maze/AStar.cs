@@ -1,4 +1,5 @@
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Maze
@@ -67,12 +68,9 @@ namespace Maze
         {
             var lowestFCostNode = mazeList[0];
             
-            foreach (var node in mazeList)
+            foreach (var node in mazeList.Where(node => node.FCost < lowestFCostNode.FCost))
             {
-                if (node.FCost < lowestFCostNode.FCost)
-                {
-                    lowestFCostNode = node;
-                }
+                lowestFCostNode = node;
             }
 
             return lowestFCostNode;

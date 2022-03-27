@@ -5,6 +5,9 @@ namespace Maze
 {
 	public class MazeCell
 	{
+		public readonly Position Coordinates;
+		public readonly int Cost;
+		
 		public bool Top;
 		public bool Bottom;
 		public bool Left;
@@ -17,12 +20,9 @@ namespace Maze
 		
 		public Transform MazeNode;
 		public Transform Floor;
-		
-		public Position Coordinates;
 
 		public bool Path;
 		
-		public int Cost;
 		public int Distance = int.MaxValue;
 		
 		public int FCost => GCost + HCost;

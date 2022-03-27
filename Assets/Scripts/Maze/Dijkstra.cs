@@ -46,7 +46,7 @@ namespace Maze
                 path.Add(currentNode);
 
                 var neighbourList = MazeCell.GenerateNeighbourList(mazeList, currentNode);
-                var nodeWithShortestDistance = FindShortestNode(neighbourList);
+                var nodeWithShortestDistance = GetNodeWithLowestDistance(neighbourList);
 
                 currentNode = nodeWithShortestDistance;
             }
@@ -56,16 +56,13 @@ namespace Maze
             return path;
         }
 
-        private static MazeCell FindShortestNode(List<MazeCell> neighbourList)
+        private static MazeCell GetNodeWithLowestDistance(List<MazeCell> neighbourList)
         {
             var nodeWithLowestDistance = neighbourList[0];
 
-            foreach (var neighbour in neighbourList)
+            foreach (var neighbour in neighbourList.Where(neighbour => neighbour.Distance < nodeWithLowestDistance.Distance))
             {
-                if (neighbour.Distance < nodeWithLowestDistance.Distance)
-                {
-                    nodeWithLowestDistance = neighbour;
-                }
+                nodeWithLowestDistance = neighbour;
             }
 
             return nodeWithLowestDistance;
