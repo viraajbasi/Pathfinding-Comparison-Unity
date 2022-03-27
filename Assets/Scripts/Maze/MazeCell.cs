@@ -19,6 +19,8 @@ namespace Maze
 		public Transform Floor;
 		
 		public Position Coordinates;
+
+		public bool Path;
 		
 		public int Cost;
 		public int Distance = int.MaxValue;

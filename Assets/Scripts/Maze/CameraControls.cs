@@ -10,7 +10,7 @@ namespace Maze
         private float _yLimit = 40f;
         private float _scrollSpeed = 20f;
         private float _minY = 20f;
-        private float _maxY = 100f;
+        private float _maxY = 70f;
         private Vector3 _initialPosition;
         private Camera _mainCamera;
 

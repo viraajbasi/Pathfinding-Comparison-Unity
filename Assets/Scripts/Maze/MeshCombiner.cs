@@ -7,28 +7,35 @@ namespace Maze
     [RequireComponent(typeof(MeshRenderer))]
     public class MeshCombiner : MonoBehaviour
     {
-        private void Start()
+        public static bool MazeRendered;
+        
+        private void Update()
         {
-            var meshFilters = GetComponentsInChildren<MeshFilter>();
-            var combine = new CombineInstance[meshFilters.Length];
-            var i = 0;
-            var filteredMesh = transform.GetComponent<MeshFilter>();
-
-            while (i < meshFilters.Length)
+            while (MazeRendered)
             {
-                combine[i].mesh = meshFilters[i].sharedMesh;
-                combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
-                meshFilters[i].gameObject.SetActive(false);
+                var meshFilters = GetComponentsInChildren<MeshFilter>();
+                var combine = new CombineInstance[meshFilters.Length];
+                var i = 1;
+                var filteredMesh = transform.GetComponent<MeshFilter>();
 
-                i++;
+                while (i < meshFilters.Length)
+                {
+                    combine[i].mesh = meshFilters[i].sharedMesh;
+                    combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
+                    meshFilters[i].gameObject.SetActive(false);
+
+                    i++;
+                }
+
+                filteredMesh.mesh = new Mesh
+                {
+                    indexFormat = IndexFormat.UInt32
+                };
+                filteredMesh.mesh.CombineMeshes(combine);
+                transform.gameObject.SetActive(true);
+                
+                MazeRendered = false;
             }
-            
-            filteredMesh.mesh = new Mesh
-            {
-                indexFormat = IndexFormat.UInt32
-            };
-            filteredMesh.mesh.CombineMeshes(combine);
-            transform.gameObject.SetActive(true);
         }
     }
 }

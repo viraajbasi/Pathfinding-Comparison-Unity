@@ -38,11 +38,11 @@ namespace Maze
         {
             var path = new List<MazeCell> {startNode};
             var currentNode = startNode;
-            goalNode.Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
+            goalNode.Path = true;
 
             while (!currentNode.GoalNode)
             {
-                currentNode.Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
+                currentNode.Path = true;
                 path.Add(currentNode);
 
                 var neighbourList = MazeCell.GenerateNeighbourList(mazeList, currentNode);

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using MainMenu;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
-using Random = UnityEngine.Random;
 
 namespace Maze
 {
@@ -14,21 +14,25 @@ namespace Maze
 		public Transform startEndPrefab;
 		public Transform wallObject;
 		public Transform floorObject;
+		public Transform pathDijkstra;
+		public Transform pathAStar;
+		public Transform pathBellmanFord;
 		public GameObject completedScreen;
+		public Material pathMaterial;
+		public Material defaultFloorMaterial;
 
 		private static readonly Position StartPosition = new(0, 0);
 		
 		private readonly Stopwatch _stopwatch = new();
-
 		
-		private int _width = 100;
-		private int _height = 100;
+		private int _width = 70;
+		private int _height = 70;
 		private List<MazeCell> _sortedMaze;
 		private List<MazeCell> _dijkstraMaze;
 		private bool _dijkstraAlreadyDisplayed;
 		private List<MazeCell> _aStarMaze;
 		private bool _aStarAlreadyDisplayed;
-		
+
 		private void Start()
 		{
 			PauseMenu.GameCompleted = false;
@@ -57,13 +61,17 @@ namespace Maze
 				_stopwatch.Stop();
 				Debug.Log($"Elapsed Milliseconds = {_stopwatch.ElapsedMilliseconds}");
 				_stopwatch.Reset();
+				pathDijkstra.gameObject.SetActive(false);
 
 				_stopwatch.Start();
 				_aStarMaze = AStar.Algorithm(_sortedMaze);
 				_stopwatch.Stop();
 				Debug.Log($"Elapsed milliseconds = {_stopwatch.ElapsedMilliseconds}");
 				_stopwatch.Reset();
+				pathAStar.gameObject.SetActive(false);
 			}
+			
+			MeshCombiner.MazeRendered = true;
 		}
 
 		private void Update()
@@ -81,53 +89,55 @@ namespace Maze
 			
 			if (PlayerPrefs.GetInt("Pathfinding") == 1)
 			{
-				if (Input.GetKeyDown(KeyCode.H))
+				if (Input.GetKeyUp(KeyCode.H))
 				{
 					_dijkstraAlreadyDisplayed = !_dijkstraAlreadyDisplayed;
 
 					if (_dijkstraAlreadyDisplayed)
 					{
-						foreach (var node in _dijkstraMaze)
+						foreach (var node in _dijkstraMaze.Where(node => node.Path))
 						{
-							if (node.Floor.gameObject.GetComponent<Renderer>().material.color == Color.black)
-							{
-								node.Floor.gameObject.SetActive(true);
-							}
+							node.Floor.gameObject.transform.GetComponent<Renderer>().material = pathMaterial;
+							node.Floor.parent = pathDijkstra;
 						}
 					}
 					else
 					{
-						foreach (var node in _dijkstraMaze)
+						foreach (var node in _dijkstraMaze.Where(node => node.Path))
 						{
-							node.Floor.gameObject.SetActive(false);
+							node.Floor.gameObject.GetComponent<Renderer>().material = defaultFloorMaterial;
+							node.Floor.parent = floorObject;
 						}
 					}
+					
+					pathDijkstra.gameObject.SetActive(_dijkstraAlreadyDisplayed);
 				}
 
-				if (Input.GetKeyDown(KeyCode.J))
+				if (Input.GetKeyUp(KeyCode.J))
 				{
 					_aStarAlreadyDisplayed = !_aStarAlreadyDisplayed;
 
 					if (_aStarAlreadyDisplayed)
 					{
-						foreach (var node in _aStarMaze)
+						foreach (var node in _aStarMaze.Where(node => node.Path))
 						{
-							if (node.Floor.gameObject.GetComponent<Renderer>().material.color == Color.black)
-							{
-								node.Floor.gameObject.SetActive(true);
-							}
+							node.Floor.gameObject.transform.GetComponent<Renderer>().material = pathMaterial;
+							node.Floor.transform.parent = pathAStar;
 						}
 					}
 					else
 					{
-						foreach (var node in _aStarMaze)
+						foreach (var node in _aStarMaze.Where(node => node.Path))
 						{
-							node.Floor.gameObject.SetActive(false);
+							node.Floor.gameObject.GetComponent<Renderer>().material = defaultFloorMaterial;
+							node.Floor.parent = floorObject;
 						}
 					}
+					
+					pathAStar.gameObject.SetActive(_aStarAlreadyDisplayed);
 				}
 
-				if (Input.GetKeyDown(KeyCode.K))
+				if (Input.GetKeyUp(KeyCode.K))
 				{
 				}
 			}
@@ -141,9 +151,7 @@ namespace Maze
 			{
 				for (int j = 0; j < h; j++)
 				{
-					maze.Add(PlayerPrefs.GetInt("BellmanFord") == 0
-						? new MazeCell(true, true, true, true, false, i, j, 1)
-						: new MazeCell(true, true, true, true, false, i, j, ReturnCost()));
+					maze.Add(new MazeCell(true, true, true, true, false, i, j, 1));
 				}
 			}
 
@@ -161,11 +169,7 @@ namespace Maze
 			var leftOffset = new Vector3(-size, 0, 0);
 			var rightOffset = new Vector3(size, 0, 0);
 			var bottomOffset = new Vector3(0, 0, -size);
-
-			var bigFloor = Instantiate(floorPrefab, new Vector3(-size, -size, -size), Quaternion.identity, transform);
-			bigFloor.localScale = new Vector3(_width / 10f, 1, _height / 10f);
-			bigFloor.name = "Big floor";
-
+			
 			for (int i = 0; i < _width; i++)
 			{
 				for (int j = 0; j < _height; j++)
@@ -188,12 +192,7 @@ namespace Maze
 
 					maze[currentIndex].Floor = Instantiate(floorPrefab, pos, Quaternion.identity, floorObject);
 					maze[currentIndex].Floor.gameObject.name = $"Node ({i},{j}) Floor";
-					maze[currentIndex].Floor.gameObject.SetActive(false);
-					if (maze[currentIndex].Cost < 0)
-					{
-						maze[currentIndex].Floor.gameObject.GetComponent<Renderer>().material.color = new Color(0, 0, 179);
-					}
-					
+
 					if (maze[currentIndex].Top)
 					{
 						var topWall = Instantiate(wallPrefab, pos + topOffset, Quaternion.identity, wallObject);
@@ -225,18 +224,6 @@ namespace Maze
 					}
 				}
 			}
-		}
-
-		private int ReturnCost()
-		{
-			int rndIndex = Random.Range(-10, 10);
-
-			if (rndIndex < 0)
-			{
-				return -1;
-			}
-
-			return 1;
 		}
 	}
 }

@@ -85,7 +85,7 @@ namespace Maze
 
             while (currentNode.Parent != null)
             {
-                currentNode.Parent.Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
+                currentNode.Path = true;
                 path.Add(currentNode.Parent);
                 currentNode = currentNode.Parent;
             }
