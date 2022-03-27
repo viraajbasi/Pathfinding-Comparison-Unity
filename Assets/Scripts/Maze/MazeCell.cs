@@ -11,15 +11,20 @@ namespace Maze
 		public bool Visited;
 		public bool StartNode;
 		public bool GoalNode;
-		public Position Coordinates;
-		public int Cost;
+		
+		public MazeCell Parent = null;
+		
 		public Transform MazeNode;
 		public Transform Floor;
-		public float Distance = float.MaxValue;
-		public int GCost;
+		
+		public Position Coordinates;
+		
+		public int Cost;
+		public int Distance = int.MaxValue;
+		
+		public int FCost => GCost + HCost;
+		public int GCost = int.MaxValue;
 		public int HCost;
-		public int FCost;
-		public MazeCell Parent;
 
 		public MazeCell(bool top, bool bottom, bool left, bool right, bool visited, int x, int y, int cost)
 		{

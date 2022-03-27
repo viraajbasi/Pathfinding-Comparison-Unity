@@ -55,11 +55,9 @@ namespace MainMenu
         
         private void Start()
         {
-            PlayerPrefs.DeleteKey("Dijkstra");
-            PlayerPrefs.DeleteKey("A*");
-            PlayerPrefs.DeleteKey("BellmanFord");
-            PlayerPrefs.DeleteKey("RecursiveBacktracker");
+            PlayerPrefs.DeleteKey("Pathfinding");
             PlayerPrefs.DeleteKey("UserSolves");
+            PlayerPrefs.DeleteKey("RecursiveBacktracker");
             PlayerPrefs.DeleteKey("Kruskal");
         }
 

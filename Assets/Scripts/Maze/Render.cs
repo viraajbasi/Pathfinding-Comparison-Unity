@@ -54,8 +54,15 @@ namespace Maze
 				_dijkstraMaze = Dijkstra.Algorithm(_sortedMaze);
 				_stopwatch.Stop();
 				Debug.Log($"Elapsed Milliseconds = {_stopwatch.ElapsedMilliseconds}");
+				_stopwatch.Reset();
 				DijkstraStartNodeIndex = _dijkstraMaze.FindIndex(a => a.StartNode);
 				_endNodeIndex = _dijkstraMaze.FindIndex(a => a.GoalNode);
+				
+				_stopwatch.Start();
+				_aStarMaze = AStar.Algorithm(_sortedMaze);
+				_stopwatch.Stop();
+				Debug.Log($"Elapsed milliseconds = {_stopwatch.ElapsedMilliseconds}");
+				_stopwatch.Reset();
 			}
 		}
 
@@ -99,18 +106,6 @@ namespace Maze
 
 				if (Input.GetKeyDown(KeyCode.J))
 				{
-					_stopwatch.Start();
-					_aStarMaze = AStar.Algorithm(_sortedMaze);
-					_stopwatch.Stop();
-					Debug.Log($"Elapsed milliseconds = {_stopwatch.ElapsedMilliseconds}");
-					
-					/*foreach (var node in _aStarMaze)
-					{
-						if (node.Parent != null)
-						{
-							node.Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
-						}
-					}*/
 				}
 			}
 		}
