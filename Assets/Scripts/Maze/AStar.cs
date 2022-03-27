@@ -8,54 +8,57 @@ namespace Maze
     {
         public static List<MazeCell> Algorithm(List<MazeCell> mazeList)
         {
-            var startNode = mazeList.Find(a => a.StartNode);
-            var endNode = mazeList.Find(a => a.GoalNode);
             var openList = new List<MazeCell>();
-            var closedList = new HashSet<MazeCell>();
+            var closedList = new List<MazeCell>();
+            var startNodeIndex = mazeList.FindIndex(a => a.StartNode);
+            var endNodeIndex = mazeList.FindIndex(a => a.GoalNode);
             
-            openList.Add(startNode);
+            openList.Add(mazeList[startNodeIndex]);
+
+            foreach (var node in mazeList)
+            {
+                node.GCost = int.MaxValue;
+                node.Parent = null;
+            }
+
+            mazeList[startNodeIndex].GCost = 0;
+            mazeList[startNodeIndex].HCost = GetManhattanDistance(mazeList[startNodeIndex], mazeList[endNodeIndex]);
+            mazeList[startNodeIndex].FCost = CalculateFCost(mazeList[startNodeIndex]);
 
             while (openList.Count > 0)
             {
-                var currentNode = openList.First();
+                var currentNodeIndex = GetIndexOfLowestNode(openList);
+                var currentNode = mazeList[currentNodeIndex];
 
-                for (int i = 1; i < openList.Count; i++)
+                if (currentNode.GoalNode)
                 {
-                    if (openList[i].FCost < currentNode.FCost || openList[i].FCost < currentNode.FCost && openList[i].HCost < currentNode.HCost)
+                    mazeList = GetFinalPath(mazeList[endNodeIndex]);
+                }
+
+                openList.Remove(currentNode);
+                closedList.Add(currentNode);
+
+                var neighbourList = GenerateNeighbourList(mazeList, currentNodeIndex);
+
+                foreach (var neighbour in neighbourList)
+                {
+                    if (closedList.Contains(neighbour))
                     {
-                        currentNode.Visited = true;
-                        currentNode = openList[i];
+                        continue;
                     }
 
-                    openList.Remove(currentNode);
-                    closedList.Add(currentNode);
+                    var provisionalGCost = currentNode.GCost + GetManhattanDistance(currentNode, neighbour);
 
-                    if (currentNode.GoalNode)
+                    if (provisionalGCost < neighbour.GCost)
                     {
-                        mazeList = GetFinalPath(endNode, mazeList);
-                    }
+                        neighbour.Parent = currentNode;
+                        neighbour.GCost = provisionalGCost;
+                        neighbour.HCost = GetManhattanDistance(neighbour, mazeList[endNodeIndex]);
+                        neighbour.FCost = CalculateFCost(neighbour);
 
-                    var neighbourList = GenerateNeighbourList(mazeList, mazeList.FindIndex(a => a == currentNode));
-
-                    foreach (var neighbour in neighbourList)
-                    {
-                        if (closedList.Contains(neighbour))
+                        if (!openList.Contains(neighbour))
                         {
-                            continue;
-                        }
-
-                        var moveCost = currentNode.GCost + GetManhattenDistance(currentNode, neighbour);
-
-                        if (moveCost < neighbour.GCost || !openList.Contains(neighbour))
-                        {
-                            neighbour.GCost = moveCost;
-                            neighbour.HCost = GetManhattenDistance(neighbour, endNode);
-                            neighbour.Parent = currentNode;
-
-                            if (!openList.Contains(neighbour))
-                            {
-                                openList.Add(neighbour);
-                            }
+                            openList.Add(neighbour);
                         }
                     }
                 }
@@ -64,26 +67,42 @@ namespace Maze
             return mazeList;
         }
 
-        private static int GetManhattenDistance(MazeCell nodeA, MazeCell nodeB)
+        private static int GetManhattanDistance(MazeCell nodeA, MazeCell nodeB)
         {
             var distX = Mathf.Abs(nodeA.Coordinates.X - nodeB.Coordinates.X);
             var distY = Mathf.Abs(nodeA.Coordinates.Y - nodeB.Coordinates.Y);
 
             return distX + distY;
         }
-        
-        private static List<MazeCell> GetFinalPath(MazeCell endNode, List<MazeCell> mazeList)
+
+        private static int CalculateFCost(MazeCell node)
         {
+            return node.GCost + node.HCost;
+        }
+
+        private static int GetIndexOfLowestNode(List<MazeCell> mazeList)
+        {
+            var listFCost = mazeList.Select(a => a.FCost).ToList();
+            var node = mazeList.Find(a => a.FCost == listFCost.Min());
+            var index = mazeList.FindIndex(a => a == node);
+
+            return index;
+        }
+        
+        private static List<MazeCell> GetFinalPath(MazeCell endNode)
+        {
+            var path = new List<MazeCell> {endNode};
             var currentNode = endNode;
 
-            while (!currentNode.StartNode)
+            while (currentNode.Parent != null)
             {
-                var currentNodeIndex = mazeList.FindIndex(a => a == currentNode);
-                mazeList[currentNodeIndex].Path = true;
-                currentNode = mazeList[currentNodeIndex].Parent;
+                path.Add(currentNode.Parent);
+                currentNode = currentNode.Parent;
             }
 
-            return mazeList;
+            path.Reverse();
+
+            return path;
         }
 
         private static List<MazeCell> GenerateNeighbourList(List<MazeCell> mazeList, int currentIndex)

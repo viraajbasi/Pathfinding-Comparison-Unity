@@ -102,7 +102,15 @@ namespace Maze
 					_stopwatch.Start();
 					_aStarMaze = AStar.Algorithm(_sortedMaze);
 					_stopwatch.Stop();
-					Debug.Log(_stopwatch.ElapsedMilliseconds);
+					Debug.Log($"Elapsed milliseconds = {_stopwatch.ElapsedMilliseconds}");
+					
+					/*foreach (var node in _aStarMaze)
+					{
+						if (node.Parent != null)
+						{
+							node.Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
+						}
+					}*/
 				}
 			}
 		}

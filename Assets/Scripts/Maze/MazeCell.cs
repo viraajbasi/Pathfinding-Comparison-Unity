@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace Maze
 {
@@ -19,9 +18,8 @@ namespace Maze
 		public float Distance = float.MaxValue;
 		public int GCost;
 		public int HCost;
-		public int FCost => GCost + HCost;
+		public int FCost;
 		public MazeCell Parent;
-		public bool Path;
 
 		public MazeCell(bool top, bool bottom, bool left, bool right, bool visited, int x, int y, int cost)
 		{
