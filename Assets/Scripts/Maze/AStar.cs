@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Maze
 {
-    public class AStar
+    public static class AStar
     {
         public static List<MazeCell> Algorithm(List<MazeCell> mazeList)
         {
@@ -27,7 +27,7 @@ namespace Maze
                 openList.Remove(currentNode);
                 closedList.Add(currentNode);
 
-                var neighbourList = GenerateNeighbourList(mazeList, mazeList.FindIndex(a => a == currentNode));
+                var neighbourList = MazeCell.GenerateNeighbourList(mazeList, currentNode);
 
                 foreach (var neighbour in neighbourList)
                 {
@@ -78,34 +78,6 @@ namespace Maze
             return lowestFCostNode;
         }
 
-        private static List<MazeCell> GenerateNeighbourList(List<MazeCell> mazeList, int currentIndex)
-        {
-            var list = new List<MazeCell>();
-            var currentPosition = new Position(mazeList[currentIndex].Coordinates.X, mazeList[currentIndex].Coordinates.Y);
-
-            if (!mazeList[currentIndex].Top)
-            {
-                list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X && a.Coordinates.Y == currentPosition.Y + 1));
-            }
-
-            if (!mazeList[currentIndex].Left)
-            {
-                list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X - 1 && a.Coordinates.Y == currentPosition.Y));
-            }
-
-            if (!mazeList[currentIndex].Right)
-            {
-                list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X + 1 && a.Coordinates.Y == currentPosition.Y));
-            }
-
-            if (!mazeList[currentIndex].Bottom)
-            {
-                list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X && a.Coordinates.Y == currentPosition.Y - 1));
-            }
-
-            return list;
-        }
-
         private static List<MazeCell> GetPath(MazeCell goalNode)
         {
             var path = new List<MazeCell> {goalNode};
@@ -113,18 +85,13 @@ namespace Maze
 
             while (currentNode.Parent != null)
             {
+                currentNode.Parent.Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
                 path.Add(currentNode.Parent);
                 currentNode = currentNode.Parent;
             }
 
             path.Reverse();
-
-            foreach (var n in path)
-            {
-                n.Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
-                n.Floor.gameObject.SetActive(true);
-            }
-
+            
             return path;
         }
     }

@@ -9,7 +9,6 @@ namespace Maze
 {
 	public class Render : MonoBehaviour
 	{
-		public static int DijkstraStartNodeIndex;
 		public Transform wallPrefab;
 		public Transform floorPrefab;
 		public Transform startEndPrefab;
@@ -17,22 +16,25 @@ namespace Maze
 		public Transform floorObject;
 		public GameObject completedScreen;
 
-		private static Position _startPosition = new(0, 0);
+		private static readonly Position StartPosition = new(0, 0);
+		
+		private readonly Stopwatch _stopwatch = new();
+
+		
 		private int _width = 100;
 		private int _height = 100;
-		private bool _alreadyDisplayedPath;
 		private List<MazeCell> _sortedMaze;
 		private List<MazeCell> _dijkstraMaze;
+		private bool _dijkstraAlreadyDisplayed;
 		private List<MazeCell> _aStarMaze;
-		private Stopwatch _stopwatch = new();
-		private int _endNodeIndex;
+		private bool _aStarAlreadyDisplayed;
 		
 		private void Start()
 		{
 			PauseMenu.GameCompleted = false;
 			if (PlayerPrefs.GetInt("UserSolves") == 1)
 			{
-				UserSolves.StartPosition = _startPosition;
+				UserSolves.StartPosition = StartPosition;
 				_width = 20;
 				_height = 20;
 				PlayerPrefs.DeleteKey("MazeSolved");
@@ -55,9 +57,7 @@ namespace Maze
 				_stopwatch.Stop();
 				Debug.Log($"Elapsed Milliseconds = {_stopwatch.ElapsedMilliseconds}");
 				_stopwatch.Reset();
-				DijkstraStartNodeIndex = _dijkstraMaze.FindIndex(a => a.StartNode);
-				_endNodeIndex = _dijkstraMaze.FindIndex(a => a.GoalNode);
-				
+
 				_stopwatch.Start();
 				_aStarMaze = AStar.Algorithm(_sortedMaze);
 				_stopwatch.Stop();
@@ -68,7 +68,7 @@ namespace Maze
 
 		private void Update()
 		{
-			if (PlayerPrefs.GetInt("UserSolves") == 1)
+			if (PlayerPrefs.GetInt("UserSolves") == 1 && Time.timeScale > 0)
 			{
 				UserSolves.HandleKeyInput(_sortedMaze);
 
@@ -83,28 +83,51 @@ namespace Maze
 			{
 				if (Input.GetKeyDown(KeyCode.H))
 				{
-					_alreadyDisplayedPath = !_alreadyDisplayedPath;
-					
-					if (_alreadyDisplayedPath)
-					{
-						while (DijkstraStartNodeIndex != _endNodeIndex)
-						{
-							Dijkstra.GeneratePathToNode(_dijkstraMaze, DijkstraStartNodeIndex);
-						}
+					_dijkstraAlreadyDisplayed = !_dijkstraAlreadyDisplayed;
 
-						_dijkstraMaze[_endNodeIndex].Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
-						_dijkstraMaze[_endNodeIndex].Floor.gameObject.SetActive(true);
+					if (_dijkstraAlreadyDisplayed)
+					{
+						foreach (var node in _dijkstraMaze)
+						{
+							if (node.Floor.gameObject.GetComponent<Renderer>().material.color == Color.black)
+							{
+								node.Floor.gameObject.SetActive(true);
+							}
+						}
 					}
 					else
 					{
-						foreach (var n in _dijkstraMaze)
+						foreach (var node in _dijkstraMaze)
 						{
-							n.Floor.gameObject.SetActive(false);
+							node.Floor.gameObject.SetActive(false);
 						}
 					}
 				}
 
 				if (Input.GetKeyDown(KeyCode.J))
+				{
+					_aStarAlreadyDisplayed = !_aStarAlreadyDisplayed;
+
+					if (_aStarAlreadyDisplayed)
+					{
+						foreach (var node in _aStarMaze)
+						{
+							if (node.Floor.gameObject.GetComponent<Renderer>().material.color == Color.black)
+							{
+								node.Floor.gameObject.SetActive(true);
+							}
+						}
+					}
+					else
+					{
+						foreach (var node in _aStarMaze)
+						{
+							node.Floor.gameObject.SetActive(false);
+						}
+					}
+				}
+
+				if (Input.GetKeyDown(KeyCode.K))
 				{
 				}
 			}
@@ -140,7 +163,7 @@ namespace Maze
 			var bottomOffset = new Vector3(0, 0, -size);
 
 			var bigFloor = Instantiate(floorPrefab, new Vector3(-size, -size, -size), Quaternion.identity, transform);
-			bigFloor.localScale = new Vector3(_width / 10, 1, _height / 10);
+			bigFloor.localScale = new Vector3(_width / 10f, 1, _height / 10f);
 			bigFloor.name = "Big floor";
 
 			for (int i = 0; i < _width; i++)
@@ -214,34 +237,6 @@ namespace Maze
 			}
 
 			return 1;
-		}
-		
-		private static List<MazeCell> GenerateNeighbourList(List<MazeCell> mazeList, int currentIndex)
-		{
-			var list = new List<MazeCell>();
-			var currentPosition = new Position(mazeList[currentIndex].Coordinates.X, mazeList[currentIndex].Coordinates.Y);
-
-			if (!mazeList[currentIndex].Top)
-			{
-				list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X && a.Coordinates.Y == currentPosition.Y + 1));
-			}
-
-			if (!mazeList[currentIndex].Left)
-			{
-				list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X - 1 && a.Coordinates.Y == currentPosition.Y));
-			}
-
-			if (!mazeList[currentIndex].Right)
-			{
-				list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X + 1 && a.Coordinates.Y == currentPosition.Y));
-			}
-
-			if (!mazeList[currentIndex].Bottom)
-			{
-				list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X && a.Coordinates.Y == currentPosition.Y - 1));
-			}
-
-			return list;
 		}
 	}
 }

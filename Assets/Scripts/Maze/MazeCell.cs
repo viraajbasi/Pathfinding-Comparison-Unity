@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Maze
@@ -35,6 +36,34 @@ namespace Maze
 			Visited = visited;
 			Coordinates = new Position(x, y);
 			Cost = cost;
+		}
+
+		public static List<MazeCell> GenerateNeighbourList(List<MazeCell> mazeList, MazeCell currentNode)
+		{
+			var list = new List<MazeCell>();
+			var currentPosition = new Position(currentNode.Coordinates.X, currentNode.Coordinates.Y);
+
+			if (!currentNode.Top)
+			{
+				list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X && a.Coordinates.Y == currentPosition.Y + 1));
+			}
+
+			if (!currentNode.Left)
+			{
+				list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X - 1 && a.Coordinates.Y == currentPosition.Y));
+			}
+
+			if (!currentNode.Right)
+			{
+				list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X + 1 && a.Coordinates.Y == currentPosition.Y));
+			}
+
+			if (!currentNode.Bottom)
+			{
+				list.Add(mazeList.Find(a => a.Coordinates.X == currentPosition.X && a.Coordinates.Y == currentPosition.Y - 1));
+			}
+
+			return list;
 		}
 	}
 }

@@ -13,10 +13,7 @@ namespace Maze
             var combine = new CombineInstance[meshFilters.Length];
             var i = 0;
             var filteredMesh = transform.GetComponent<MeshFilter>();
-            
-            Debug.Log(meshFilters.Length);
-            Debug.Log(combine.Length);
-            
+
             while (i < meshFilters.Length)
             {
                 combine[i].mesh = meshFilters[i].sharedMesh;
