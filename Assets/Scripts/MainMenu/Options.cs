@@ -108,6 +108,7 @@ namespace MainMenu
 		
 		private void Start()
 		{
+			Application.targetFrameRate = 60;
 			fullscreenToggle.isOn = Screen.fullScreen;
 			vSyncToggle.isOn = QualitySettings.vSyncCount != 0;
 			fpsToggle.isOn = PlayerPrefs.GetInt("FPS") == 1;

@@ -35,6 +35,7 @@ namespace Maze
 
 		private void Start()
 		{
+			Application.targetFrameRate = -1;
 			PauseMenu.GameCompleted = false;
 			if (PlayerPrefs.GetInt("UserSolves") == 1)
 			{
