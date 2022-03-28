@@ -30,14 +30,14 @@ namespace MainMenu
         
         public void BeginProgram()
         {
-            if (pathfindingToggle.isOn | userSolvesToggle.isOn && kruskalToggle.isOn | recursiveBacktrackerToggle.isOn)
+            if ((pathfindingToggle.isOn || userSolvesToggle.isOn) && (kruskalToggle.isOn || recursiveBacktrackerToggle.isOn))
             {
                 StoreToggleState(pathfindingToggle.isOn, recursiveBacktrackerToggle.isOn);
                 StartCoroutine(LoadAsync("Game"));
             }
             else
             {
-                if (recursiveBacktrackerToggle.isOn == false && kruskalToggle.isOn == false)
+                if (!recursiveBacktrackerToggle.isOn && !kruskalToggle.isOn)
                 {
                     OpenErrorScreen("Ensure a maze generation algorithm is chosen.");
                 }
