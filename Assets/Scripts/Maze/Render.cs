@@ -17,7 +17,9 @@ namespace Maze
 		public Transform pathAStar;
 		public Transform pathBellmanFord;
 		public GameObject completedScreen;
-		public Material pathMaterial;
+		public Material dijkstraMaterial;
+		public Material aStarMaterial;
+		public Material bellmanFordMaterial;
 		public Material defaultFloorMaterial;
 		
 		private const float Offset = 0.5f;
@@ -95,9 +97,9 @@ namespace Maze
 				{
 					_dijkstraAlreadyDisplayed = !_dijkstraAlreadyDisplayed;
 
-					if (_dijkstraAlreadyDisplayed)
+					if (_dijkstraAlreadyDisplayed && !_aStarAlreadyDisplayed)
 					{
-						ChangeParentOfObjects(pathDijkstra, pathMaterial, _dijkstraMaze);
+						ChangeParentOfObjects(pathDijkstra, dijkstraMaterial, _dijkstraMaze);
 					}
 					else
 					{
@@ -111,9 +113,9 @@ namespace Maze
 				{
 					_aStarAlreadyDisplayed = !_aStarAlreadyDisplayed;
 
-					if (_aStarAlreadyDisplayed)
+					if (_aStarAlreadyDisplayed && !_dijkstraAlreadyDisplayed)
 					{
-						ChangeParentOfObjects(pathAStar, pathMaterial, _aStarMaze);
+						ChangeParentOfObjects(pathAStar, aStarMaterial, _aStarMaze);
 					}
 					else
 					{
