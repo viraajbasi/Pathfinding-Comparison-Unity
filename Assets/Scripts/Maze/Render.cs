@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using MainMenu;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -28,13 +29,15 @@ namespace Maze
 		
 		private readonly Stopwatch _stopwatch = new();
 		
-		private int _width = 70;
-		private int _height = 70;
+		private int _width = 100;
+		private int _height = 100;
 		private List<MazeCell> _sortedMaze;
 		private List<MazeCell> _dijkstraMaze;
 		private bool _dijkstraAlreadyDisplayed;
 		private List<MazeCell> _aStarMaze;
 		private bool _aStarAlreadyDisplayed;
+		private List<MazeCell> _bellmanFordMaze;
+		private bool _bellmanFordAlreadyDisplayed;
 
 		private void Start()
 		{
@@ -73,6 +76,14 @@ namespace Maze
 				Debug.Log($"Elapsed milliseconds = {_stopwatch.ElapsedMilliseconds}");
 				_stopwatch.Reset();
 				pathAStar.gameObject.SetActive(false);
+				
+				_stopwatch.Start();
+				_bellmanFordMaze = BellmanFord.Algorithm(_sortedMaze);
+				_stopwatch.Stop();
+				Debug.Log($"Elapsed Milliseconds = {_stopwatch.ElapsedMilliseconds}");
+				_stopwatch.Reset();
+				pathBellmanFord.gameObject.SetActive(false);
+				Debug.Log(PlayerPrefs.GetInt("NegativeCycles"));
 			}
 			
 			MeshCombiner.MazeRendered = true;
@@ -97,7 +108,7 @@ namespace Maze
 				{
 					_dijkstraAlreadyDisplayed = !_dijkstraAlreadyDisplayed;
 
-					if (_dijkstraAlreadyDisplayed && !_aStarAlreadyDisplayed)
+					if (_dijkstraAlreadyDisplayed && !_aStarAlreadyDisplayed && !_bellmanFordAlreadyDisplayed)
 					{
 						ChangeParentOfObjects(pathDijkstra, dijkstraMaterial, _dijkstraMaze);
 					}
@@ -113,7 +124,7 @@ namespace Maze
 				{
 					_aStarAlreadyDisplayed = !_aStarAlreadyDisplayed;
 
-					if (_aStarAlreadyDisplayed && !_dijkstraAlreadyDisplayed)
+					if (_aStarAlreadyDisplayed && !_dijkstraAlreadyDisplayed && !_bellmanFordAlreadyDisplayed)
 					{
 						ChangeParentOfObjects(pathAStar, aStarMaterial, _aStarMaze);
 					}
@@ -127,6 +138,18 @@ namespace Maze
 
 				if (Input.GetKeyUp(KeyCode.K))
 				{
+					_bellmanFordAlreadyDisplayed = !_bellmanFordAlreadyDisplayed;
+
+					if (_bellmanFordAlreadyDisplayed && !_aStarAlreadyDisplayed && !_dijkstraAlreadyDisplayed)
+					{
+						ChangeParentOfObjects(pathBellmanFord, bellmanFordMaterial, _bellmanFordMaze);
+					}
+					else
+					{
+						ChangeParentOfObjects(floorObject, defaultFloorMaterial, _bellmanFordMaze);
+					}
+					
+					pathBellmanFord.gameObject.SetActive(_bellmanFordAlreadyDisplayed);
 				}
 			}
 		}
@@ -139,7 +162,7 @@ namespace Maze
 			{
 				for (var j = 0; j < h; j++)
 				{
-					maze.Add(new MazeCell(true, true, true, true, false, i, j, 1));
+					maze.Add(new MazeCell(true, true, true, true, false, i, j));
 				}
 			}
 
@@ -214,7 +237,7 @@ namespace Maze
 
 		private void ChangeParentOfObjects(Transform parent, Material newMaterial, List<MazeCell> mazeList)
 		{
-			foreach (var node in mazeList)
+			foreach (var node in mazeList.Where(node => node.Path))
 			{
 				node.Floor.gameObject.GetComponent<Renderer>().material = newMaterial;
 				node.Floor.parent = parent;

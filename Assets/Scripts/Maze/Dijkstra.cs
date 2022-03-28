@@ -22,6 +22,7 @@ namespace Maze
                 foreach (var node in nextNodes)
                 {
                     var nodeInList = mazeList.Find(a => a == node);
+                    node.Cost = Mathf.Abs(MazeCell.GetManhattanDistance(currentNode, node));
                     var newDistance = currentNode.Distance + node.Cost;
                     nodeInList.Distance = Mathf.Min(node.Distance, newDistance);
 
@@ -46,7 +47,7 @@ namespace Maze
                 path.Add(currentNode);
 
                 var neighbourList = MazeCell.GenerateNeighbourList(mazeList, currentNode);
-                var nodeWithShortestDistance = GetNodeWithLowestDistance(neighbourList);
+                var nodeWithShortestDistance = MazeCell.GetNodeWithLowestDistance(neighbourList);
 
                 currentNode = nodeWithShortestDistance;
             }
@@ -54,18 +55,6 @@ namespace Maze
             path.Add(goalNode);
 
             return path;
-        }
-
-        private static MazeCell GetNodeWithLowestDistance(List<MazeCell> neighbourList)
-        {
-            var nodeWithLowestDistance = neighbourList[0];
-
-            foreach (var neighbour in neighbourList.Where(neighbour => neighbour.Distance < nodeWithLowestDistance.Distance))
-            {
-                nodeWithLowestDistance = neighbour;
-            }
-
-            return nodeWithLowestDistance;
         }
     }
 }

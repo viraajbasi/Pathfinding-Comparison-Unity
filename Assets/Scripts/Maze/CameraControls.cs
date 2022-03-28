@@ -35,10 +35,10 @@ namespace Maze
             }
             else
             {
-                _maxY = 70;
+                _maxY = 100;
                 _minY = 15;
-                _xLimit = 30;
-                _zLimit = 30;
+                _xLimit = 40;
+                _zLimit = 40;
                 _initialPosition = new Vector3(0, _maxY, 0);
             }
             
