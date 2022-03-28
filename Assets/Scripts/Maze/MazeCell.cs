@@ -12,9 +12,11 @@ namespace Maze
 		public bool Bottom;
 		public bool Left;
 		public bool Right;
-		public bool Visited;
 		public bool StartNode;
 		public bool GoalNode;
+		
+		public bool Visited;
+		public int TotalVisitedNodes;
 		
 		public int Cost;
 		

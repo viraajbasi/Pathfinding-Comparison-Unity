@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Maze
 {
@@ -28,7 +28,7 @@ namespace Maze
                 {
                     if (node.Distance > neighbour.Distance + node.Cost)
                     {
-                        PlayerPrefs.SetInt("NegativeCycles", 1);
+                        throw new Exception("Negative cycles detected");
                     }
                 }
             }
@@ -42,6 +42,7 @@ namespace Maze
             
             if (nodeA.Distance > nodeB.Distance + nodeA.Cost)
             {
+                nodeA.Visited = true;
                 nodeA.Distance = nodeB.Distance + nodeA.Cost;
                 nodeA.Parent = nodeB;
             }

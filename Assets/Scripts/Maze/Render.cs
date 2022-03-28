@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using MainMenu;
+using UnityEditor;
 using UnityEngine;
+using static System.String;
 using Debug = UnityEngine.Debug;
 
 namespace Maze
@@ -22,24 +25,34 @@ namespace Maze
 		private const float Offset = 0.5f;
 
 		private static readonly Position StartPosition = new(0, 0);
-		
-		private readonly Stopwatch _stopwatch = new();
-		
+
 		private int _width = 100;
 		private int _height = 100;
 		private List<MazeCell> _sortedMaze;
+
+		private int _totalNodes;
+		private long _averageTimeTaken;
+		private string _currentAlgorithm;
+		
 		private List<MazeCell> _dijkstraMaze;
-		private bool _dijkstraAlreadyDisplayed;
+		private bool _dijkstraAlreadyDisplayed = true;
+		private long _dijkstraTimeTaken;
+		private int _dijkstraNodesVisited;
+		
 		private List<MazeCell> _aStarMaze;
-		private bool _aStarAlreadyDisplayed;
+		private bool _aStarAlreadyDisplayed = true;
+		private long _aStarTimeTaken;
+		private int _aStarNodesVisited;
+		
 		private List<MazeCell> _bellmanFordMaze;
-		private bool _bellmanFordAlreadyDisplayed;
+		private bool _bellmanFordAlreadyDisplayed = true;
+		private long _bellmanFordTimeTaken;
+		private int _bellmanFordNodesVisited;
 
 		private void Start()
 		{
 			Application.targetFrameRate = -1;
 			PauseMenu.GameCompleted = false;
-			PlayerPrefs.DeleteKey("NegativeCycles");
 			if (PlayerPrefs.GetInt("UserSolves") == 1)
 			{
 				UserSolves.StartPosition = StartPosition;
@@ -58,29 +71,37 @@ namespace Maze
 				}
 			}
 
+			_totalNodes = _sortedMaze.Count;
+			Debug.Log($"Total Nodes = {_totalNodes}");
+
 			if (PlayerPrefs.GetInt("Pathfinding") == 1)
 			{
-				_stopwatch.Start();
-				_dijkstraMaze = Dijkstra.Algorithm(_sortedMaze);
-				_stopwatch.Stop();
-				Debug.Log($"Elapsed Milliseconds = {_stopwatch.ElapsedMilliseconds}");
-				_stopwatch.Reset();
+				var (dijkstraMaze, dijkstraTime) = ExecuteAlgorithmAndFindTimeTaken(1);
+				_dijkstraMaze = dijkstraMaze;
+				_dijkstraTimeTaken = dijkstraTime;
+				Debug.Log($"Elapsed Milliseconds = {_dijkstraTimeTaken}");
 				pathDijkstra.gameObject.SetActive(false);
-
-				_stopwatch.Start();
-				_aStarMaze = AStar.Algorithm(_sortedMaze);
-				_stopwatch.Stop();
-				Debug.Log($"Elapsed milliseconds = {_stopwatch.ElapsedMilliseconds}");
-				_stopwatch.Reset();
-				pathAStar.gameObject.SetActive(false);
+				_dijkstraNodesVisited = FindTotalVisitedNodes(_dijkstraMaze);
+				Debug.Log($"Dijkstra Total Visited Nodes = {_dijkstraNodesVisited}");
 				
-				_stopwatch.Start();
-				_bellmanFordMaze = BellmanFord.Algorithm(_sortedMaze);
-				_stopwatch.Stop();
-				Debug.Log($"Elapsed Milliseconds = {_stopwatch.ElapsedMilliseconds}");
-				_stopwatch.Reset();
+				var (aStarMaze, aStarTime) = ExecuteAlgorithmAndFindTimeTaken(2);
+				_aStarMaze = aStarMaze;
+				_aStarTimeTaken = aStarTime;
+				Debug.Log($"Elapsed milliseconds = {_aStarTimeTaken}");
+				pathAStar.gameObject.SetActive(false);
+				_aStarNodesVisited = FindTotalVisitedNodes(_aStarMaze);
+				Debug.Log($"A* Total Visited Nodes = {_aStarNodesVisited}");
+				
+				var (bellmanFordMaze, bellmanFordTime) = ExecuteAlgorithmAndFindTimeTaken(3);
+				_bellmanFordMaze = bellmanFordMaze;
+				_bellmanFordTimeTaken = bellmanFordTime;
+				Debug.Log($"Elapsed Milliseconds = {_bellmanFordTimeTaken}");
 				pathBellmanFord.gameObject.SetActive(false);
-				Debug.Log(PlayerPrefs.GetInt("NegativeCycles"));
+				_bellmanFordNodesVisited = FindTotalVisitedNodes(_bellmanFordMaze);
+				Debug.Log($"Bellman-Ford Visited Nodes = {_bellmanFordNodesVisited}");
+
+				_averageTimeTaken = _aStarTimeTaken + _dijkstraTimeTaken + _bellmanFordTimeTaken / 3;
+				Debug.Log($"Average Time = {_averageTimeTaken}");
 			}
 			
 			MeshCombiner.MazeRendered = true;
@@ -101,52 +122,15 @@ namespace Maze
 			
 			if (PlayerPrefs.GetInt("Pathfinding") == 1)
 			{
-				if (Input.GetKeyUp(KeyCode.H))
+				foreach (KeyCode vKey in Enum.GetValues(typeof(KeyCode)))
 				{
-					_dijkstraAlreadyDisplayed = !_dijkstraAlreadyDisplayed;
-
-					if (_dijkstraAlreadyDisplayed && !_aStarAlreadyDisplayed && !_bellmanFordAlreadyDisplayed)
+					if (Input.GetKeyUp(vKey))
 					{
-						ChangeParentOfObjects(pathDijkstra, _dijkstraMaze);
+						_dijkstraAlreadyDisplayed = !_dijkstraAlreadyDisplayed;
+						_aStarAlreadyDisplayed = !_aStarAlreadyDisplayed;
+						_bellmanFordAlreadyDisplayed = !_bellmanFordAlreadyDisplayed;
+						HandleKeyInput(vKey);
 					}
-					else
-					{
-						ChangeParentOfObjects(floorObject, _dijkstraMaze);
-					}
-					
-					pathDijkstra.gameObject.SetActive(_dijkstraAlreadyDisplayed);
-				}
-
-				if (Input.GetKeyUp(KeyCode.J))
-				{
-					_aStarAlreadyDisplayed = !_aStarAlreadyDisplayed;
-
-					if (_aStarAlreadyDisplayed && !_dijkstraAlreadyDisplayed && !_bellmanFordAlreadyDisplayed)
-					{
-						ChangeParentOfObjects(pathAStar, _aStarMaze);
-					}
-					else
-					{
-						ChangeParentOfObjects(floorObject, _aStarMaze);
-					}
-					
-					pathAStar.gameObject.SetActive(_aStarAlreadyDisplayed);
-				}
-
-				if (Input.GetKeyUp(KeyCode.K))
-				{
-					_bellmanFordAlreadyDisplayed = !_bellmanFordAlreadyDisplayed;
-
-					if (_bellmanFordAlreadyDisplayed && !_aStarAlreadyDisplayed && !_dijkstraAlreadyDisplayed)
-					{
-						ChangeParentOfObjects(pathBellmanFord, _bellmanFordMaze);
-					}
-					else
-					{
-						ChangeParentOfObjects(floorObject, _bellmanFordMaze);
-					}
-					
-					pathBellmanFord.gameObject.SetActive(_bellmanFordAlreadyDisplayed);
 				}
 			}
 		}
@@ -239,6 +223,97 @@ namespace Maze
 				node.Floor.parent = parent;
 				node.Floor.gameObject.GetComponent<Renderer>().material = parent.gameObject.GetComponent<Renderer>().material;
 			}
+		}
+
+		private void HandleKeyInput(KeyCode key)
+		{
+			Transform parentObject;
+			List<MazeCell> maze;
+			bool isDisplayed;
+			
+			switch (key)
+			{
+				case KeyCode.H:
+					parentObject = pathDijkstra;
+					maze = _dijkstraMaze;
+					isDisplayed = _dijkstraAlreadyDisplayed;
+					_currentAlgorithm = "Dijkstra";
+					break;
+				
+				case KeyCode.J:
+					parentObject = pathAStar;
+					maze = _aStarMaze;
+					isDisplayed = _aStarAlreadyDisplayed;
+					_currentAlgorithm = "A*";
+					break;
+				
+				case KeyCode.K:
+					parentObject = pathBellmanFord;
+					maze = _bellmanFordMaze;
+					isDisplayed = _bellmanFordAlreadyDisplayed;
+					_currentAlgorithm = "Bellman-Ford";
+					break;
+				
+				default:
+					_currentAlgorithm = Empty;
+					return;
+			}
+
+			Debug.Log($"Current Algorithm = {_currentAlgorithm}");
+
+			ChangeParentOfObjects(isDisplayed ? floorObject : parentObject, maze);
+
+			parentObject.gameObject.SetActive(!isDisplayed);
+		}
+
+		private int FindTotalVisitedNodes(List<MazeCell> mazeList)
+		{
+			var count = 0;
+			
+			foreach (var node in mazeList.Where(node => node.Visited))
+			{
+				count++;
+			}
+
+			return count;
+		}
+
+		private (List<MazeCell> mazeList, long timeTaken) ExecuteAlgorithmAndFindTimeTaken(int algorithmToExecute)
+		{
+			Stopwatch sw = new();
+			long timeTaken;
+			List<MazeCell> mazeList;
+
+			switch (algorithmToExecute)
+			{
+				case 1:
+					sw.Start();
+					mazeList = Dijkstra.Algorithm(_sortedMaze);
+					sw.Stop();
+					timeTaken = sw.ElapsedMilliseconds;
+					break;
+				
+				case 2:
+					sw.Start();
+					mazeList = AStar.Algorithm(_sortedMaze);
+					sw.Stop();
+					timeTaken = sw.ElapsedMilliseconds;
+					break;
+				
+				case 3:
+					sw.Start();
+					mazeList = BellmanFord.Algorithm(_sortedMaze);
+					sw.Stop();
+					timeTaken = sw.ElapsedMilliseconds;
+					break;
+				
+				default:
+					throw new ArgumentException();
+			}
+			
+			sw.Reset();
+			
+			return (mazeList, timeTaken);
 		}
 	}
 }
