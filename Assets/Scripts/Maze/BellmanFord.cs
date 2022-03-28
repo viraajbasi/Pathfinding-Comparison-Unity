@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Maze
 {
@@ -32,6 +33,9 @@ namespace Maze
                     }
                 }
             }
+
+            var totalVisitedNodes = MazeCell.GetVisitedNodeCount(mazeList);
+            PlayerPrefs.SetInt("BellmanFordTotalVisited", totalVisitedNodes);
 
             return GetPath(mazeList, startNode, goalNode);
         }

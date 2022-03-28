@@ -32,6 +32,9 @@ namespace Maze
                 currentNode.Visited = true;
             }
 
+            var totalVisitedNodes = MazeCell.GetVisitedNodeCount(mazeList);
+            PlayerPrefs.SetInt("DijkstraTotalVisited", totalVisitedNodes);
+
             return GetPath(mazeList, startNode, targetNode);
         }
         

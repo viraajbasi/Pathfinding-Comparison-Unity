@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Maze
 {
@@ -18,10 +19,13 @@ namespace Maze
             while (openList.Count > 0)
             {
                 var currentNode = GetNodeWithLowestFCost(openList);
+                currentNode.Visited = true;
 
                 if (currentNode.GoalNode)
                 {
-                    return GetPath(goalNode);
+                    var totalVisitedNodes = MazeCell.GetVisitedNodeCount(closedList);
+                    PlayerPrefs.SetInt("A*TotalVisited", totalVisitedNodes);
+                    return GetPath(startNode, goalNode);
                 }
 
                 openList.Remove(currentNode);
@@ -67,7 +71,7 @@ namespace Maze
             return lowestFCostNode;
         }
 
-        private static List<MazeCell> GetPath(MazeCell goalNode)
+        private static List<MazeCell> GetPath(MazeCell startNode, MazeCell goalNode)
         {
             var path = new List<MazeCell> {goalNode};
             var currentNode = goalNode;
@@ -79,8 +83,11 @@ namespace Maze
                 currentNode = currentNode.Parent;
             }
 
-            path.Reverse();
+            startNode.Path = true;
+            path.Add(startNode);
             
+            path.Reverse();
+
             return path;
         }
     }

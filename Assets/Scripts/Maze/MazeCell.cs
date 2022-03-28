@@ -6,32 +6,37 @@ namespace Maze
 {
 	public class MazeCell
 	{
+		// Coordinates in Maze.
 		public readonly Position Coordinates;
-
+		
+		// Booleans relating to walls and other properties of the cell.
 		public bool Top;
 		public bool Bottom;
 		public bool Left;
 		public bool Right;
 		public bool StartNode;
 		public bool GoalNode;
-		
-		public bool Visited;
-		public int TotalVisitedNodes;
-		
-		public int Cost;
-		
-		public MazeCell Parent = null;
-		
-		public Transform MazeNode;
-		public Transform Floor;
 
-		public bool Path;
+		// Boolean to determine if cell is visited.
+		public bool Visited;
 		
-		public int Distance = int.MaxValue;
-		
+		// Weighting and distance variables for A*.
 		public int FCost => GCost + HCost;
 		public int GCost = int.MaxValue;
 		public int HCost;
+
+		// Weighting and distance variables for Dijkstra and Bellman-Ford..
+		public int Cost;
+		public int Distance = int.MaxValue;
+		
+		// Parent cell for backtracking purposes.
+		public MazeCell Parent = null;
+		
+		// Unity floor object.
+		public Transform Floor;
+
+		// Boolean to determine whether cell is in the optimal path.
+		public bool Path;
 
 		public MazeCell(bool top, bool bottom, bool left, bool right, bool visited, int x, int y)
 		{
@@ -89,6 +94,16 @@ namespace Maze
 			}
 
 			return nodeWithLowestDistance;
+		}
+
+		public static int GetVisitedNodeCount(List<MazeCell> mazeList)
+		{
+			return mazeList.Count(node => node.Visited);
+		}
+
+		public static int GetPathNodeCount(List<MazeCell> mazeList)
+		{
+			return mazeList.Count(node => node.Path);
 		}
 	}
 }

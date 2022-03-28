@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using MainMenu;
-using UnityEditor;
 using UnityEngine;
 using static System.String;
 using Debug = UnityEngine.Debug;
@@ -26,33 +25,42 @@ namespace Maze
 
 		private static readonly Position StartPosition = new(0, 0);
 
+		private long AverageTimeTaken => TotalTimeTaken / 3;
+		private long TotalTimeTaken => _dijkstraTimeTaken + _aStarTimeTaken + _bellmanFordTimeTaken;
+		
 		private int _width = 100;
 		private int _height = 100;
 		private List<MazeCell> _sortedMaze;
 
 		private int _totalNodes;
-		private long _averageTimeTaken;
 		private string _currentAlgorithm;
 		
 		private List<MazeCell> _dijkstraMaze;
 		private bool _dijkstraAlreadyDisplayed = true;
 		private long _dijkstraTimeTaken;
 		private int _dijkstraNodesVisited;
+		private int _dijkstraNodesInPath;
 		
 		private List<MazeCell> _aStarMaze;
 		private bool _aStarAlreadyDisplayed = true;
 		private long _aStarTimeTaken;
 		private int _aStarNodesVisited;
+		private int _aStarNodesInPath;
 		
 		private List<MazeCell> _bellmanFordMaze;
 		private bool _bellmanFordAlreadyDisplayed = true;
 		private long _bellmanFordTimeTaken;
 		private int _bellmanFordNodesVisited;
+		private int _bellmanFordNodesInPath;
 
 		private void Start()
 		{
 			Application.targetFrameRate = -1;
 			PauseMenu.GameCompleted = false;
+			PlayerPrefs.DeleteKey("DijkstraTotalVisited");
+			PlayerPrefs.DeleteKey("A*TotalVisited");
+			PlayerPrefs.DeleteKey("BellmanFordTotalVisited");
+			
 			if (PlayerPrefs.GetInt("UserSolves") == 1)
 			{
 				UserSolves.StartPosition = StartPosition;
@@ -76,32 +84,51 @@ namespace Maze
 
 			if (PlayerPrefs.GetInt("Pathfinding") == 1)
 			{
+				// DIJKSTRA
 				var (dijkstraMaze, dijkstraTime) = ExecuteAlgorithmAndFindTimeTaken(1);
 				_dijkstraMaze = dijkstraMaze;
 				_dijkstraTimeTaken = dijkstraTime;
 				Debug.Log($"Elapsed Milliseconds = {_dijkstraTimeTaken}");
-				pathDijkstra.gameObject.SetActive(false);
-				_dijkstraNodesVisited = FindTotalVisitedNodes(_dijkstraMaze);
-				Debug.Log($"Dijkstra Total Visited Nodes = {_dijkstraNodesVisited}");
 				
+				pathDijkstra.gameObject.SetActive(false);
+				
+				_dijkstraNodesVisited = PlayerPrefs.GetInt("DijkstraTotalVisited");
+				Debug.Log($"Dijkstra Total Visited Nodes = {_dijkstraNodesVisited}");
+
+				_dijkstraNodesInPath = MazeCell.GetPathNodeCount(_dijkstraMaze);
+				Debug.Log($"Dijkstra Total Path Nodes = {_dijkstraNodesInPath}");
+				
+				// A*
 				var (aStarMaze, aStarTime) = ExecuteAlgorithmAndFindTimeTaken(2);
 				_aStarMaze = aStarMaze;
 				_aStarTimeTaken = aStarTime;
 				Debug.Log($"Elapsed milliseconds = {_aStarTimeTaken}");
-				pathAStar.gameObject.SetActive(false);
-				_aStarNodesVisited = FindTotalVisitedNodes(_aStarMaze);
-				Debug.Log($"A* Total Visited Nodes = {_aStarNodesVisited}");
 				
+				pathAStar.gameObject.SetActive(false);
+
+				_aStarNodesVisited = PlayerPrefs.GetInt("A*TotalVisited");
+				Debug.Log($"A* Total Visited Nodes = {_aStarNodesVisited}");
+
+				_aStarNodesInPath = MazeCell.GetPathNodeCount(_aStarMaze);
+				Debug.Log($"A* Total Path Nodes = {_aStarNodesInPath}");
+				
+				// BELLMAN-FORD
 				var (bellmanFordMaze, bellmanFordTime) = ExecuteAlgorithmAndFindTimeTaken(3);
 				_bellmanFordMaze = bellmanFordMaze;
 				_bellmanFordTimeTaken = bellmanFordTime;
 				Debug.Log($"Elapsed Milliseconds = {_bellmanFordTimeTaken}");
+				
 				pathBellmanFord.gameObject.SetActive(false);
-				_bellmanFordNodesVisited = FindTotalVisitedNodes(_bellmanFordMaze);
+				
+				_bellmanFordNodesVisited = PlayerPrefs.GetInt("BellmanFordTotalVisited");
 				Debug.Log($"Bellman-Ford Visited Nodes = {_bellmanFordNodesVisited}");
 
-				_averageTimeTaken = _aStarTimeTaken + _dijkstraTimeTaken + _bellmanFordTimeTaken / 3;
-				Debug.Log($"Average Time = {_averageTimeTaken}");
+				_bellmanFordNodesInPath = MazeCell.GetPathNodeCount(_bellmanFordMaze);
+				Debug.Log($"Bellman-Ford Total Path Nodes = {_bellmanFordNodesInPath}");
+				
+				// General stats,
+				Debug.Log($"Total Time = {TotalTimeTaken}");
+				Debug.Log($"Average Time = {AverageTimeTaken}");
 			}
 			
 			MeshCombiner.MazeRendered = true;
@@ -135,25 +162,25 @@ namespace Maze
 			}
 		}
 
-		private List<MazeCell> GenerateRandomMaze(int w, int h)
+		private List<MazeCell> GenerateRandomMaze(int width, int height)
 		{
 			var maze = new List<MazeCell>();
 
-			for (var i = 0; i < w; i++)
+			for (var i = 0; i < width; i++)
 			{
-				for (var j = 0; j < h; j++)
+				for (var j = 0; j < height; j++)
 				{
 					maze.Add(new MazeCell(true, true, true, true, false, i, j));
 				}
 			}
 
 			maze.Find(a => a.Coordinates.X == 0 && a.Coordinates.Y == 0).StartNode = true;
-			maze.Find(a => a.Coordinates.X == w - 1 && a.Coordinates.Y == h - 1).GoalNode = true;
+			maze.Find(a => a.Coordinates.X == width - 1 && a.Coordinates.Y == height - 1).GoalNode = true;
 
-			return PlayerPrefs.GetInt("Kruskal") == 1 ? Kruskal.Algorithm(maze, w, h) : RecursiveBacktracker.Algorithm(maze, w, h);
+			return PlayerPrefs.GetInt("Kruskal") == 1 ? Kruskal.Algorithm(maze, width, height) : RecursiveBacktracker.Algorithm(maze, width, height);
 		}
 
-		private void DrawMaze(List<MazeCell> maze)
+		private void DrawMaze(List<MazeCell> mazeList)
 		{
 			var topOffset = new Vector3(0, 0, Offset);
 			var leftOffset = new Vector3(-Offset, 0, 0);
@@ -164,32 +191,32 @@ namespace Maze
 			{
 				for (var j = 0; j < _height; j++)
 				{
-					var currentIndex = maze.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j);
+					var currentIndex = mazeList.FindIndex(a => a.Coordinates.X == i && a.Coordinates.Y == j);
 					var pos = new Vector3(-_width / 2 + i, 0, -_height / 2 + j);
 
-					if (maze[currentIndex].StartNode)
+					if (mazeList[currentIndex].StartNode)
 					{
-						maze[currentIndex].MazeNode = Instantiate(startEndPrefab, pos + new Vector3(0, Offset, 0), Quaternion.identity,transform);
-						maze[currentIndex].MazeNode.name = $"Node (Start) ({i},{j})";
-						maze[currentIndex].MazeNode.GetComponent<Renderer>().material.color = new Color(0, 204, 102);
+						var mazeNode = Instantiate(startEndPrefab, pos + new Vector3(0, Offset, 0), Quaternion.identity,transform);
+						mazeNode.name = $"Node (Start) ({i},{j})";
+						mazeNode.GetComponent<Renderer>().material.color = new Color(0, 204, 102);
 					}
-					else if (maze[currentIndex].GoalNode)
+					else if (mazeList[currentIndex].GoalNode)
 					{
-						maze[currentIndex].MazeNode = Instantiate(startEndPrefab, pos + new Vector3(0, Offset, 0), Quaternion.identity,transform);
-						maze[currentIndex].MazeNode.name = $"Node (Goal) ({i},{j})";
-						maze[currentIndex].MazeNode.GetComponent<Renderer>().material.color = new Color(102, 190, 0);
+						var mazeNode = Instantiate(startEndPrefab, pos + new Vector3(0, Offset, 0), Quaternion.identity,transform);
+						mazeNode.name = $"Node (Goal) ({i},{j})";
+						mazeNode.GetComponent<Renderer>().material.color = new Color(102, 190, 0);
 					}
 
-					maze[currentIndex].Floor = Instantiate(floorPrefab, pos, Quaternion.identity, floorObject);
-					maze[currentIndex].Floor.gameObject.name = $"Node ({i},{j}) Floor";
+					mazeList[currentIndex].Floor = Instantiate(floorPrefab, pos, Quaternion.identity, floorObject);
+					mazeList[currentIndex].Floor.gameObject.name = $"Node ({i},{j}) Floor";
 
-					if (maze[currentIndex].Top)
+					if (mazeList[currentIndex].Top)
 					{
 						var topWall = Instantiate(wallPrefab, pos + topOffset, Quaternion.identity, wallObject);
 						topWall.name = $"Node ({i},{j}) Top Wall";
 					}
 
-					if (maze[currentIndex].Left)
+					if (mazeList[currentIndex].Left)
 					{
 						var leftWall = Instantiate(wallPrefab, pos + leftOffset, Quaternion.Euler(0, 90, 0), wallObject);
 						leftWall.name = $"Node ({i},{j}) Left Wall";
@@ -197,7 +224,7 @@ namespace Maze
 
 					if (i == _width - 1)
 					{
-						if (maze[currentIndex].Right)
+						if (mazeList[currentIndex].Right)
 						{
 							var rightWall = Instantiate(wallPrefab, pos + rightOffset, Quaternion.Euler(0, 90, 0), wallObject);
 							rightWall.name = $"Node ({i},{j}) Right Wall";
@@ -206,7 +233,7 @@ namespace Maze
 
 					if (j == 0)
 					{
-						if (maze[currentIndex].Bottom)
+						if (mazeList[currentIndex].Bottom)
 						{
 							var bottomWall = Instantiate(wallPrefab, pos + bottomOffset, Quaternion.identity, wallObject);
 							bottomWall.name = $"Node ({i},{j}) Bottom Wall";
@@ -264,18 +291,6 @@ namespace Maze
 			ChangeParentOfObjects(isDisplayed ? floorObject : parentObject, maze);
 
 			parentObject.gameObject.SetActive(!isDisplayed);
-		}
-
-		private int FindTotalVisitedNodes(List<MazeCell> mazeList)
-		{
-			var count = 0;
-			
-			foreach (var node in mazeList.Where(node => node.Visited))
-			{
-				count++;
-			}
-
-			return count;
 		}
 
 		private (List<MazeCell> mazeList, long timeTaken) ExecuteAlgorithmAndFindTimeTaken(int algorithmToExecute)
