@@ -22,7 +22,7 @@ namespace Maze
                 foreach (var node in nextNodes)
                 {
                     var nodeInList = mazeList.Find(a => a == node);
-                    node.Cost = Mathf.Abs(MazeCell.GetManhattanDistance(currentNode, node));
+                    node.Cost = MazeCell.GetManhattanDistance(currentNode, node);
                     var newDistance = currentNode.Distance + node.Cost;
                     nodeInList.Distance = Mathf.Min(node.Distance, newDistance);
 

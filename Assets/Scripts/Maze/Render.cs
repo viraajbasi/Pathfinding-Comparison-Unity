@@ -43,6 +43,7 @@ namespace Maze
 		{
 			Application.targetFrameRate = -1;
 			PauseMenu.GameCompleted = false;
+			PlayerPrefs.DeleteKey("NegativeCycles");
 			if (PlayerPrefs.GetInt("UserSolves") == 1)
 			{
 				UserSolves.StartPosition = StartPosition;

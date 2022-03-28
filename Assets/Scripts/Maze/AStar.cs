@@ -14,7 +14,7 @@ namespace Maze
             var closedList = new List<MazeCell>();
 
             startNode.GCost = 0;
-            startNode.HCost = Mathf.Abs(MazeCell.GetManhattanDistance(startNode, goalNode));
+            startNode.HCost = MazeCell.GetManhattanDistance(startNode, goalNode);
 
             while (openList.Count > 0)
             {
@@ -37,13 +37,13 @@ namespace Maze
                         continue;
                     }
 
-                    var provisionalGCost = currentNode.GCost + Mathf.Abs(MazeCell.GetManhattanDistance(currentNode, neighbour));
+                    var provisionalGCost = currentNode.GCost + MazeCell.GetManhattanDistance(currentNode, neighbour);
 
                     if (provisionalGCost < neighbour.GCost)
                     {
                         neighbour.Parent = currentNode;
                         neighbour.GCost = provisionalGCost;
-                        neighbour.HCost = Mathf.Abs(MazeCell.GetManhattanDistance(neighbour, goalNode));
+                        neighbour.HCost = MazeCell.GetManhattanDistance(neighbour, goalNode);
 
                         if (!openList.Contains(neighbour))
                         {

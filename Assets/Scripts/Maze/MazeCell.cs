@@ -74,7 +74,7 @@ namespace Maze
 			var distX = Mathf.Abs(nodeA.Coordinates.X - nodeB.Coordinates.X);
 			var distY = Mathf.Abs(nodeA.Coordinates.Y - nodeB.Coordinates.Y);
 
-			return distX + distY;
+			return Mathf.Abs(distX + distY);
 		}
 		
 		public static MazeCell GetNodeWithLowestDistance(List<MazeCell> neighbourList)

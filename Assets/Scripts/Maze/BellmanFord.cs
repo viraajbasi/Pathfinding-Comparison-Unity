@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,14 +20,16 @@ namespace Maze
                 }
             }
 
-            for (var i = 0; i < mazeList.Count - 1; i++)
+            foreach (var node in mazeList)
             {
-                var currentNode = mazeList[i];
-                var nextNode = mazeList[i + 1];
+                var neighbourList = MazeCell.GenerateNeighbourList(mazeList, node);
 
-                if (currentNode.Distance > nextNode.Distance + currentNode.Cost)
+                foreach (var neighbour in neighbourList)
                 {
-                    PlayerPrefs.SetInt("NegativeCycles", 1);
+                    if (node.Distance > neighbour.Distance + node.Cost)
+                    {
+                        PlayerPrefs.SetInt("NegativeCycles", 1);
+                    }
                 }
             }
 
