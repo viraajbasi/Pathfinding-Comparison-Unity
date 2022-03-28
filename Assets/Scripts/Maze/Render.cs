@@ -18,11 +18,7 @@ namespace Maze
 		public Transform pathAStar;
 		public Transform pathBellmanFord;
 		public GameObject completedScreen;
-		public Material dijkstraMaterial;
-		public Material aStarMaterial;
-		public Material bellmanFordMaterial;
-		public Material defaultFloorMaterial;
-		
+
 		private const float Offset = 0.5f;
 
 		private static readonly Position StartPosition = new(0, 0);
@@ -111,11 +107,11 @@ namespace Maze
 
 					if (_dijkstraAlreadyDisplayed && !_aStarAlreadyDisplayed && !_bellmanFordAlreadyDisplayed)
 					{
-						ChangeParentOfObjects(pathDijkstra, dijkstraMaterial, _dijkstraMaze);
+						ChangeParentOfObjects(pathDijkstra, _dijkstraMaze);
 					}
 					else
 					{
-						ChangeParentOfObjects(floorObject, defaultFloorMaterial, _dijkstraMaze);
+						ChangeParentOfObjects(floorObject, _dijkstraMaze);
 					}
 					
 					pathDijkstra.gameObject.SetActive(_dijkstraAlreadyDisplayed);
@@ -127,11 +123,11 @@ namespace Maze
 
 					if (_aStarAlreadyDisplayed && !_dijkstraAlreadyDisplayed && !_bellmanFordAlreadyDisplayed)
 					{
-						ChangeParentOfObjects(pathAStar, aStarMaterial, _aStarMaze);
+						ChangeParentOfObjects(pathAStar, _aStarMaze);
 					}
 					else
 					{
-						ChangeParentOfObjects(floorObject, defaultFloorMaterial, _aStarMaze);
+						ChangeParentOfObjects(floorObject, _aStarMaze);
 					}
 					
 					pathAStar.gameObject.SetActive(_aStarAlreadyDisplayed);
@@ -143,11 +139,11 @@ namespace Maze
 
 					if (_bellmanFordAlreadyDisplayed && !_aStarAlreadyDisplayed && !_dijkstraAlreadyDisplayed)
 					{
-						ChangeParentOfObjects(pathBellmanFord, bellmanFordMaterial, _bellmanFordMaze);
+						ChangeParentOfObjects(pathBellmanFord, _bellmanFordMaze);
 					}
 					else
 					{
-						ChangeParentOfObjects(floorObject, defaultFloorMaterial, _bellmanFordMaze);
+						ChangeParentOfObjects(floorObject, _bellmanFordMaze);
 					}
 					
 					pathBellmanFord.gameObject.SetActive(_bellmanFordAlreadyDisplayed);
@@ -236,12 +232,12 @@ namespace Maze
 			}
 		}
 
-		private void ChangeParentOfObjects(Transform parent, Material newMaterial, List<MazeCell> mazeList)
+		private void ChangeParentOfObjects(Transform parent, List<MazeCell> mazeList)
 		{
 			foreach (var node in mazeList.Where(node => node.Path))
 			{
-				node.Floor.gameObject.GetComponent<Renderer>().material = newMaterial;
 				node.Floor.parent = parent;
+				node.Floor.gameObject.GetComponent<Renderer>().material = parent.gameObject.GetComponent<Renderer>().material;
 			}
 		}
 	}
