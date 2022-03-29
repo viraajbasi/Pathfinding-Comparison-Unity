@@ -6,8 +6,9 @@ namespace Maze
 {
 	public class MazeCell
 	{
-		// Coordinates in Maze.
+		// Related to maze.
 		public readonly Position Coordinates;
+		public SharedWall SharedWall;
 		
 		// Booleans relating to walls and other properties of the cell.
 		public bool Top;

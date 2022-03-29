@@ -59,13 +59,13 @@ namespace Maze
 			PlayerPrefs.DeleteKey("DijkstraTotalVisited");
 			PlayerPrefs.DeleteKey("A*TotalVisited");
 			PlayerPrefs.DeleteKey("BellmanFordTotalVisited");
+			PlayerPrefs.DeleteKey("MazeSolved");
 			
 			if (PlayerPrefs.GetInt("UserSolves") == 1)
 			{
 				UserSolves.StartPosition = StartPosition;
 				_width = 20;
 				_height = 20;
-				PlayerPrefs.DeleteKey("MazeSolved");
 			}
 			
 			_sortedMaze = GenerateRandomMaze(_width, _height);
@@ -79,7 +79,6 @@ namespace Maze
 			}
 
 			_totalNodes = _sortedMaze.Count;
-			print($"Total Nodes = {_totalNodes}");
 
 			if (PlayerPrefs.GetInt("Pathfinding") == 1)
 			{
@@ -87,47 +86,48 @@ namespace Maze
 				var (dijkstraMaze, dijkstraTime) = ExecuteAlgorithmAndFindTimeTaken(1);
 				_dijkstraMaze = dijkstraMaze;
 				_dijkstraTimeTaken = dijkstraTime;
-				print($"Elapsed Milliseconds = {_dijkstraTimeTaken}");
-				
+
 				pathDijkstra.gameObject.SetActive(false);
 				
 				_dijkstraNodesVisited = PlayerPrefs.GetInt("DijkstraTotalVisited");
-				print($"Dijkstra Total Visited Nodes = {_dijkstraNodesVisited}");
 
 				_dijkstraNodesInPath = MazeCell.GetPathNodeCount(_dijkstraMaze);
-				print($"Dijkstra Total Path Nodes = {_dijkstraNodesInPath}");
-				
+
 				// A*
 				var (aStarMaze, aStarTime) = ExecuteAlgorithmAndFindTimeTaken(2);
 				_aStarMaze = aStarMaze;
 				_aStarTimeTaken = aStarTime;
-				print($"Elapsed milliseconds = {_aStarTimeTaken}");
-				
+
 				pathAStar.gameObject.SetActive(false);
 
 				_aStarNodesVisited = PlayerPrefs.GetInt("A*TotalVisited");
-				print($"A* Total Visited Nodes = {_aStarNodesVisited}");
 
 				_aStarNodesInPath = MazeCell.GetPathNodeCount(_aStarMaze);
-				print($"A* Total Path Nodes = {_aStarNodesInPath}");
-				
+
 				// BELLMAN-FORD
 				var (bellmanFordMaze, bellmanFordTime) = ExecuteAlgorithmAndFindTimeTaken(3);
 				_bellmanFordMaze = bellmanFordMaze;
 				_bellmanFordTimeTaken = bellmanFordTime;
-				print($"Elapsed Milliseconds = {_bellmanFordTimeTaken}");
-				
+
 				pathBellmanFord.gameObject.SetActive(false);
 				
 				_bellmanFordNodesVisited = PlayerPrefs.GetInt("BellmanFordTotalVisited");
-				print($"Bellman-Ford Visited Nodes = {_bellmanFordNodesVisited}");
 
 				_bellmanFordNodesInPath = MazeCell.GetPathNodeCount(_bellmanFordMaze);
+
+				// Stats
+				print($"Dijkstra Time to Execute = {_dijkstraTimeTaken}ms");
+				print($"Dijkstra Total Visited Nodes = {_dijkstraNodesVisited}");
+				print($"Dijkstra Total Path Nodes = {_dijkstraNodesInPath}");
+				print($"A* Time to Execute = {_aStarTimeTaken}ms");
+				print($"A* Total Visited Nodes = {_aStarNodesVisited}");
+				print($"A* Total Path Nodes = {_aStarNodesInPath}");
+				print($"Bellman-Ford Time to Execute = {_bellmanFordTimeTaken}ms");
+				print($"Bellman-Ford Visited Nodes = {_bellmanFordNodesVisited}");
 				print($"Bellman-Ford Total Path Nodes = {_bellmanFordNodesInPath}");
-				
-				// General stats,
-				print($"Total Time = {TotalTimeTaken}");
-				print($"Average Time = {AverageTimeTaken}");
+				print($"Total Nodes = {_totalNodes}");
+				print($"Total Time = {TotalTimeTaken}ms");
+				print($"Average Time = {AverageTimeTaken}ms");
 			}
 			
 			MeshCombiner.MazeRendered = true;
@@ -163,20 +163,20 @@ namespace Maze
 
 		private List<MazeCell> GenerateRandomMaze(int width, int height)
 		{
-			var maze = new List<MazeCell>();
+			var mazeList = new List<MazeCell>();
 
 			for (var i = 0; i < width; i++)
 			{
 				for (var j = 0; j < height; j++)
 				{
-					maze.Add(new MazeCell(true, true, true, true, false, i, j));
+					mazeList.Add(new MazeCell(true, true, true, true, false, i, j));
 				}
 			}
 
-			maze.Find(a => a.Coordinates.X == 0 && a.Coordinates.Y == 0).StartNode = true;
-			maze.Find(a => a.Coordinates.X == width - 1 && a.Coordinates.Y == height - 1).GoalNode = true;
+			mazeList.Find(a => a.Coordinates.X == 0 && a.Coordinates.Y == 0).StartNode = true;
+			mazeList.Find(a => a.Coordinates.X == width - 1 && a.Coordinates.Y == height - 1).GoalNode = true;
 
-			return PlayerPrefs.GetInt("Kruskal") == 1 ? Kruskal.Algorithm(maze, width, height) : RecursiveBacktracker.Algorithm(maze, width, height);
+			return PlayerPrefs.GetInt("Kruskal") == 1 ? Kruskal.Algorithm(mazeList, width, height) : RecursiveBacktracker.Algorithm(mazeList, width, height);
 		}
 
 		private void DrawMaze(List<MazeCell> mazeList)
