@@ -5,7 +5,6 @@ using System.Linq;
 using MainMenu;
 using UnityEngine;
 using static System.String;
-using Debug = UnityEngine.Debug;
 
 namespace Maze
 {
@@ -80,7 +79,7 @@ namespace Maze
 			}
 
 			_totalNodes = _sortedMaze.Count;
-			Debug.Log($"Total Nodes = {_totalNodes}");
+			print($"Total Nodes = {_totalNodes}");
 
 			if (PlayerPrefs.GetInt("Pathfinding") == 1)
 			{
@@ -88,47 +87,47 @@ namespace Maze
 				var (dijkstraMaze, dijkstraTime) = ExecuteAlgorithmAndFindTimeTaken(1);
 				_dijkstraMaze = dijkstraMaze;
 				_dijkstraTimeTaken = dijkstraTime;
-				Debug.Log($"Elapsed Milliseconds = {_dijkstraTimeTaken}");
+				print($"Elapsed Milliseconds = {_dijkstraTimeTaken}");
 				
 				pathDijkstra.gameObject.SetActive(false);
 				
 				_dijkstraNodesVisited = PlayerPrefs.GetInt("DijkstraTotalVisited");
-				Debug.Log($"Dijkstra Total Visited Nodes = {_dijkstraNodesVisited}");
+				print($"Dijkstra Total Visited Nodes = {_dijkstraNodesVisited}");
 
 				_dijkstraNodesInPath = MazeCell.GetPathNodeCount(_dijkstraMaze);
-				Debug.Log($"Dijkstra Total Path Nodes = {_dijkstraNodesInPath}");
+				print($"Dijkstra Total Path Nodes = {_dijkstraNodesInPath}");
 				
 				// A*
 				var (aStarMaze, aStarTime) = ExecuteAlgorithmAndFindTimeTaken(2);
 				_aStarMaze = aStarMaze;
 				_aStarTimeTaken = aStarTime;
-				Debug.Log($"Elapsed milliseconds = {_aStarTimeTaken}");
+				print($"Elapsed milliseconds = {_aStarTimeTaken}");
 				
 				pathAStar.gameObject.SetActive(false);
 
 				_aStarNodesVisited = PlayerPrefs.GetInt("A*TotalVisited");
-				Debug.Log($"A* Total Visited Nodes = {_aStarNodesVisited}");
+				print($"A* Total Visited Nodes = {_aStarNodesVisited}");
 
 				_aStarNodesInPath = MazeCell.GetPathNodeCount(_aStarMaze);
-				Debug.Log($"A* Total Path Nodes = {_aStarNodesInPath}");
+				print($"A* Total Path Nodes = {_aStarNodesInPath}");
 				
 				// BELLMAN-FORD
 				var (bellmanFordMaze, bellmanFordTime) = ExecuteAlgorithmAndFindTimeTaken(3);
 				_bellmanFordMaze = bellmanFordMaze;
 				_bellmanFordTimeTaken = bellmanFordTime;
-				Debug.Log($"Elapsed Milliseconds = {_bellmanFordTimeTaken}");
+				print($"Elapsed Milliseconds = {_bellmanFordTimeTaken}");
 				
 				pathBellmanFord.gameObject.SetActive(false);
 				
 				_bellmanFordNodesVisited = PlayerPrefs.GetInt("BellmanFordTotalVisited");
-				Debug.Log($"Bellman-Ford Visited Nodes = {_bellmanFordNodesVisited}");
+				print($"Bellman-Ford Visited Nodes = {_bellmanFordNodesVisited}");
 
 				_bellmanFordNodesInPath = MazeCell.GetPathNodeCount(_bellmanFordMaze);
-				Debug.Log($"Bellman-Ford Total Path Nodes = {_bellmanFordNodesInPath}");
+				print($"Bellman-Ford Total Path Nodes = {_bellmanFordNodesInPath}");
 				
 				// General stats,
-				Debug.Log($"Total Time = {TotalTimeTaken}");
-				Debug.Log($"Average Time = {AverageTimeTaken}");
+				print($"Total Time = {TotalTimeTaken}");
+				print($"Average Time = {AverageTimeTaken}");
 			}
 			
 			MeshCombiner.MazeRendered = true;
@@ -186,7 +185,9 @@ namespace Maze
 			var leftOffset = new Vector3(-Offset, 0, 0);
 			var rightOffset = new Vector3(Offset, 0, 0);
 			var bottomOffset = new Vector3(0, 0, -Offset);
-			
+			var yOffset = new Vector3(0, Offset, 0);
+			var wallRotation = Quaternion.Euler(0, 90, 0);
+
 			for (var i = 0; i < _width; i++)
 			{
 				for (var j = 0; j < _height; j++)
@@ -196,13 +197,13 @@ namespace Maze
 
 					if (mazeList[currentIndex].StartNode)
 					{
-						var mazeNode = Instantiate(startEndPrefab, pos + new Vector3(0, Offset, 0), Quaternion.identity,transform);
+						var mazeNode = Instantiate(startEndPrefab, pos + yOffset, Quaternion.identity,transform);
 						mazeNode.name = $"Node (Start) ({i},{j})";
 						mazeNode.GetComponent<Renderer>().material.color = new Color(0, 204, 102);
 					}
 					else if (mazeList[currentIndex].GoalNode)
 					{
-						var mazeNode = Instantiate(startEndPrefab, pos + new Vector3(0, Offset, 0), Quaternion.identity,transform);
+						var mazeNode = Instantiate(startEndPrefab, pos + yOffset, Quaternion.identity,transform);
 						mazeNode.name = $"Node (Goal) ({i},{j})";
 						mazeNode.GetComponent<Renderer>().material.color = new Color(102, 190, 0);
 					}
@@ -218,7 +219,7 @@ namespace Maze
 
 					if (mazeList[currentIndex].Left)
 					{
-						var leftWall = Instantiate(wallPrefab, pos + leftOffset, Quaternion.Euler(0, 90, 0), wallObject);
+						var leftWall = Instantiate(wallPrefab, pos + leftOffset, wallRotation, wallObject);
 						leftWall.name = $"Node ({i},{j}) Left Wall";
 					}
 
@@ -226,7 +227,7 @@ namespace Maze
 					{
 						if (mazeList[currentIndex].Right)
 						{
-							var rightWall = Instantiate(wallPrefab, pos + rightOffset, Quaternion.Euler(0, 90, 0), wallObject);
+							var rightWall = Instantiate(wallPrefab, pos + rightOffset, wallRotation, wallObject);
 							rightWall.name = $"Node ({i},{j}) Right Wall";
 						}
 					}
@@ -286,7 +287,7 @@ namespace Maze
 					return;
 			}
 
-			Debug.Log($"Current Algorithm = {_currentAlgorithm}");
+			print($"Current Algorithm = {_currentAlgorithm}");
 
 			ChangeParentOfObjects(isDisplayed ? floorObject : parentObject, maze);
 
