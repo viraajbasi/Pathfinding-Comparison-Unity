@@ -17,14 +17,14 @@ namespace Maze
             while (nodesToVisitQueue.Count > 0)
             {
                 var currentNode = nodesToVisitQueue.Dequeue();
-                var nextNodes = MazeCell.GenerateNeighbourList(mazeList, currentNode).Where(node => !node.Visited).ToList();
-                
-                foreach (var node in nextNodes)
+                var unvisitedNeighbourNodes = MazeCell.GenerateNeighbourList(mazeList, currentNode).Where(node => !node.Visited).ToList();
+
+                for (var i = 0; i < unvisitedNeighbourNodes.Count; i++)
                 {
-                    var nodeInList = mazeList.Find(a => a == node);
-                    node.Cost = MazeCell.GetManhattanDistance(currentNode, node);
-                    var newDistance = currentNode.Distance + node.Cost;
-                    nodeInList.Distance = Mathf.Min(node.Distance, newDistance);
+                    var nodeInList = unvisitedNeighbourNodes[i];
+                    nodeInList.Cost = MazeCell.GetManhattanDistance(currentNode, nodeInList);
+                    var newDistance = currentNode.Distance + nodeInList.Cost;
+                    nodeInList.Distance = Mathf.Min(nodeInList.Distance, newDistance);
 
                     nodesToVisitQueue.Enqueue(nodeInList);
                 }

@@ -6,7 +6,7 @@ namespace Maze
 {
 	public class MazeCell
 	{
-		// Related to maze.
+		// Related to maze generation.
 		public readonly Position Coordinates;
 		public SharedWall SharedWall;
 		

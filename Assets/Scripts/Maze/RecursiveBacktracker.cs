@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Random = UnityEngine.Random;
+using Random = System.Random;
 
 namespace Maze
 {
@@ -7,8 +7,9 @@ namespace Maze
 	{
 		public static List<MazeCell> Algorithm(List<MazeCell> mazeList, int width, int height)
 		{
+			var rng = new Random();
 			var positionStack = new Stack<Position>();
-			var randomPosition = new Position(Random.Range(0, width), Random.Range(0, height));
+			var randomPosition = new Position(rng.Next(0, width), rng.Next(0, height));
 			var randomPositionIndex = mazeList.FindIndex(a => a.Coordinates.X == randomPosition.X && a.Coordinates.Y == randomPosition.Y);
 
 			mazeList[randomPositionIndex].Visited = true;
@@ -22,35 +23,34 @@ namespace Maze
 				if (neighbourList.Count > 0)
 				{
 					positionStack.Push(currentPosition);
-					var randomNeighbour = neighbourList[Random.Range(0, neighbourList.Count)];
+					var randomNeighbour = neighbourList[rng.Next(0, neighbourList.Count)];
+					var currentNode = mazeList.Find(a => a.Coordinates.X == currentPosition.X && a.Coordinates.Y == currentPosition.Y);
 					var neighbourPosition = randomNeighbour.Coordinates;
-					var currentIndex = mazeList.FindIndex(a => a.Coordinates.X == currentPosition.X && a.Coordinates.Y == currentPosition.Y);
-					var neighbourIndex = mazeList.FindIndex(a => a.Coordinates.X == neighbourPosition.X && a.Coordinates.Y == neighbourPosition.Y);
 
 					switch (randomNeighbour.SharedWall)
 					{
 						case SharedWall.Top:
-							mazeList[currentIndex].Top = false;
-							mazeList[neighbourIndex].Bottom = false;
+							currentNode.Top = false;
+							randomNeighbour.Bottom = false;
 							break;
 
 						case SharedWall.Bottom:
-							mazeList[currentIndex].Bottom = false;
-							mazeList[neighbourIndex].Top = false;
+							currentNode.Bottom = false;
+							randomNeighbour.Top = false;
 							break;
 
 						case SharedWall.Left:
-							mazeList[currentIndex].Left = false;
-							mazeList[neighbourIndex].Right = false;
+							currentNode.Left = false;
+							randomNeighbour.Right = false;
 							break;
 
 						case SharedWall.Right:
-							mazeList[currentIndex].Right = false;
-							mazeList[neighbourIndex].Left = false;
+							currentNode.Right = false;
+							randomNeighbour.Left = false;
 							break;
 					}
-
-					mazeList[neighbourIndex].Visited = true;
+					
+					randomNeighbour.Visited = true;
 					positionStack.Push(neighbourPosition);
 				}
 			}
