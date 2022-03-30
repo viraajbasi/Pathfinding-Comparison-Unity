@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Maze
@@ -7,16 +8,23 @@ namespace Maze
     {
         public static Position StartPosition;
 
-        public static void HandleKeyInput(List<MazeCell> mazeList)
+        private static int _totalVisitedNodes;
+
+        public static void HandleKeyInput(List<MazeCell> mazeList, Color defaultFloorColour)
         {
             var currentNode = mazeList.Find(a => a.Coordinates.X == StartPosition.X && a.Coordinates.Y == StartPosition.Y);
-            
+            currentNode.Visited = true;
+
             if (currentNode.GoalNode)
             {
                 PlayerPrefs.SetInt("MazeSolved", 1);
             }
-            
-            if (Input.GetKeyDown(KeyCode.W) || Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.W))
+
+            if (Input.GetKey(KeyCode.Q))
+            {
+                StartPosition = ResetToStart(mazeList, defaultFloorColour);
+            } 
+            else if (Input.GetKeyDown(KeyCode.W) || Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.W))
             {
                 var topOffset = new Position(StartPosition.X, StartPosition.Y + 1);
                 var topNode = mazeList.Find(a => a.Coordinates.X == topOffset.X && a.Coordinates.Y == topOffset.Y);
@@ -71,8 +79,22 @@ namespace Maze
             
             currentNode.Floor.gameObject.SetActive(true);
             nextNode.Floor.gameObject.SetActive(true);
-            
+
             StartPosition = pos;
+        }
+
+        private static Position ResetToStart(List<MazeCell> mazeList, Color defaultColor)
+        {
+            foreach (var node in mazeList.Where(node =>  node.Floor.gameObject.GetComponent<Renderer>().material.color == Color.black || node.Floor.gameObject.GetComponent<Renderer>().material.color == Color.white))
+            {
+                node.Floor.gameObject.GetComponent<Renderer>().material.color = defaultColor;
+            }
+
+            var currentNode = mazeList.Find(a => a.StartNode);
+            var currentNodePosition = currentNode.Coordinates;
+            currentNode.Floor.gameObject.GetComponent<Renderer>().material.color = Color.white;
+
+            return currentNodePosition;
         }
     }
 }
