@@ -9796,11 +9796,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8865654166504870217, guid: 8e80a00ac01351d368f9a23027f587d1, type: 3}
       propertyPath: m_text
-      value: Help
+      value: 'Controls
+
+'
       objectReference: {fileID: 0}
     - target: {fileID: 8865654166504870217, guid: 8e80a00ac01351d368f9a23027f587d1, type: 3}
       propertyPath: m_fontSize
-      value: 72
+      value: 62.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8e80a00ac01351d368f9a23027f587d1, type: 3}

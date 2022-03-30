@@ -12,10 +12,11 @@ namespace Maze
         {
             var destination = $"{Application.persistentDataPath}/{fileName}";
             var currentDate = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+            var headerString = $"Statistics calculated on {currentDate}.";
 
             var data = new List<string>()
             {
-                currentDate,
+                headerString,
                 algName,
                 totNodes,
                 totVisNodes,
