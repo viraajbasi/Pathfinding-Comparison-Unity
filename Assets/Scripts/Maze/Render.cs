@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using MainMenu;
+using TMPro;
 using UnityEngine;
 using static System.String;
 
@@ -21,6 +21,8 @@ namespace Maze
 		public GameObject completedScreen;
 		public Material defaultFloorMaterial;
 		public GameObject informationPanel;
+		public GameObject fileSavedScreen;
+		public TMP_Text fileSavedText;
 
 		private const float Offset = 0.5f;
 
@@ -54,12 +56,10 @@ namespace Maze
 		private int _bellmanFordNodesVisited;
 		private int _bellmanFordNodesInPath;
 
-		private bool _informationPanelShown;
-
 		private void Start()
 		{
 			Application.targetFrameRate = -1;
-			PauseMenu.GameCompleted = false;
+			Time.timeScale = 1f;
 			PlayerPrefs.DeleteKey("DijkstraTotalVisited");
 			PlayerPrefs.DeleteKey("A*TotalVisited");
 			PlayerPrefs.DeleteKey("BellmanFordTotalVisited");
@@ -147,7 +147,7 @@ namespace Maze
 
 				if (PlayerPrefs.GetInt("MazeSolved") == 1)
 				{
-					PauseMenu.GameCompleted = true;
+					Time.timeScale = 0f;
 					completedScreen.SetActive(true);
 				}
 			}
@@ -161,8 +161,46 @@ namespace Maze
 						_dijkstraAlreadyDisplayed = !_dijkstraAlreadyDisplayed;
 						_aStarAlreadyDisplayed = !_aStarAlreadyDisplayed;
 						_bellmanFordAlreadyDisplayed = !_bellmanFordAlreadyDisplayed;
-						HandleKeyInput(vKey);
+						PathfindingDisplay(vKey);
 					}
+				}
+
+				if (Input.GetKeyUp(KeyCode.L))
+				{
+					var dijkstraList = new List<string>()
+					{
+						$"Time to Execute: {_dijkstraTimeTaken}",
+						$"Total Visited Nodes: {_dijkstraNodesVisited}",
+						$"Total Nodes in Path: {_dijkstraNodesInPath}"
+					};
+					
+					var aStarList = new List<string>()
+					{
+						$"Time to Execute: {_aStarTimeTaken}",
+						$"Total Visited Nodes: {_aStarNodesVisited}",
+						$"Total Nodes in Path: {_aStarNodesInPath}"
+					};
+					
+					var bellmanFordList = new List<string>()
+					{
+						$"Time to Execute: {_bellmanFordTimeTaken}",
+						$"Total Visited Nodes: {_bellmanFordNodesVisited}",
+						$"Total Nodes in Path: {_bellmanFordNodesInPath}"
+					};
+
+					var generalList = new List<string>()
+					{
+						$"Total Nodes: {_totalNodes}",
+						$"Total Time: {TotalTimeTaken}",
+						$"Average Time: {AverageTimeTaken}"
+					};
+					
+					SaveScript.SaveToFile(dijkstraList, aStarList, bellmanFordList, generalList);
+
+					Time.timeScale = 0f;
+					var fileLocation = PlayerPrefs.GetString("FileLocation");
+					fileSavedText.text = $"The statistics file was saved to '{fileLocation}'";
+					fileSavedScreen.SetActive(true);
 				}
 			}
 		}
@@ -259,7 +297,7 @@ namespace Maze
 			}
 		}
 
-		private void HandleKeyInput(KeyCode key)
+		private void PathfindingDisplay(KeyCode key)
 		{
 			Transform parentObject;
 			List<MazeCell> maze;

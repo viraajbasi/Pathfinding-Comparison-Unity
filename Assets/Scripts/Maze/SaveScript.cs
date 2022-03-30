@@ -8,26 +8,43 @@ namespace Maze
 {
     public static class SaveScript
     {
-        public static void SaveToFile(string fileName, string algName, string totNodes, string totVisNodes, string totPathNodes, string algTimeTaken, string totTimeTaken, string avgTimeTaken)
+        public static void SaveToFile(List<string> dijkstraList, List<string> aStarList, List<string> bellmanFordList, List<string> generalStats)
         {
-            var destination = $"{Application.persistentDataPath}/{fileName}";
             var currentDate = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+            var fileName = DateTime.Now.ToString("yyyMMdd");
+            var destination = $"{Application.persistentDataPath}/{fileName}.txt";
             var headerString = $"Statistics calculated on {currentDate}.";
-
-            var data = new List<string>()
-            {
-                headerString,
-                algName,
-                totNodes,
-                totVisNodes,
-                totPathNodes,
-                algTimeTaken,
-                totTimeTaken,
-                avgTimeTaken
-            };
-            
             var streamWriter = new StreamWriter(destination);
-            streamWriter.Write(data);
+            
+            streamWriter.WriteLine(headerString);
+            
+            streamWriter.WriteLine("Dijkstra:");
+            foreach (var str in dijkstraList)
+            {
+                streamWriter.WriteLine(str);
+            }
+            
+            streamWriter.WriteLine("A*:");
+            foreach (var str in aStarList)
+            {
+                streamWriter.WriteLine(str);
+            }
+            
+            streamWriter.WriteLine("Bellman-Ford:");
+            foreach (var str in bellmanFordList)
+            {
+                streamWriter.WriteLine(str);
+            }
+            
+            streamWriter.WriteLine("General Statistics:");
+            foreach (var str in generalStats)
+            {
+                streamWriter.WriteLine(str);
+            }
+            
+            streamWriter.Close();
+            
+            PlayerPrefs.SetString("FileLocation", destination);
         }
     }
 }

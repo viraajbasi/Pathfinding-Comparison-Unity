@@ -5,33 +5,24 @@ namespace MainMenu
 {
     public class PauseMenu : MonoBehaviour
     {
-        public static bool GameCompleted;
         public GameObject pauseMenu;
-        private bool _isPaused;
-        
+
         public void Resume()
         {
             pauseMenu.SetActive(false);
             Time.timeScale = 1f;
-            _isPaused = false;
         }
 
         public void ReturnToMainMenu()
         {
-            _isPaused = false;
             Time.timeScale = 1f;
             SceneManager.LoadScene("Menu");
         }
         
-        private void Pause(bool gameCompleted)
+        private void Pause()
         {
-            if (!gameCompleted)
-            {
-                pauseMenu.SetActive(true);
-            }
-
+            pauseMenu.SetActive(true);
             Time.timeScale = 0f;
-            _isPaused = true;
         }
 
         private void Start()
@@ -43,19 +34,14 @@ namespace MainMenu
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (_isPaused)
+                if (Time.timeScale == 0f)
                 {
                     Resume();
                 }
                 else
                 {
-                    Pause(GameCompleted);
+                    Pause();
                 }
-            }
-
-            if (GameCompleted)
-            {
-                Pause(GameCompleted);
             }
         }
     }

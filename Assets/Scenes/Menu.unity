@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657815, g: 0.49641192, b: 0.57481617, a: 1}
+  m_IndirectSpecularColor: {r: 0.4465791, g: 0.4964133, b: 0.57481784, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5816,9 +5816,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "'\u2191' : Pan Camera Up\n'\u2193' : Pan Camera Down\n'\u2190' : Pan Camera
-    Left\n'\u2192' : Pan Camera Right\n'\u21E7' : Hold to Speed Up\n'=' : Zoom In\n'-'
-    : Zoom Out\n'R' : Reset Position\n"
+  m_text: "General Controls\n'\u2191' : Pan Camera Up\n'\u2193' : Pan Camera Down\n'\u2190'
+    : Pan Camera Left\n'\u2192' : Pan Camera Right\n'\u21E7' : Hold to Speed Up\n'='
+    : Zoom In\n'-' : Zoom Out\n'R' : Reset Position of Camera\n'Esc' : Pause\n\nUser
+    Solves only:\n'W' : Move Upwards in Maze\n'A' : Move Left in Maze\n'S' : Move
+    Down in Maze\n'D' : Move Right in Maze\n'Q' : Reset Position in Maze\n\nPathfinding
+    Only:\n'H' : Toggle Dijkstra\n'J' : Toggle A*\n'K' : Toggle Bellman-Ford\n'L'
+    : Save Statistics"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9e916c95951d047e08feb04b7a644a50, type: 2}
   m_sharedMaterial: {fileID: 778799407885902829, guid: 9e916c95951d047e08feb04b7a644a50, type: 2}
@@ -5845,7 +5849,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 70.15
+  m_fontSize: 24.4
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
