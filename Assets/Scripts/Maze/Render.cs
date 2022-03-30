@@ -132,6 +132,7 @@ namespace Maze
 				print($"Total Nodes = {_totalNodes}");
 				print($"Total Time = {TotalTimeTaken}ms");
 				print($"Average Time = {AverageTimeTaken}ms");
+				print(Application.persistentDataPath);
 			}
 			
 			MeshCombiner.MazeRendered = true;
