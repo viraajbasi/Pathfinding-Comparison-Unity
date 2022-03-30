@@ -24,13 +24,13 @@ namespace Maze
 
         public static void UpdateLabels(string algName, string totNodes, string totVisNodes, string totPathNodes, string algTimeTaken, string totTimeTaken, string avgTimeTaken)
         {
-            _algorithmName = algName;
-            _totalNodes = totNodes;
-            _totalVisitedNodes = totVisNodes;
-            _totalPathNodes = totPathNodes;
-            _algorithmTimeTaken = algTimeTaken;
-            _totalTimeTaken = totTimeTaken;
-            _averageTimeTaken = avgTimeTaken;
+            _algorithmName = $"Current Algorithm: {algName}";
+            _totalNodes = $"Total Nodes: {totNodes}";
+            _totalVisitedNodes = $"Total Visited Nodes: {totVisNodes}";
+            _totalPathNodes = $"Total Nodes in Path {totPathNodes}";
+            _algorithmTimeTaken = $"Time Taken to Find Path: {algTimeTaken}ms";
+            _totalTimeTaken = $"Total Time Taken for All Algorithms: {totTimeTaken}ms";
+            _averageTimeTaken = $"Average Time Taken for All Algorithms: {avgTimeTaken}ms";
         }
         
         private void Update()

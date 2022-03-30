@@ -151,7 +151,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &97786652
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2553,7 +2553,7 @@ MonoBehaviour:
   pathBellmanFord: {fileID: 1239188753}
   completedScreen: {fileID: 531358302}
   defaultFloorMaterial: {fileID: 2100000, guid: c898499917019a8fd900cbd0d0077448, type: 2}
-  informationPanel: {fileID: 0}
+  informationPanel: {fileID: 97786651}
 --- !u!4 &1602929705
 Transform:
   m_ObjectHideFlags: 0

@@ -54,6 +54,8 @@ namespace Maze
 		private int _bellmanFordNodesVisited;
 		private int _bellmanFordNodesInPath;
 
+		private bool _informationPanelShown;
+
 		private void Start()
 		{
 			Application.targetFrameRate = -1;
@@ -310,6 +312,7 @@ namespace Maze
 			ChangeParentOfObjects(isDisplayed ? floorObject : parentObject, maze);
 
 			parentObject.gameObject.SetActive(!isDisplayed);
+			informationPanel.SetActive(!isDisplayed);
 		}
 
 		private (List<MazeCell> mazeList, long timeTaken) ExecuteAlgorithmAndFindTimeTaken(int algorithmToExecute)
