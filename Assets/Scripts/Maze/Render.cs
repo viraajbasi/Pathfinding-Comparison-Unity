@@ -20,6 +20,7 @@ namespace Maze
 		public Transform pathBellmanFord;
 		public GameObject completedScreen;
 		public Material defaultFloorMaterial;
+		public GameObject informationPanel;
 
 		private const float Offset = 0.5f;
 
@@ -260,7 +261,10 @@ namespace Maze
 			Transform parentObject;
 			List<MazeCell> maze;
 			bool isDisplayed;
-			
+			string totalVisitedNodes;
+			string totalPathNodes;
+			string algorithmTimeTaken;
+
 			switch (key)
 			{
 				case KeyCode.H:
@@ -268,6 +272,10 @@ namespace Maze
 					maze = _dijkstraMaze;
 					isDisplayed = _dijkstraAlreadyDisplayed;
 					_currentAlgorithm = "Dijkstra";
+					totalVisitedNodes = _dijkstraNodesVisited.ToString();
+					totalPathNodes = _dijkstraNodesInPath.ToString();
+					algorithmTimeTaken = _dijkstraTimeTaken.ToString();
+					InformationPanel.UpdateLabels(_currentAlgorithm, _totalNodes.ToString(), totalVisitedNodes, totalPathNodes, algorithmTimeTaken, TotalTimeTaken.ToString(), AverageTimeTaken.ToString());
 					break;
 				
 				case KeyCode.J:
@@ -275,6 +283,10 @@ namespace Maze
 					maze = _aStarMaze;
 					isDisplayed = _aStarAlreadyDisplayed;
 					_currentAlgorithm = "A*";
+					totalVisitedNodes = _aStarNodesVisited.ToString();
+					totalPathNodes = _aStarNodesInPath.ToString();
+					algorithmTimeTaken = _aStarTimeTaken.ToString();
+					InformationPanel.UpdateLabels(_currentAlgorithm, _totalNodes.ToString(), totalVisitedNodes, totalPathNodes, algorithmTimeTaken, TotalTimeTaken.ToString(), AverageTimeTaken.ToString());
 					break;
 				
 				case KeyCode.K:
@@ -282,6 +294,10 @@ namespace Maze
 					maze = _bellmanFordMaze;
 					isDisplayed = _bellmanFordAlreadyDisplayed;
 					_currentAlgorithm = "Bellman-Ford";
+					totalVisitedNodes = _bellmanFordNodesVisited.ToString();
+					totalPathNodes = _bellmanFordNodesInPath.ToString();
+					algorithmTimeTaken = _bellmanFordTimeTaken.ToString();
+					InformationPanel.UpdateLabels(_currentAlgorithm, _totalNodes.ToString(), totalVisitedNodes, totalPathNodes, algorithmTimeTaken, TotalTimeTaken.ToString(), AverageTimeTaken.ToString());
 					break;
 				
 				default:
