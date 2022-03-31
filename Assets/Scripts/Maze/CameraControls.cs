@@ -30,7 +30,7 @@ namespace Maze
             _minY = _maxY / 10;
             _xLimit = _maxY / 2;
             _zLimit = _maxY / 2;
-            _initialPosition = new Vector3(0, _maxY + 10, 0);
+            _initialPosition = new Vector3(0, _maxY, 0);
             
             var camTransform = _mainCamera.transform;
 

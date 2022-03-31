@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace Maze
 
 		private static readonly Position StartPosition = new(0, 0);
 
-		private long AverageTimeTaken => TotalTimeTaken / 3;
+		private float AverageTimeTaken => TotalTimeTaken / 3f;
 		private long TotalTimeTaken => _dijkstraTimeTaken + _aStarTimeTaken + _bellmanFordTimeTaken;
 		
 		private int _width;
@@ -67,6 +68,7 @@ namespace Maze
 			PlayerPrefs.DeleteKey("A*TotalVisited");
 			PlayerPrefs.DeleteKey("BellmanFordTotalVisited");
 			PlayerPrefs.DeleteKey("MazeSolved");
+			PlayerPrefs.SetString("FileName", DateTime.Now.ToString("HH.mm-yyyy_MM_dd"));
 
 			_width = PlayerPrefs.GetInt("Width");
 			_height = PlayerPrefs.GetInt("Height");
@@ -90,7 +92,7 @@ namespace Maze
 
 			if (PlayerPrefs.GetInt("Pathfinding") == 1)
 			{
-				ScreenCapture.CaptureScreenshot("Maze");
+				ScreenCapture.CaptureScreenshot(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Maze.png");
 				
 				// DIJKSTRA
 				var (dijkstraMaze, dijkstraTime) = ExecuteAlgorithmAndFindTimeTaken(1);
@@ -318,6 +320,7 @@ namespace Maze
 			string totalVisitedNodes;
 			string totalPathNodes;
 			string algorithmTimeTaken;
+			var fileName = PlayerPrefs.GetString("FileName");
 
 			switch (key)
 			{
@@ -364,26 +367,31 @@ namespace Maze
 			ChangeParentOfObjects(isDisplayed ? floorObject : parentObject, maze);
 
 			parentObject.gameObject.SetActive(!isDisplayed);
+			informationPanel.SetActive(!isDisplayed);
 
-			if (!_dijkstraScreenshotTaken)
+			if (!_dijkstraScreenshotTaken && _currentAlgorithm == "Dijkstra")
 			{
-				ScreenCapture.CaptureScreenshot("Dijkstra");
+				StartCoroutine(TakeScreenshot(_currentAlgorithm, fileName));
 				_dijkstraScreenshotTaken = true;
 			}
 
-			if (!_aStarScreenshotTaken)
+			if (!_aStarScreenshotTaken && _currentAlgorithm == "A*")
 			{
-				ScreenCapture.CaptureScreenshot("AStar");
+				StartCoroutine(TakeScreenshot(_currentAlgorithm, fileName));
 				_aStarScreenshotTaken = true;
 			}
 
-			if (!_bellmanFordScreenshotTaken)
+			if (!_bellmanFordScreenshotTaken && _currentAlgorithm == "Bellman-Ford")
 			{
-				ScreenCapture.CaptureScreenshot("Bellman-Ford");
+				StartCoroutine(TakeScreenshot(_currentAlgorithm, fileName));
 				_bellmanFordScreenshotTaken = true;
 			}
-			
-			informationPanel.SetActive(!isDisplayed);
+		}
+
+		private IEnumerator TakeScreenshot(string currentAlgorithm, string fileExtension)
+		{
+			yield return new WaitForSeconds(1);
+			ScreenCapture.CaptureScreenshot($"{Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)}/{currentAlgorithm}-{fileExtension}.png");
 		}
 
 		private (List<MazeCell> mazeList, long timeTaken) ExecuteAlgorithmAndFindTimeTaken(int algorithmToExecute)
