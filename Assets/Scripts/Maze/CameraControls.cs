@@ -25,22 +25,12 @@ namespace Maze
                 throw new Exception("Camera not found");
             }
 
-            if (PlayerPrefs.GetInt("UserSolves") == 1)
-            {
-                _maxY = 25;
-                _minY = 10;
-                _xLimit = 5;
-                _zLimit = 5;
-                _initialPosition = new Vector3(0, _maxY, 0);
-            }
-            else
-            {
-                _maxY = 100;
-                _minY = 15;
-                _xLimit = 40;
-                _zLimit = 40;
-                _initialPosition = new Vector3(0, _maxY, 0);
-            }
+            var avgWidthAndHeight = (PlayerPrefs.GetInt("Width") + PlayerPrefs.GetInt("Height")) / 2;
+            _maxY = avgWidthAndHeight;
+            _minY = _maxY / 10;
+            _xLimit = _maxY / 2;
+            _zLimit = _maxY / 2;
+            _initialPosition = new Vector3(0, _maxY + 10, 0);
             
             var camTransform = _mainCamera.transform;
 

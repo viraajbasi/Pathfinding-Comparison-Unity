@@ -45,8 +45,31 @@ namespace MainMenu
 
         public void SetWidthAndHeight()
         {
-            widthText.text = $"Current Maze Width: {widthInput.text}";
-            heightText.text = $"Current Maze Width: {heightInput.text}";
+            int width;
+            int height;
+            int.TryParse(widthInput.text, out width);
+            int.TryParse(heightInput.text, out height);
+            
+            if (width is <= 100 and > 10)
+            {
+                PlayerPrefs.SetInt("Width", width);
+            }
+            else
+            {
+                PlayerPrefs.SetInt("Width", 20);
+            }
+
+            if (height is <= 100 and > 10)
+            {
+                PlayerPrefs.SetInt("Height", height);
+            }
+            else
+            {
+                PlayerPrefs.SetInt("Height", 20);
+            }
+            
+            widthText.text = $"Current Maze Width: {PlayerPrefs.GetInt("Width")}";
+            heightText.text = $"Current Maze Width: {PlayerPrefs.GetInt("Height")}";
         }
         
         public void CloseErrorScreen()
@@ -58,6 +81,15 @@ namespace MainMenu
         {
             PlayerPrefs.DeleteKey("Pathfinding");
             PlayerPrefs.DeleteKey("UserSolves");
+            
+            PlayerPrefs.SetInt("Width", 20);
+            PlayerPrefs.SetInt("Height", 20);
+
+            heightInput.characterValidation = TMP_InputField.CharacterValidation.Integer;
+            widthInput.characterValidation = TMP_InputField.CharacterValidation.Integer;
+
+            widthText.text = $"Current Maze Width: 20";
+            heightText.text = $"Current Maze Height: 20";
         }
 
         private static void StoreToggleState(bool pathfinding)

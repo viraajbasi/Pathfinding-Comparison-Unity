@@ -31,8 +31,8 @@ namespace Maze
 		private long AverageTimeTaken => TotalTimeTaken / 3;
 		private long TotalTimeTaken => _dijkstraTimeTaken + _aStarTimeTaken + _bellmanFordTimeTaken;
 		
-		private int _width = 100;
-		private int _height = 100;
+		private int _width;
+		private int _height;
 		private List<MazeCell> _sortedMaze;
 
 		private int _totalNodes;
@@ -67,12 +67,13 @@ namespace Maze
 			PlayerPrefs.DeleteKey("A*TotalVisited");
 			PlayerPrefs.DeleteKey("BellmanFordTotalVisited");
 			PlayerPrefs.DeleteKey("MazeSolved");
+
+			_width = PlayerPrefs.GetInt("Width");
+			_height = PlayerPrefs.GetInt("Height");
 			
 			if (PlayerPrefs.GetInt("UserSolves") == 1)
 			{
 				UserSolves.StartPosition = StartPosition;
-				_width = 20;
-				_height = 20;
 			}
 			
 			_sortedMaze = GenerateRandomMaze(_width, _height);
@@ -232,7 +233,7 @@ namespace Maze
 			mazeList.Find(a => a.Coordinates.X == 0 && a.Coordinates.Y == 0).StartNode = true;
 			mazeList.Find(a => a.Coordinates.X == width - 1 && a.Coordinates.Y == height - 1).GoalNode = true;
 
-			return PlayerPrefs.GetInt("Kruskal") == 1 ? Kruskal.Algorithm(mazeList, width, height) : RecursiveBacktracker.Algorithm(mazeList, width, height);
+			return RecursiveBacktracker.Algorithm(mazeList, width, height);
 		}
 
 		private void DrawMaze(List<MazeCell> mazeList)
