@@ -43,18 +43,21 @@ namespace Maze
 		private long _dijkstraTimeTaken;
 		private int _dijkstraNodesVisited;
 		private int _dijkstraNodesInPath;
+		private bool _dijkstraScreenshotTaken;
 		
 		private List<MazeCell> _aStarMaze;
 		private bool _aStarAlreadyDisplayed = true;
 		private long _aStarTimeTaken;
 		private int _aStarNodesVisited;
 		private int _aStarNodesInPath;
+		private bool _aStarScreenshotTaken;
 		
 		private List<MazeCell> _bellmanFordMaze;
 		private bool _bellmanFordAlreadyDisplayed = true;
 		private long _bellmanFordTimeTaken;
 		private int _bellmanFordNodesVisited;
 		private int _bellmanFordNodesInPath;
+		private bool _bellmanFordScreenshotTaken;
 
 		private void Start()
 		{
@@ -86,6 +89,8 @@ namespace Maze
 
 			if (PlayerPrefs.GetInt("Pathfinding") == 1)
 			{
+				ScreenCapture.CaptureScreenshot("Maze");
+				
 				// DIJKSTRA
 				var (dijkstraMaze, dijkstraTime) = ExecuteAlgorithmAndFindTimeTaken(1);
 				_dijkstraMaze = dijkstraMaze;
@@ -133,6 +138,8 @@ namespace Maze
 				print($"Total Time = {TotalTimeTaken}ms");
 				print($"Average Time = {AverageTimeTaken}ms");
 				print(Application.persistentDataPath);
+				print(Application.dataPath);
+				print(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
 			}
 			
 			MeshCombiner.MazeRendered = true;
@@ -195,7 +202,7 @@ namespace Maze
 						$"Average Time: {AverageTimeTaken}"
 					};
 					
-					SaveScript.SaveToFile(dijkstraList, aStarList, bellmanFordList, generalList);
+					SaveScript.SaveStatsToFile(dijkstraList, aStarList, bellmanFordList, generalList);
 
 					Time.timeScale = 0f;
 					var fileLocation = PlayerPrefs.GetString("FileLocation");
@@ -351,6 +358,25 @@ namespace Maze
 			ChangeParentOfObjects(isDisplayed ? floorObject : parentObject, maze);
 
 			parentObject.gameObject.SetActive(!isDisplayed);
+
+			if (!_dijkstraScreenshotTaken)
+			{
+				ScreenCapture.CaptureScreenshot("Dijkstra");
+				_dijkstraScreenshotTaken = true;
+			}
+
+			if (!_aStarScreenshotTaken)
+			{
+				ScreenCapture.CaptureScreenshot("AStar");
+				_aStarScreenshotTaken = true;
+			}
+
+			if (!_bellmanFordScreenshotTaken)
+			{
+				ScreenCapture.CaptureScreenshot("Bellman-Ford");
+				_bellmanFordScreenshotTaken = true;
+			}
+			
 			informationPanel.SetActive(!isDisplayed);
 		}
 

@@ -8,7 +8,7 @@ namespace Maze
 {
     public static class SaveScript
     {
-        public static void SaveToFile(List<string> dijkstraList, List<string> aStarList, List<string> bellmanFordList, List<string> generalStats)
+        public static void SaveStatsToFile(List<string> dijkstraList, List<string> aStarList, List<string> bellmanFordList, List<string> generalStats)
         {
             var currentDate = DateTime.Now.ToString(CultureInfo.CurrentCulture);
             var fileName = DateTime.Now.ToString("yyyMMdd");
