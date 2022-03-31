@@ -24,7 +24,7 @@ namespace Maze
             {
                 StartPosition = ResetToStart(mazeList, defaultFloorColour);
             } 
-            else if (Input.GetKeyDown(KeyCode.W) || Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.W))
+            else if (Input.GetKeyDown(KeyCode.W) || Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.W))
             {
                 var topOffset = new Position(StartPosition.X, StartPosition.Y + 1);
                 var topNode = mazeList.Find(a => a.Coordinates.X == topOffset.X && a.Coordinates.Y == topOffset.Y);
@@ -34,7 +34,7 @@ namespace Maze
                     VisitAndColour(topOffset, currentNode, topNode);
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.A) || Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.A))
+            else if (Input.GetKeyDown(KeyCode.A) || Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.A))
             {
                 if (StartPosition.X > 0)
                 {
@@ -47,7 +47,7 @@ namespace Maze
                     }
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.D))
+            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.D))
             {
                 var rightOffset = new Position(StartPosition.X + 1, StartPosition.Y);
                 var rightNode = mazeList.Find(a => a.Coordinates.X == rightOffset.X && a.Coordinates.Y == rightOffset.Y);
@@ -57,7 +57,7 @@ namespace Maze
                     VisitAndColour(rightOffset, currentNode, rightNode);
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.S))
+            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.S))
             {
                 if (StartPosition.Y > 0)
                 {
