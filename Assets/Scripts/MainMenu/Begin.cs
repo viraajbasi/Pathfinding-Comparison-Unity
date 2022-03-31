@@ -10,13 +10,15 @@ namespace MainMenu
     {
         public Toggle pathfindingToggle;
         public Toggle userSolvesToggle;
-        public Toggle kruskalToggle;
-        public Toggle recursiveBacktrackerToggle;
         public GameObject startScreen;
         public GameObject loadingScreen;
         public GameObject errorScreen;
         public Slider loadingBar;
         public TMP_Text errorMessage;
+        public TMP_InputField widthInput;
+        public TMP_InputField heightInput;
+        public TMP_Text widthText;
+        public TMP_Text heightText;
 
         public void OpenStart()
         {
@@ -30,43 +32,38 @@ namespace MainMenu
         
         public void BeginProgram()
         {
-            if ((pathfindingToggle.isOn || userSolvesToggle.isOn) && (kruskalToggle.isOn || recursiveBacktrackerToggle.isOn))
+            if ((pathfindingToggle.isOn || userSolvesToggle.isOn))
             {
-                StoreToggleState(pathfindingToggle.isOn, recursiveBacktrackerToggle.isOn);
+                StoreToggleState(pathfindingToggle.isOn);
                 StartCoroutine(LoadAsync("Game"));
             }
             else
             {
-                if (!recursiveBacktrackerToggle.isOn && !kruskalToggle.isOn)
-                {
-                    OpenErrorScreen("Ensure a maze generation algorithm is chosen.");
-                }
-                else
-                {
-                    OpenErrorScreen("Ensure a pathfinding algorithm is chosen.");
-                }
+                OpenErrorScreen("Ensure a pathfinding algorithm is chosen.");
             }
+        }
+
+        public void SetWidthAndHeight()
+        {
+            widthText.text = $"Current Maze Width: {widthInput.text}";
+            heightText.text = $"Current Maze Width: {heightInput.text}";
         }
         
         public void CloseErrorScreen()
         {
             errorScreen.SetActive(false);
         }
-        
+
         private void Start()
         {
             PlayerPrefs.DeleteKey("Pathfinding");
             PlayerPrefs.DeleteKey("UserSolves");
-            PlayerPrefs.DeleteKey("RecursiveBacktracker");
-            PlayerPrefs.DeleteKey("Kruskal");
         }
 
-        private static void StoreToggleState(bool pathfinding, bool recursiveBacktracker)
+        private static void StoreToggleState(bool pathfinding)
         {
             PlayerPrefs.SetInt("Pathfinding", pathfinding ? 1 : 0);
             PlayerPrefs.SetInt("UserSolves", !pathfinding ? 1 : 0);
-            PlayerPrefs.SetInt("RecursiveBacktraker", recursiveBacktracker ? 1 : 0);
-            PlayerPrefs.SetInt("Kruskal", !recursiveBacktracker ? 1 : 0);
         }
 
         private IEnumerator LoadAsync(string sceneName)

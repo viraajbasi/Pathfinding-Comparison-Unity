@@ -143,6 +143,11 @@ namespace Maze
 			}
 			
 			MeshCombiner.MazeRendered = true;
+
+			if (PlayerPrefs.GetInt("UserSolves") == 1)
+			{
+				_sortedMaze.Find(a => a.StartNode).Floor.gameObject.GetComponent<Renderer>().material.color = Color.white;
+			}
 		}
 
 		private void Update()
