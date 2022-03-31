@@ -182,21 +182,21 @@ namespace Maze
 				{
 					var dijkstraList = new List<string>()
 					{
-						$"Time to Execute: {_dijkstraTimeTaken}",
+						$"Time to Execute: {_dijkstraTimeTaken}ms",
 						$"Total Visited Nodes: {_dijkstraNodesVisited}",
 						$"Total Nodes in Path: {_dijkstraNodesInPath}"
 					};
 					
 					var aStarList = new List<string>()
 					{
-						$"Time to Execute: {_aStarTimeTaken}",
+						$"Time to Execute: {_aStarTimeTaken}ms",
 						$"Total Visited Nodes: {_aStarNodesVisited}",
 						$"Total Nodes in Path: {_aStarNodesInPath}"
 					};
 					
 					var bellmanFordList = new List<string>()
 					{
-						$"Time to Execute: {_bellmanFordTimeTaken}",
+						$"Time to Execute: {_bellmanFordTimeTaken}ms",
 						$"Total Visited Nodes: {_bellmanFordNodesVisited}",
 						$"Total Nodes in Path: {_bellmanFordNodesInPath}"
 					};
@@ -204,8 +204,8 @@ namespace Maze
 					var generalList = new List<string>()
 					{
 						$"Total Nodes: {_totalNodes}",
-						$"Total Time: {TotalTimeTaken}",
-						$"Average Time: {AverageTimeTaken}"
+						$"Total Time: {TotalTimeTaken}ms",
+						$"Average Time: {AverageTimeTaken}ms"
 					};
 					
 					SaveScript.SaveStatsToFile(dijkstraList, aStarList, bellmanFordList, generalList);
