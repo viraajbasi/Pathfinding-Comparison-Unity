@@ -50,7 +50,7 @@ namespace MainMenu
             int.TryParse(widthInput.text, out width);
             int.TryParse(heightInput.text, out height);
             
-            if (width is <= 100 and > 10)
+            if (width is <= 100 and >= 10)
             {
                 PlayerPrefs.SetInt("Width", width);
             }
@@ -59,7 +59,7 @@ namespace MainMenu
                 PlayerPrefs.SetInt("Width", 20);
             }
 
-            if (height is <= 100 and > 10)
+            if (height is <= 100 and >= 10)
             {
                 PlayerPrefs.SetInt("Height", height);
             }

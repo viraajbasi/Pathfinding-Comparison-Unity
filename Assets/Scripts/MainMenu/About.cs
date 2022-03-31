@@ -40,11 +40,6 @@ namespace MainMenu
             ReadInfoAndShow("RecursiveBacktracker.txt");
         }
 
-        public void KruskalInfo()
-        {
-            ReadInfoAndShow("Kruskal.txt");
-        }
-
         private void ReadInfoAndShow(string filename)
         {
             var streamReader = new StreamReader(Path.Combine(Application.streamingAssetsPath, filename));
