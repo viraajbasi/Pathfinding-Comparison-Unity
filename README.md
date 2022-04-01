@@ -2,6 +2,5 @@
 
 ## TODO
 
-+ Add sound effects to user solves.
-+ Annotate code.
++ Annotate code with comments.
 + Ensure latest code is in documentation.
