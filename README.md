@@ -1,5 +1,7 @@
 # NEA
 
-+ TODO:
-  + Add ability to change file save location (might have to compromise on filename only).
-  + Add sound effects to user solves.
+## TODO
+
++ Add sound effects to user solves.
++ Annotate code.
++ Ensure latest code is in documentation.

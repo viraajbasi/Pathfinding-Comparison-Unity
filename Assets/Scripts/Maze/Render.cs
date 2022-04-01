@@ -26,6 +26,7 @@ namespace Maze
 		public TMP_Text fileSavedText;
 		public GameObject userSolvesNodePanel;
 		public TMP_Text userSolvesNodes;
+		public AudioSource audioSource;
 
 		private const float Offset = 0.5f;
 
@@ -156,7 +157,7 @@ namespace Maze
 			if (PlayerPrefs.GetInt("UserSolves") == 1 && Time.timeScale > 0)
 			{
 				var defaultFloorColour = defaultFloorMaterial.color;
-				UserSolves.HandleKeyInput(_sortedMaze, defaultFloorColour);
+				UserSolves.HandleKeyInput(_sortedMaze, defaultFloorColour, audioSource);
 				userSolvesNodes.text = $"Total Visited Nodes: {PlayerPrefs.GetInt("UserSolvesNodePanel")}";
 
 				if (PlayerPrefs.GetInt("MazeSolved") == 1)

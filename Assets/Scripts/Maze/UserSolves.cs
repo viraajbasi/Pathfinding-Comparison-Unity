@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Video;
 
 namespace Maze
 {
@@ -11,7 +12,7 @@ namespace Maze
         private static Position _startPosition;
         private static Stopwatch _stopwatch;
 
-        public static void HandleKeyInput(List<MazeCell> mazeList, Color defaultFloorColour)
+        public static void HandleKeyInput(List<MazeCell> mazeList, Color defaultFloorColour, AudioSource audioSource)
         {
             var currentNode = mazeList.Find(a => a.Coordinates.X == _startPosition.X && a.Coordinates.Y == _startPosition.Y);
             currentNode.Visited = true;
@@ -31,12 +32,15 @@ namespace Maze
 
             if (Input.GetKey(KeyCode.Q))
             {
-                _startPosition = ResetToStart(mazeList, defaultFloorColour);
+                audioSource.Play();
+                _startPosition = ResetToStart(mazeList, defaultFloorColour, audioSource);
             } 
             else if (Input.GetKeyDown(KeyCode.W) || Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.W))
             {
                 var topOffset = new Position(_startPosition.X, _startPosition.Y + 1);
                 var topNode = mazeList.Find(a => a.Coordinates.X == topOffset.X && a.Coordinates.Y == topOffset.Y);
+                
+                audioSource.Play();
                 
                 if (!currentNode.Top)
                 {
@@ -50,6 +54,8 @@ namespace Maze
                     var leftOffset = new Position(_startPosition.X - 1, _startPosition.Y);
                     var leftNode = mazeList.Find(a => a.Coordinates.X == leftOffset.X && a.Coordinates.Y == leftOffset.Y);
 
+                    audioSource.Play();
+                    
                     if (!currentNode.Left && _startPosition.X >= 0)
                     {
                         VisitAndColour(leftOffset, currentNode, leftNode);
@@ -60,6 +66,8 @@ namespace Maze
             {
                 var rightOffset = new Position(_startPosition.X + 1, _startPosition.Y);
                 var rightNode = mazeList.Find(a => a.Coordinates.X == rightOffset.X && a.Coordinates.Y == rightOffset.Y);
+                
+                audioSource.Play();
                 
                 if (!currentNode.Right)
                 {
@@ -72,6 +80,8 @@ namespace Maze
                 {
                     var bottomOffset = new Position(_startPosition.X, _startPosition.Y - 1);
                     var bottomNode = mazeList.Find(a => a.Coordinates.X == bottomOffset.X && a.Coordinates.Y == bottomOffset.Y);
+                    
+                    audioSource.Play();
                     
                     if (!currentNode.Bottom && _startPosition.Y >= 0)
                     {
@@ -92,7 +102,7 @@ namespace Maze
             _startPosition = pos;
         }
 
-        private static Position ResetToStart(List<MazeCell> mazeList, Color defaultColor)
+        private static Position ResetToStart(List<MazeCell> mazeList, Color defaultColor, AudioSource audioSource)
         {
             foreach (var node in mazeList.Where(node =>  node.Floor.gameObject.GetComponent<Renderer>().material.color == Color.black || node.Floor.gameObject.GetComponent<Renderer>().material.color == Color.white))
             {
