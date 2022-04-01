@@ -68,7 +68,6 @@ namespace Maze
 			PlayerPrefs.DeleteKey("DijkstraTotalVisited");
 			PlayerPrefs.DeleteKey("A*TotalVisited");
 			PlayerPrefs.DeleteKey("BellmanFordTotalVisited");
-			PlayerPrefs.DeleteKey("MazeSolved");
 			PlayerPrefs.SetString("FileName", DateTime.Now.ToString("HH.mm-yyyy_MM_dd"));
 
 			_width = PlayerPrefs.GetInt("Width");
@@ -146,9 +145,8 @@ namespace Maze
 			if (PlayerPrefs.GetInt("UserSolves") == 1)
 			{
 				_sortedMaze.Find(a => a.StartNode).Floor.gameObject.GetComponent<Renderer>().material.color = Color.white;
-				PlayerPrefs.SetInt("UserSolvesNodePanel", 0);
 				userSolvesNodePanel.SetActive(true);
-				userSolvesNodes.text = $"Total Visited Nodes: {PlayerPrefs.GetInt("UserSolvesNodePanel")}";
+				userSolvesNodes.text = $"Total Visited Nodes: {PlayerPrefs.GetInt("0")}";
 			}
 		}
 
@@ -157,14 +155,7 @@ namespace Maze
 			if (PlayerPrefs.GetInt("UserSolves") == 1 && Time.timeScale > 0)
 			{
 				var defaultFloorColour = defaultFloorMaterial.color;
-				UserSolves.HandleKeyInput(_sortedMaze, defaultFloorColour, audioSource);
-				userSolvesNodes.text = $"Total Visited Nodes: {PlayerPrefs.GetInt("UserSolvesNodePanel")}";
-
-				if (PlayerPrefs.GetInt("MazeSolved") == 1)
-				{
-					Time.timeScale = 0f;
-					completedScreen.SetActive(true);
-				}
+				UserSolves.HandleKeyInput(_sortedMaze, defaultFloorColour, audioSource, completedScreen, userSolvesNodes);
 			}
 			
 			if (PlayerPrefs.GetInt("Pathfinding") == 1)

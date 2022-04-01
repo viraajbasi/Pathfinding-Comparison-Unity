@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using TMPro;
 using UnityEngine;
-using UnityEngine.Video;
 
 namespace Maze
 {
@@ -12,7 +12,7 @@ namespace Maze
         private static Position _startPosition;
         private static Stopwatch _stopwatch;
 
-        public static void HandleKeyInput(List<MazeCell> mazeList, Color defaultFloorColour, AudioSource audioSource)
+        public static void HandleKeyInput(List<MazeCell> mazeList, Color defaultFloorColour, AudioSource audioSource, GameObject completedScreen, TMP_Text userSolvesNodeText)
         {
             var currentNode = mazeList.Find(a => a.Coordinates.X == _startPosition.X && a.Coordinates.Y == _startPosition.Y);
             currentNode.Visited = true;
@@ -22,12 +22,13 @@ namespace Maze
                 VisitedList.Add(currentNode);
             }
             
-            PlayerPrefs.SetInt("UserSolvesNodePanel", VisitedList.Count);
             print(VisitedList.Count);
-
+            userSolvesNodeText.text = $"Total Visited Nodes: {VisitedList.Count}";
+            
             if (currentNode.GoalNode)
             {
-                PlayerPrefs.SetInt("MazeSolved", 1);
+                Time.timeScale = 0f;
+                completedScreen.SetActive(true);
             }
 
             if (Input.GetKey(KeyCode.Q))
