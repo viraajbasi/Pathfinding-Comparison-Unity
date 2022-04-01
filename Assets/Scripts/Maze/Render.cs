@@ -368,7 +368,10 @@ namespace Maze
 
 			if (!_aStarScreenshotTaken && _currentAlgorithm == "A*")
 			{
-				StartCoroutine(TakeScreenshot(_currentAlgorithm, fileName));
+				StartCoroutine(TakeScreenshot("AStar", fileName));
+				/*
+				 * The '*' character cannot be in file names on Windows.
+				 */
 				_aStarScreenshotTaken = true;
 			}
 
