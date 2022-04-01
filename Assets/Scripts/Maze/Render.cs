@@ -24,10 +24,10 @@ namespace Maze
 		public GameObject informationPanel;
 		public GameObject fileSavedScreen;
 		public TMP_Text fileSavedText;
+		public GameObject userSolvesNodePanel;
+		public TMP_Text userSolvesNodes;
 
 		private const float Offset = 0.5f;
-
-		private static readonly Position StartPosition = new(0, 0);
 
 		private float AverageTimeTaken => TotalTimeTaken / 3f;
 		private long TotalTimeTaken => _dijkstraTimeTaken + _aStarTimeTaken + _bellmanFordTimeTaken;
@@ -72,12 +72,7 @@ namespace Maze
 
 			_width = PlayerPrefs.GetInt("Width");
 			_height = PlayerPrefs.GetInt("Height");
-			
-			if (PlayerPrefs.GetInt("UserSolves") == 1)
-			{
-				UserSolves.StartPosition = StartPosition;
-			}
-			
+
 			_sortedMaze = GenerateRandomMaze(_width, _height);
 			DrawMaze(_sortedMaze);
 			for (var i = 0; i < _width; i++)
@@ -150,6 +145,9 @@ namespace Maze
 			if (PlayerPrefs.GetInt("UserSolves") == 1)
 			{
 				_sortedMaze.Find(a => a.StartNode).Floor.gameObject.GetComponent<Renderer>().material.color = Color.white;
+				PlayerPrefs.SetInt("UserSolvesNodePanel", 0);
+				userSolvesNodePanel.SetActive(true);
+				userSolvesNodes.text = $"Total Visited Nodes: {PlayerPrefs.GetInt("UserSolvesNodePanel")}";
 			}
 		}
 
@@ -159,6 +157,7 @@ namespace Maze
 			{
 				var defaultFloorColour = defaultFloorMaterial.color;
 				UserSolves.HandleKeyInput(_sortedMaze, defaultFloorColour);
+				userSolvesNodes.text = $"Total Visited Nodes: {PlayerPrefs.GetInt("UserSolvesNodePanel")}";
 
 				if (PlayerPrefs.GetInt("MazeSolved") == 1)
 				{

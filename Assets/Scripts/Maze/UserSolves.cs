@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 
@@ -6,14 +7,22 @@ namespace Maze
 {
     public class UserSolves : MonoBehaviour
     {
-        public static Position StartPosition;
-
-        private static int _totalVisitedNodes;
+        private static readonly List<MazeCell> VisitedList = new List<MazeCell>();
+        private static Position _startPosition;
+        private static Stopwatch _stopwatch;
 
         public static void HandleKeyInput(List<MazeCell> mazeList, Color defaultFloorColour)
         {
-            var currentNode = mazeList.Find(a => a.Coordinates.X == StartPosition.X && a.Coordinates.Y == StartPosition.Y);
+            var currentNode = mazeList.Find(a => a.Coordinates.X == _startPosition.X && a.Coordinates.Y == _startPosition.Y);
             currentNode.Visited = true;
+
+            if (!VisitedList.Contains(currentNode))
+            {
+                VisitedList.Add(currentNode);
+            }
+            
+            PlayerPrefs.SetInt("UserSolvesNodePanel", VisitedList.Count);
+            print(VisitedList.Count);
 
             if (currentNode.GoalNode)
             {
@@ -22,11 +31,11 @@ namespace Maze
 
             if (Input.GetKey(KeyCode.Q))
             {
-                StartPosition = ResetToStart(mazeList, defaultFloorColour);
+                _startPosition = ResetToStart(mazeList, defaultFloorColour);
             } 
             else if (Input.GetKeyDown(KeyCode.W) || Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.W))
             {
-                var topOffset = new Position(StartPosition.X, StartPosition.Y + 1);
+                var topOffset = new Position(_startPosition.X, _startPosition.Y + 1);
                 var topNode = mazeList.Find(a => a.Coordinates.X == topOffset.X && a.Coordinates.Y == topOffset.Y);
                 
                 if (!currentNode.Top)
@@ -36,12 +45,12 @@ namespace Maze
             }
             else if (Input.GetKeyDown(KeyCode.A) || Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.A))
             {
-                if (StartPosition.X > 0)
+                if (_startPosition.X > 0)
                 {
-                    var leftOffset = new Position(StartPosition.X - 1, StartPosition.Y);
+                    var leftOffset = new Position(_startPosition.X - 1, _startPosition.Y);
                     var leftNode = mazeList.Find(a => a.Coordinates.X == leftOffset.X && a.Coordinates.Y == leftOffset.Y);
 
-                    if (!currentNode.Left && StartPosition.X >= 0)
+                    if (!currentNode.Left && _startPosition.X >= 0)
                     {
                         VisitAndColour(leftOffset, currentNode, leftNode);
                     }
@@ -49,7 +58,7 @@ namespace Maze
             }
             else if (Input.GetKeyDown(KeyCode.D) || Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.D))
             {
-                var rightOffset = new Position(StartPosition.X + 1, StartPosition.Y);
+                var rightOffset = new Position(_startPosition.X + 1, _startPosition.Y);
                 var rightNode = mazeList.Find(a => a.Coordinates.X == rightOffset.X && a.Coordinates.Y == rightOffset.Y);
                 
                 if (!currentNode.Right)
@@ -59,12 +68,12 @@ namespace Maze
             }
             else if (Input.GetKeyDown(KeyCode.S) || Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.S))
             {
-                if (StartPosition.Y > 0)
+                if (_startPosition.Y > 0)
                 {
-                    var bottomOffset = new Position(StartPosition.X, StartPosition.Y - 1);
+                    var bottomOffset = new Position(_startPosition.X, _startPosition.Y - 1);
                     var bottomNode = mazeList.Find(a => a.Coordinates.X == bottomOffset.X && a.Coordinates.Y == bottomOffset.Y);
                     
-                    if (!currentNode.Bottom && StartPosition.Y >= 0)
+                    if (!currentNode.Bottom && _startPosition.Y >= 0)
                     {
                         VisitAndColour(bottomOffset, currentNode, bottomNode);
                     }
@@ -80,7 +89,7 @@ namespace Maze
             currentNode.Floor.gameObject.SetActive(true);
             nextNode.Floor.gameObject.SetActive(true);
 
-            StartPosition = pos;
+            _startPosition = pos;
         }
 
         private static Position ResetToStart(List<MazeCell> mazeList, Color defaultColor)
@@ -95,6 +104,12 @@ namespace Maze
             currentNode.Floor.gameObject.GetComponent<Renderer>().material.color = Color.white;
 
             return currentNodePosition;
+        }
+
+        private void Start()
+        {
+            _startPosition = new Position(0, 0);
+            VisitedList.Clear();
         }
     }
 }
