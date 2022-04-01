@@ -39,7 +39,7 @@ namespace MainMenu
             }
             else
             {
-                OpenErrorScreen("Ensure a pathfinding algorithm is chosen.");
+                OpenErrorScreen("Choose at least one mode.");
             }
         }
 
