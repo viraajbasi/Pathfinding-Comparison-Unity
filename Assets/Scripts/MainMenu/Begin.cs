@@ -69,7 +69,7 @@ namespace MainMenu
             }
             
             widthText.text = $"Current Maze Width: {PlayerPrefs.GetInt("Width")}";
-            heightText.text = $"Current Maze Width: {PlayerPrefs.GetInt("Height")}";
+            heightText.text = $"Current Maze Height: {PlayerPrefs.GetInt("Height")}";
         }
         
         public void CloseErrorScreen()
