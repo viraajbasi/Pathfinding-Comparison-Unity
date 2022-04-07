@@ -87,7 +87,8 @@ namespace Maze
 
 			if (PlayerPrefs.GetInt("Pathfinding") == 1)
 			{
-				ScreenCapture.CaptureScreenshot(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Maze.png");
+				var fileExtension = PlayerPrefs.GetString("FileName");
+				ScreenCapture.CaptureScreenshot($"{Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)}/Maze-{fileExtension}.png");
 				
 				// DIJKSTRA
 				var (dijkstraMaze, dijkstraTime) = ExecuteAlgorithmAndFindTimeTaken(1);
