@@ -6,6 +6,7 @@ namespace Maze
 {
     public static class Dijkstra
     {
+        // Perform Dijkstra Algorithm.
         public static List<MazeCell> Algorithm(List<MazeCell> mazeList)
         {
             var nodesToVisitQueue = new Queue<MazeCell>();
@@ -38,7 +39,7 @@ namespace Maze
             return GetPath(mazeList, startNode, targetNode);
         }
         
-        private static List<MazeCell> GetPath(List<MazeCell> mazeList, MazeCell startNode, MazeCell goalNode)
+        private static List<MazeCell> GetPath(List<MazeCell> mazeList, MazeCell startNode, MazeCell goalNode) // Find path and return it.
         {
             var path = new List<MazeCell> {startNode};
             var currentNode = startNode;

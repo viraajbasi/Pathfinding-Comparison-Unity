@@ -17,24 +17,29 @@ namespace Maze
             var currentNode = mazeList.Find(a => a.Coordinates.X == _startPosition.X && a.Coordinates.Y == _startPosition.Y);
             currentNode.Visited = true;
 
-            if (!VisitedList.Contains(currentNode))
+            if (!VisitedList.Contains(currentNode)) // Adds node to list for counting purposes.
             {
                 VisitedList.Add(currentNode);
             }
             
+            // Print list count to Unity Editor console.
             print(VisitedList.Count);
+            
             userSolvesNodeText.text = $"Total Visited Nodes: {VisitedList.Count}";
             
+            // Stops if the current node is the goal node.
             if (currentNode.GoalNode)
             {
                 Time.timeScale = 0f;
                 completedScreen.SetActive(true);
             }
 
+            // Reset back to start node.
+            // Movements are in a single if statement to ensure only one input per frame.
             if (Input.GetKey(KeyCode.Q))
             {
                 audioSource.Play();
-                _startPosition = ResetToStart(mazeList, defaultFloorColour, audioSource);
+                _startPosition = ResetToStart(mazeList, defaultFloorColour);
             } 
             else if (Input.GetKeyDown(KeyCode.W) || Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.W))
             {
@@ -92,7 +97,7 @@ namespace Maze
             }
         }
         
-        private static void VisitAndColour(Position pos, MazeCell currentNode, MazeCell nextNode)
+        private static void VisitAndColour(Position pos, MazeCell currentNode, MazeCell nextNode) // Set node as visited and colour accordingly.
         {
             currentNode.Floor.gameObject.GetComponent<Renderer>().material.color = Color.black;
             nextNode.Floor.gameObject.GetComponent<Renderer>().material.color = Color.white;
@@ -103,7 +108,7 @@ namespace Maze
             _startPosition = pos;
         }
 
-        private static Position ResetToStart(List<MazeCell> mazeList, Color defaultColor, AudioSource audioSource)
+        private static Position ResetToStart(List<MazeCell> mazeList, Color defaultColor)
         {
             foreach (var node in mazeList.Where(node =>  node.Floor.gameObject.GetComponent<Renderer>().material.color == Color.black || node.Floor.gameObject.GetComponent<Renderer>().material.color == Color.white))
             {
@@ -119,7 +124,10 @@ namespace Maze
 
         private void Start()
         {
+            // Set start position to the bottom left of the maze.
             _startPosition = new Position(0, 0);
+            
+            // Ensure visited list is empty.
             VisitedList.Clear();
         }
     }

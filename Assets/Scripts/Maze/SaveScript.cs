@@ -10,8 +10,14 @@ namespace Maze
     {
         public static void SaveStatsToFile(List<string> dijkstraList, List<string> aStarList, List<string> bellmanFordList, List<string> generalStats)
         {
+            // Finds current date and time for the statistics value.
+            // CultureInfo.CurrentCulture ensures that its in the format of the region of the computer.
             var currentDate = DateTime.Now.ToString(CultureInfo.CurrentCulture);
+            
+            // Finds filename from PlayerPrefs.
             var fileName = PlayerPrefs.GetString("FileName");
+            
+            // Environment.SpecialFolder.DesktopDirectory is an OS-agnostic way of finding the desktop directory.
             var destination = $"{Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)}/Statistics-{fileName}.txt";
             var headerString = $"Statistics calculated on {currentDate}.";
             var streamWriter = new StreamWriter(destination);

@@ -6,6 +6,7 @@ namespace Maze
 {
     public static class AStar
     {
+        // Perform the A* pathfinding algorithm.
         public static List<MazeCell> Algorithm(List<MazeCell> mazeList)
         {
             var startNode = mazeList.Find(a => a.StartNode);
@@ -71,7 +72,7 @@ namespace Maze
             return lowestFCostNode;
         }
 
-        private static List<MazeCell> GetPath(MazeCell startNode, MazeCell goalNode)
+        private static List<MazeCell> GetPath(MazeCell startNode, MazeCell goalNode) // Find path and return it.
         {
             var path = new List<MazeCell> {goalNode};
             var currentNode = goalNode;

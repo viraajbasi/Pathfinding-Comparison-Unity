@@ -6,12 +6,13 @@ namespace Maze
 {
     public static class BellmanFord
     {
+        // Perform Bellman-Ford algorithm.
         public static List<MazeCell> Algorithm(List<MazeCell> mazeList)
         {
             var startNode = mazeList.Find(a => a.StartNode);
             var goalNode = mazeList.Find(a => a.GoalNode);
 
-            foreach (var node in mazeList)
+            foreach (var node in mazeList) // Iterate through lists and generate paths.
             {
                 var neighbourList = MazeCell.GenerateNeighbourList(mazeList, node);
 
@@ -21,7 +22,7 @@ namespace Maze
                 }
             }
 
-            foreach (var node in mazeList)
+            foreach (var node in mazeList) // Check for negative cycles.
             {
                 var neighbourList = MazeCell.GenerateNeighbourList(mazeList, node);
 
@@ -40,7 +41,7 @@ namespace Maze
             return GetPath(mazeList, startNode, goalNode);
         }
 
-        private static void Relax(MazeCell nodeA, MazeCell nodeB)
+        private static void Relax(MazeCell nodeA, MazeCell nodeB) // Determine which distance is the shortest between two nodes.
         {
             nodeA.Cost = MazeCell.GetManhattanDistance(nodeA, nodeB);
             
@@ -52,7 +53,7 @@ namespace Maze
             }
         }
 
-        private static List<MazeCell> GetPath(List<MazeCell> mazeList, MazeCell startNode, MazeCell goalNode)
+        private static List<MazeCell> GetPath(List<MazeCell> mazeList, MazeCell startNode, MazeCell goalNode) // Find path and return it.
         {
             var path = new List<MazeCell> {startNode};
             var currentNode = startNode;

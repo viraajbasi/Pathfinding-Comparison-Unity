@@ -5,6 +5,11 @@ namespace MainMenu
 {
     public class AudioManager : MonoBehaviour
     {
+        /*
+         * Sets the volume to the value stored in PlayerPrefs.
+         * Ensures that user options are preserved when the program is restarted.
+         */
+        
         public AudioMixer mixer;
 
         private void Start()

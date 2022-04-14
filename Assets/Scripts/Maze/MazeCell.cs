@@ -49,6 +49,7 @@ namespace Maze
 			Coordinates = new Position(x, y);
 		}
 
+		// Generates a list of all the neighbouring nodes, relative to the supplied current node.
 		public static List<MazeCell> GenerateNeighbourList(List<MazeCell> mazeList, MazeCell currentNode)
 		{
 			var list = new List<MazeCell>();
@@ -77,6 +78,7 @@ namespace Maze
 			return list;
 		}
 		
+		// Finds the Manhattan Distance between two supplied nodes.
 		public static int GetManhattanDistance(MazeCell nodeA, MazeCell nodeB)
 		{
 			var distX = Mathf.Abs(nodeA.Coordinates.X - nodeB.Coordinates.X);
@@ -85,11 +87,12 @@ namespace Maze
 			return Mathf.Abs(distX + distY);
 		}
 		
-		public static MazeCell GetNodeWithLowestDistance(List<MazeCell> neighbourList)
+		// Finds the node with the lowest distance in a list.
+		public static MazeCell GetNodeWithLowestDistance(List<MazeCell> mazeList)
 		{
-			var nodeWithLowestDistance = neighbourList[0];
+			var nodeWithLowestDistance = mazeList[0];
 
-			foreach (var neighbour in neighbourList.Where(neighbour => neighbour.Distance < nodeWithLowestDistance.Distance))
+			foreach (var neighbour in mazeList.Where(neighbour => neighbour.Distance < nodeWithLowestDistance.Distance))
 			{
 				nodeWithLowestDistance = neighbour;
 			}
@@ -97,11 +100,13 @@ namespace Maze
 			return nodeWithLowestDistance;
 		}
 
+		// Returns the number of visited nodes in a supplied list.
 		public static int GetVisitedNodeCount(List<MazeCell> mazeList)
 		{
 			return mazeList.Count(node => node.Visited);
 		}
 
+		// Returns the number of nodes in the path in a supplied list.
 		public static int GetPathNodeCount(List<MazeCell> mazeList)
 		{
 			return mazeList.Count(node => node.Path);

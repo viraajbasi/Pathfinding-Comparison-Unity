@@ -23,6 +23,7 @@ namespace Maze
 
         public static void UpdateLabels(string algName, string totNodes, string totVisNodes, string totPathNodes, string algTimeTaken, string totTimeTaken, string avgTimeTaken)
         {
+            // Sets the data points on the Information Panel to the correct values.
             _algorithmName = $"Current Algorithm: {algName}";
             _totalNodes = $"Total Nodes: {totNodes}";
             _totalVisitedNodes = $"Total Visited Nodes: {totVisNodes}";
@@ -34,6 +35,7 @@ namespace Maze
         
         private void Update()
         {
+            // Ensures that they are always the correct value, by updating every frame.
             algorithmNameObject.text = _algorithmName;
             totalNodesObject.text = _totalNodes;
             totalVisitedNodesObject.text = _totalVisitedNodes;

@@ -6,6 +6,11 @@ namespace MainMenu
 {
     public class About : MonoBehaviour
     {
+        /*
+         * The various text files are project files.
+         * They contain the information that is displayed to the user.
+         */
+        
         public TMP_Text algorithmInformation;
         public GameObject aboutScreen;
 
@@ -42,7 +47,10 @@ namespace MainMenu
 
         private void ReadInfoAndShow(string filename)
         {
+            // Reads from the specified text file in the StreamingAssets folder in the project.
             var streamReader = new StreamReader(Path.Combine(Application.streamingAssetsPath, filename));
+            
+            // Reads the entire file into the text box.
             algorithmInformation.text = streamReader.ReadToEnd();
         }
     }

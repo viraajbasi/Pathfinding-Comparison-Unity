@@ -5,6 +5,13 @@ namespace Maze
 {
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]
+    
+    /*
+     * Combines meshes with the same material.
+     * Used to ensure high performance.
+     * One combined mesh removes considerable strain from the rendering pipeline.
+     */
+    
     public class MeshCombiner : MonoBehaviour
     {
         public static bool MazeRendered;
